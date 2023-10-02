@@ -20,7 +20,9 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        this.database = new Database(null, null, null);
+        saveDefaultConfig();
+
+        this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
     }
 
     @Override

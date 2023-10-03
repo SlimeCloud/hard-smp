@@ -3,14 +3,23 @@ package de.slimecloud.hardsmp.player;
 public interface TeamPlayer extends EventPlayer {
 
     /**
-     * equals to
-     * <p>
-     * addPoints(getTeam().getMultiplier()*points);
+     * The points are added equally distributed to all team members
+     * @param points points to add
      */
     void addMultipliedPoints(double points);
 
+    /**
+     * Returns the team of the player
+     * @return the team
+     * @see EventTeam
+     */
     EventTeam getTeam();
 
-    void leaveTeam();
+    /**
+     * Herewith the player leaves the team and the EventPlayer is returned
+     * @return the EventPlayer implementation of the player
+     * @see EventPlayer
+     */
+    EventPlayer leaveTeam();
 
 }

@@ -2,6 +2,9 @@ package de.slimecloud.hardsmp.player;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public interface EventPlayer {
 
@@ -13,12 +16,16 @@ public interface EventPlayer {
 
     double getPoints();
 
-    void setTeam(EventTeam team);
+    TeamPlayer joinTeam(EventTeam team);
 
     Player getPlayer();
 
     OfflinePlayer getOfflinePlayer();
 
-    EventTeam createTeam();
+    UUID getUniqueId();
+
+    TeamPlayer createTeam(String name);
+
+    @Nullable EventTeam getTeam();
 
 }

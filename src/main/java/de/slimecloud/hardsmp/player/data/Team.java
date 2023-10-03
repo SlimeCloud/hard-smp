@@ -1,6 +1,6 @@
 package de.slimecloud.hardsmp.player.data;
 
-import de.slimecloud.hardsmp.Main;
+import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.database.DataClass;
 import de.slimecloud.hardsmp.database.Key;
 import de.slimecloud.hardsmp.player.EventPlayer;
@@ -79,7 +79,7 @@ public class Team extends DataClass implements EventTeam {
 	@Override
 	public void add(EventPlayer player) {
 		if (player.getPlayer()==null) throw new IllegalStateException("player must be online to be added to a team");
-		player.getPlayer().getPersistentDataContainer().set(Main.getInstance().TEAM_KEY, PersistentDataType.LONG, id);
+		player.getPlayer().getPersistentDataContainer().set(HardSMP.getInstance().TEAM_KEY, PersistentDataType.LONG, id);
 		players.add(player.getUniqueId());
 		save();
 	}

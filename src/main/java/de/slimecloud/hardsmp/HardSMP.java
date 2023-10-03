@@ -2,20 +2,17 @@ package de.slimecloud.hardsmp;
 
 import de.slimecloud.hardsmp.database.Database;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Logger;
-
-public final class Main extends JavaPlugin {
+public final class HardSMP extends JavaPlugin {
 
     public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
 
-    private static Main instance;
+    private static HardSMP instance;
 
     @Getter
     private Database database;
@@ -25,6 +22,8 @@ public final class Main extends JavaPlugin {
         instance = this;
 
         saveDefaultConfig();
+
+
 
         this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
     }
@@ -44,7 +43,9 @@ public final class Main extends JavaPlugin {
         return command;
     }
 
-    public static Main getInstance() {
+    public static HardSMP getInstance() {
         return instance;
     }
+
+
 }

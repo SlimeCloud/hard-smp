@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
-public interface EventTeam {
+public interface EventTeam extends EventEntity {
 
     /**
      * returns a collection from TeamPlayer containing all team members
@@ -60,13 +60,5 @@ public interface EventTeam {
      * @return the Multiplier
      */
     double getMultiplier();
-
-    /**
-     * Returns the team ID. Each team has a unique id that is set when it is created and cannot be changed afterwards. This ID is the time in milliseconds at which the team was created.
-     * @return the team ID
-     *
-     * @see System
-     */
-    long getID();
 
 }

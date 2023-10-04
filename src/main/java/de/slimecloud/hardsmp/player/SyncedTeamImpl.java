@@ -7,11 +7,12 @@ import org.bukkit.OfflinePlayer;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class SyncedTeamImpl implements EventTeam {
 
-	private final long id;
+	private final UUID id;
 
 	private Team load() {
 		return DataClass.load(() -> new Team(id), Map.of("id", id)).orElseGet(() -> new Team(id));
@@ -58,7 +59,7 @@ public class SyncedTeamImpl implements EventTeam {
 	}
 
 	@Override
-	public long getID() {
-		return id;
+	public UUID getUniqueId() {
+		return load().getUniqueId();
 	}
 }

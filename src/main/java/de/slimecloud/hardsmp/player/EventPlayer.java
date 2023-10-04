@@ -4,9 +4,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
-public interface EventPlayer {
+public interface EventPlayer extends EventEntity {
 
     /**
      * adds points to this player
@@ -53,12 +51,6 @@ public interface EventPlayer {
      * @see OfflinePlayer
      */
     OfflinePlayer getOfflinePlayer();
-
-    /**
-     * @return the Unique Id of the player
-     * @see UUID
-     */
-    UUID getUniqueId();
 
     /**
      * Creates a team with the specified name and this player as the leader

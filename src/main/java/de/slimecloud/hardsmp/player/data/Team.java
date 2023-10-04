@@ -19,7 +19,7 @@ import java.util.UUID;
 public class Team extends DataClass implements EventTeam {
 
 	@Key
-	private final long id;
+	private final String id;
 
 	private String name;
 	private String leader;
@@ -28,12 +28,12 @@ public class Team extends DataClass implements EventTeam {
 
 	private transient Collection<UUID> players;
 
-	public Team(long id) {
-		this.id = id;
+	public Team(UUID id) {
+		this.id = id.toString();
 	}
 
-	public Team(long id, String name, String leader) {
-		this.id = id;
+	public Team(UUID id, String name, String leader) {
+		this.id = id.toString();
 		this.name = name;
 		this.leader = leader;
 	}
@@ -79,7 +79,7 @@ public class Team extends DataClass implements EventTeam {
 	@Override
 	public void add(EventPlayer player) {
 		if (player.getPlayer()==null) throw new IllegalStateException("player must be online to be added to a team");
-		player.getPlayer().getPersistentDataContainer().set(Main.getInstance().TEAM_KEY, PersistentDataType.LONG, id);
+		player.getPlayer().getPersistentDataContainer().set(Main.getInstance().TEAM_KEY, PersistentDataType.STRING, id);
 		players.add(player.getUniqueId());
 		save();
 	}
@@ -101,7 +101,7 @@ public class Team extends DataClass implements EventTeam {
 	}
 
 	@Override
-	public long getID() {
-		return id;
+	public UUID getUniqueId() {
+		return UUID.fromString(id);
 	}
 }

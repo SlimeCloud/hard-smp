@@ -80,16 +80,16 @@ public class PlayerController {
 
 		@Override
 		public TeamPlayer createTeam(String name) {
-			Team team = new Team(System.currentTimeMillis(), name, getUniqueId().toString());
+			Team team = new Team(UUID.randomUUID(), name, getUniqueId().toString());
 			team.add(this);
 			team.save();
-			return getTeamPlayer(getOfflinePlayer(), new SyncedTeamImpl(team.getID()));
+			return getTeamPlayer(getOfflinePlayer(), new SyncedTeamImpl(team.getUniqueId()));
 		}
 
 		@Override
 		public @Nullable EventTeam getTeam() {
 			if (getPlayer()==null) throw new IllegalStateException("player must be online to get the team");
-			Long id = getPlayer().getPersistentDataContainer().get(Main.getInstance().TEAM_KEY, PersistentDataType.LONG);
+			UUID id = UUID.fromString(getPlayer().getPersistentDataContainer().get(Main.getInstance().TEAM_KEY, PersistentDataType.STRING));
 			return id == null ? null : new SyncedTeamImpl(id);
 		}
 	}

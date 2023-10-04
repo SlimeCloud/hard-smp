@@ -2,3 +2,9 @@ database:
   host: "localhost:5432/"
   user: postgres
   password: pwd
+
+verify:
+  code-length: 5
+
+discord:
+  token: xxx

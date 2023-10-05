@@ -51,6 +51,7 @@ public final class Main extends JavaPlugin {
         //Events
         registerEvent(new Verify());
 
+        new DiscordBot();
     }
 
     @Override

@@ -56,24 +56,25 @@ public class DiscordVerifyCommand extends ListenerAdapter {
             String c = entry.getValue();
             Player player = Main.getInstance().getServer().getPlayer(uuid);
 
-            Group group = this.luckPerms.getGroupManager().getGroup("verified");
-
-            if (group == null) {
-                Main.getInstance().getLogger().warning("Group" + group.toString() + "not found!");
-                return;
-            }
-
-
-            this.luckPerms.getUserManager().modifyUser(uuid, (User user) -> {
-                user.data().clear(NodeType.INHERITANCE::matches);
-                Node node = InheritanceNode.builder(group).build();
-                user.data().add(node);
-            });
-
-
 
             if (c.equals(code)) {
+
+                Group group = this.luckPerms.getGroupManager().getGroup("verified");
+
+                if (group == null) {
+                    Main.getInstance().getLogger().warning("Group" + group.toString() + "not found!");
+                    return;
+                }
+
+                this.luckPerms.getUserManager().modifyUser(uuid, (User user) -> {
+                    user.data().clear(NodeType.INHERITANCE::matches);
+                    Node node = InheritanceNode.builder(group).build();
+                    user.data().add(node);
+                });
+
                 Verify.activeCodes.remove(uuid);
+                player.sendActionBar(Component.text());
+
                 Main.getInstance().getServer().getPlayer(uuid).sendMessage(
                         Main.getPrefix()
                                 .append(Component.text("Du wurdest erfolgreich", TextColor.color(0x88d657)))

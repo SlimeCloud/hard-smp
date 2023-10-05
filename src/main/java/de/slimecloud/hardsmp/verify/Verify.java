@@ -4,6 +4,7 @@ package de.slimecloud.hardsmp.verify;
 import de.slimecloud.hardsmp.Main;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,13 +32,19 @@ public class Verify implements Listener {
         User user = LuckPermsProvider.get().getPlayerAdapter(Player.class).getUser(event.getPlayer());
         if (user.getPrimaryGroup().equals("verified")) return;
 
+        String code = generateCode(Main.getInstance().getConfig().getInt("verify.code-length"));
 
         activeCodes.put(
                 event.getPlayer().getUniqueId(),
-                generateCode(Main.getInstance().getConfig().getInt("verify.code-length"))
+                code
         );
 
         sendInfoMessage(event);
+
+        event.getPlayer().sendActionBar(
+                text("Dein Verifikations-Code: ", color(0x88d657))
+                .append(text(code, color(0x55cfc4), TextDecoration.BOLD))
+        );
     }
 
     @EventHandler()

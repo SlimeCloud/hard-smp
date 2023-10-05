@@ -13,6 +13,7 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.InheritanceNode;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
@@ -54,7 +55,7 @@ public class DiscordVerifyCommand extends ListenerAdapter {
 
             UUID uuid = entry.getKey();
             String c = entry.getValue();
-            Player player = Main.getInstance().getServer().getPlayer(uuid);
+            Player player = Bukkit.getPlayer(uuid);
 
 
             if (c.equals(code)) {
@@ -75,7 +76,7 @@ public class DiscordVerifyCommand extends ListenerAdapter {
                 Verify.activeCodes.remove(uuid);
                 player.sendActionBar(Component.text());
 
-                Main.getInstance().getServer().getPlayer(uuid).sendMessage(
+                Bukkit.getPlayer(uuid).sendMessage(
                         Main.getPrefix()
                                 .append(Component.text("Du wurdest erfolgreich", TextColor.color(0x88d657)))
                                 .append(Component.text(" Verifiziert", TextColor.color(0x55cfc4), TextDecoration.BOLD))

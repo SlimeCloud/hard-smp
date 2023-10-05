@@ -36,8 +36,6 @@ public final class Main extends JavaPlugin {
     @Getter
     private Database database;
 
-    public static JDA jdaInstance;
-
     private LuckPerms luckPerms;
 
     @Override
@@ -50,25 +48,8 @@ public final class Main extends JavaPlugin {
 
         this.luckPerms = getServer().getServicesManager().load(LuckPerms.class);
 
-        jdaInstance = JDABuilder.createDefault(instance.getConfig().getString("discord.token"))
-                .setActivity(Activity.playing( "auf " + instance.getServer().getIp()))
-
-                .enableIntents(EnumSet.allOf(GatewayIntent.class))
-                .setEventPassthrough(true)
-                .setMemberCachePolicy(MemberCachePolicy.ALL)
-
-                //Commands
-                .addEventListeners(new DiscordVerifyCommand(this, this.luckPerms))
-
-
-                .build();
-
         //Events
         registerEvent(new Verify());
-
-
-        registerDiscordCommands();
-
 
     }
 
@@ -91,13 +72,6 @@ public final class Main extends JavaPlugin {
         PluginCommand command = getCommand(name);
         if (command!=null) command.setExecutor(executor);
         return command;
-    }
-
-    private void registerDiscordCommands() {
-        jdaInstance.updateCommands().addCommands(
-                Commands.slash("verify", "Verifier deinen Minecraft Account")
-                        .addOption(OptionType.STRING, "code", "Gebe den Code ein der dir im Minecraft Chat angezeigt wird", true)
-        ).queue();
     }
 
 }

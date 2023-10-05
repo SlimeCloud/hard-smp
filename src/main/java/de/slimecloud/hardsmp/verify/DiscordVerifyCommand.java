@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.luckperms.api.LuckPerms;
@@ -64,6 +65,8 @@ public class DiscordVerifyCommand extends ListenerAdapter {
 
                 if (group == null) {
                     Main.getInstance().getLogger().warning("Group" + group.toString() + "not found!");
+                    event.reply("Es ist ein Fehler aufgetreten, bitte wende dich an das Team!").setEphemeral(true).queue();
+                    player.sendMessage(Main.getPrefix().append(Component.text("Es ist ein Fehler aufgetreten, bitte wende dich an das Team!", NamedTextColor.RED)));
                     return;
                 }
 

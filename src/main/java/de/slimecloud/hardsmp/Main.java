@@ -16,6 +16,8 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.luckperms.api.LuckPerms;
+import lombok.NonNull;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
@@ -24,6 +26,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.EnumSet;
 
 public final class Main extends JavaPlugin {
+
+
+    public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
 
     @Getter
     private static Main instance;

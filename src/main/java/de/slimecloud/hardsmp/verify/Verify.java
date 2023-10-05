@@ -65,6 +65,9 @@ public class Verify implements Listener {
     private void sendInfoMessage(PlayerEvent event){
 
         String code = activeCodes.get(event.getPlayer().getUniqueId());
+
+        if (code == null) return;
+
         event.getPlayer().sendMessage(
                 text("\n\n\n\n==========================\n", color(0x88d657))
                         .append(text("Du bist noch nicht", color(0x88d657))

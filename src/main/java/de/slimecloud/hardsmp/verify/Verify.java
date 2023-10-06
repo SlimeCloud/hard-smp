@@ -44,8 +44,6 @@ public class Verify implements Listener {
 
         sendInfoMessage(event);
         sendCodeActionBar(event);
-
-
     }
 
     @EventHandler()
@@ -124,7 +122,13 @@ public class Verify implements Listener {
         for (int i = 0; i < length; i++) {
             if (Math.random()>0.5) sb.append(Math.round(Math.random()*9));
             else {
-                char c = alphabet[(int) (Math.round(Math.random()*alphabet.length)-1)];
+                char c;
+                try {
+                    c = alphabet[(int) (Math.round(Math.random()*alphabet.length)-1)];
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    c = alphabet[0];
+                }
+
                 sb.append(String.valueOf(c).toUpperCase());
             }
         }

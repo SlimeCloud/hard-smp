@@ -1,22 +1,13 @@
 package de.slimecloud.hardsmp;
 
 import de.slimecloud.hardsmp.database.Database;
-import de.slimecloud.hardsmp.verify.DiscordVerifyCommand;
 import de.slimecloud.hardsmp.verify.Verify;
 import lombok.Getter;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.luckperms.api.LuckPerms;
-import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;

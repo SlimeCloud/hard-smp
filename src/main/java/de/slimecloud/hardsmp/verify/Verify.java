@@ -13,7 +13,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -40,11 +43,9 @@ public class Verify implements Listener {
         );
 
         sendInfoMessage(event);
+        sendCodeActionBar(event);
 
-        event.getPlayer().sendActionBar(
-                text("Dein Verifikations-Code: ", color(0x88d657))
-                .append(text(code, color(0x55cfc4), TextDecoration.BOLD))
-        );
+
     }
 
     @EventHandler()
@@ -58,9 +59,29 @@ public class Verify implements Listener {
         if (!(user.getPrimaryGroup().equals("default"))) return;
 
         event.setCancelled(true);
+
         sendInfoMessage(event);
+        sendCodeActionBar(event);
     }
 
+    private void sendCodeActionBar(PlayerEvent event) {
+        String code = activeCodes.get(event.getPlayer().getUniqueId());
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            int c = 0;
+            @Override
+            public void run() {
+                event.getPlayer().sendActionBar(
+                        text("Dein Verifikations-Code: ", color(0x88d657))
+                                .append(text(code, color(0x55cfc4), TextDecoration.BOLD)
+                                        .clickEvent(ClickEvent.copyToClipboard(code)))
+                );
+
+                if (c >= 10) timer.cancel();
+                c ++;
+            }
+        }, 0, 500);
+    }
 
     private void sendInfoMessage(PlayerEvent event){
 
@@ -107,6 +128,7 @@ public class Verify implements Listener {
                 sb.append(String.valueOf(c).toUpperCase());
             }
         }
+        Bukkit.getLogger().log(Level.INFO, "new code generated: " + sb);
         return sb.toString();
     }
 

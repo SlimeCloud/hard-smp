@@ -30,7 +30,7 @@ public class Verify implements Listener {
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {
         User user = LuckPermsProvider.get().getPlayerAdapter(Player.class).getUser(event.getPlayer());
-        if (user.getPrimaryGroup().equals("verified")) return;
+        if (!(user.getPrimaryGroup().equals("default"))) return;
 
         String code = generateCode(Main.getInstance().getConfig().getInt("verify.code-length"));
 
@@ -55,7 +55,7 @@ public class Verify implements Listener {
     @EventHandler()
     private void onMove(PlayerMoveEvent event) {
         User user = LuckPermsProvider.get().getPlayerAdapter(Player.class).getUser(event.getPlayer());
-        if (user.getPrimaryGroup().equals("verified")) return;
+        if (!(user.getPrimaryGroup().equals("default"))) return;
 
         event.setCancelled(true);
         sendInfoMessage(event);

@@ -77,7 +77,9 @@ public class DiscordVerifyCommand extends ListenerAdapter {
                 });
 
                 Verify.activeCodes.remove(uuid);
-                player.sendActionBar(Component.text());
+                //todo set Database column "verified" and "discordID"
+
+                player.sendActionBar(Component.text("Erfolgreich Verifiziert!", TextColor.color(0x88d657)));
 
                 Bukkit.getPlayer(uuid).sendMessage(
                         Main.getPrefix()

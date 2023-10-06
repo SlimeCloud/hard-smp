@@ -2,6 +2,7 @@ package de.slimecloud.hardsmp.verify;
 
 
 import de.slimecloud.hardsmp.Main;
+import de.slimecloud.hardsmp.database.DataClass;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
@@ -41,6 +42,7 @@ public class Verify implements Listener {
                 event.getPlayer().getUniqueId(),
                 code
         );
+        //todo create Database column if player is new
 
         sendInfoMessage(event);
         sendCodeActionBar(event);

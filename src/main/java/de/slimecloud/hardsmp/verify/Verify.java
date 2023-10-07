@@ -2,8 +2,7 @@ package de.slimecloud.hardsmp.verify;
 
 
 import de.slimecloud.hardsmp.Main;
-import de.slimecloud.hardsmp.database.DataClass;
-import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -30,10 +29,17 @@ import static net.kyori.adventure.text.format.TextColor.*;
 public class Verify implements Listener {
 
     public static HashMap<UUID, String> activeCodes = new HashMap<>();
+    private final Main plugin;
+    private final LuckPerms luckPerms;
+
+    public Verify(Main plugin, LuckPerms luckPerms) {
+        this.plugin = plugin;
+        this.luckPerms = luckPerms;
+    }
 
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {
-        User user = LuckPermsProvider.get().getPlayerAdapter(Player.class).getUser(event.getPlayer());
+        User user = this.luckPerms.getPlayerAdapter(Player.class).getUser(event.getPlayer());
         if (!(user.getPrimaryGroup().equals("default"))) return;
 
         String code = generateCode(Main.getInstance().getConfig().getInt("verify.code-length"));
@@ -55,7 +61,7 @@ public class Verify implements Listener {
 
     @EventHandler()
     private void onMove(PlayerMoveEvent event) {
-        User user = LuckPermsProvider.get().getPlayerAdapter(Player.class).getUser(event.getPlayer());
+        User user = this.luckPerms.getPlayerAdapter(Player.class).getUser(event.getPlayer());
         if (!(user.getPrimaryGroup().equals("default"))) return;
 
         event.setCancelled(true);
@@ -77,7 +83,7 @@ public class Verify implements Listener {
                                         .clickEvent(ClickEvent.copyToClipboard(code)))
                 );
 
-                if (c >= 10) timer.cancel();
+                if (c >= 20) timer.cancel();
                 c ++;
             }
         }, 0, 500);

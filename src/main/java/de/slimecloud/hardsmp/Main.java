@@ -14,8 +14,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.EnumSet;
-
 public final class Main extends JavaPlugin {
 
 
@@ -32,15 +30,14 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        this.luckPerms = getServer().getServicesManager().load(LuckPerms.class);
 
         saveDefaultConfig();
 
         this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
 
-        this.luckPerms = getServer().getServicesManager().load(LuckPerms.class);
-
         //Events
-        registerEvent(new Verify());
+        registerEvent(new Verify(this, this.luckPerms));
 
         new DiscordBot();
     }

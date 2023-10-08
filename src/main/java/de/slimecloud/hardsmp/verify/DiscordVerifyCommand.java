@@ -1,6 +1,7 @@
 package de.slimecloud.hardsmp.verify;
 
 import de.slimecloud.hardsmp.Main;
+import de.slimecloud.hardsmp.database.DataClass;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -49,9 +50,6 @@ public class DiscordVerifyCommand extends ListenerAdapter {
             return;
         }
 
-
-
-
         for (Map.Entry<UUID, String> entry : Verify.activeCodes.entrySet()) {
 
             UUID uuid = entry.getKey();
@@ -77,7 +75,11 @@ public class DiscordVerifyCommand extends ListenerAdapter {
                 });
 
                 Verify.activeCodes.remove(uuid);
-                //todo set Database column "verified" and "discordID"
+
+                VerifyData data = VerifyData.load(player.getUniqueId().toString());
+                data.setVerified(true);
+                data.setDiscordID(event.getMember().getIdLong());
+                data.save();
 
                 player.sendActionBar(Component.text("Erfolgreich Verifiziert!", TextColor.color(0x88d657)));
 
@@ -97,8 +99,6 @@ public class DiscordVerifyCommand extends ListenerAdapter {
                 .setColor(Color.decode("#569d3c"))
                 .setTimestamp(Instant.now());
         event.replyEmbeds(embed.build()).setEphemeral(true).queue();
-
-        //todo log dc
 
     }
 }

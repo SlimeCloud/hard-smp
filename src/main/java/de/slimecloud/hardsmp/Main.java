@@ -1,15 +1,16 @@
 package de.slimecloud.hardsmp;
 
+import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
 import de.slimecloud.hardsmp.database.Database;
+import de.slimecloud.hardsmp.item.ItemManager;
+import de.slimecloud.hardsmp.shop.ShopNPC;
+import dev.sergiferry.playernpc.api.NPCLib;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.logging.Logger;
 
 public final class Main extends JavaPlugin {
 
@@ -20,6 +21,9 @@ public final class Main extends JavaPlugin {
     @Getter
     private Database database;
 
+    @Getter
+    private ItemManager itemManager;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -27,6 +31,16 @@ public final class Main extends JavaPlugin {
         saveDefaultConfig();
 
         this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
+
+        this.itemManager = new ItemManager();
+
+        registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
+
+        itemManager.registerItem("chest-key", () -> null);
+
+        NPCLib.getInstance().registerPlugin(this);
+
+        ShopNPC.init();
     }
 
     @Override

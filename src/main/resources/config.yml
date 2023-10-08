@@ -2,3 +2,16 @@ database:
   host: "localhost:5432/"
   user: postgres
   password: pwd
+
+shop:
+  offers:
+    chest-key:
+      item: "chest-key"
+      amount: 1
+      price: 10.5
+
+  npc:
+    skins:
+      1:
+        value: "ewogICJ0aW1lc3RhbXAiIDogMTU4ODE2NDIzMTk1NywKICAicHJvZmlsZUlkIiA6ICIyM2YxYTU5ZjQ2OWI0M2RkYmRiNTM3YmZlYzEwNDcxZiIsCiAgInByb2ZpbGVOYW1lIiA6ICIyODA3IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhhOWMzYWZmNDRiMGYyMDE5MmRmMjc2MGI4Y2U2MWU4MGI1Mjg2OTJkMTYwM2JhNDFiNDk5OGMzNjM4YjYyYjYiCiAgICB9CiAgfQp9"
+        signature: "DN8Vv8n3T4UIfJF26UQ31cmJUrOlbUmecRnojFqeEwAmWdxNg+CSxBAnC3JhI1P+xeQ2MMNMHLZBf7Cheu9d0EElC6n82kQisGOnKTM9YAs2ot97Ayl2yp4EkWmC86F8fox3f9OthqACXBouIoH/zfsZ4j4aKqUJHsvsCB1wv+Y1mkSk0h6/06jhLfzSkMk+mAmD8XL25F/8JSGgohAx6Jzwe+yyOB5RjV9AWrXb2Tahf0+zPW+IiSOKVIRtPzbqzO8mW0uzVtL/awfMRwTFkkBKmL/eCeXLNR0H06g1W2yadcKZhpSiHqXdmjOpSkVwa+MO+FvZQzLjY9hgXtgtBzdCwhmhsaJEmLRE//9SNLBxOOwfTThdxfnhrtNk0vfeJb5gv+qoYg9Rrt9P2nfHzSb0LK69zmPQ0fGE+p5aWAAYxG730gUs6cIzszxJmNNg0EKNiOG3UoNjfEI+b5JjYn+EUflaWFCnirMFVWf/4o4S4FspRAy2QrlpsDLnkaF1Z69IsLisBQbShfFU/DGXHOvKiAKGo6iSHkZTB4A9Us075u2hCZi/w/vNlDJ1l1UWZEIOEwgLjFj8NC8uf8x1YabjZbWW/4pDqZdWYWLWlpXcB+BoGi+uTWrvbgkImDwdizXyxSF2XScsRDXpqCvLBFXO06tkfXFxJFW6zE/Iqys="

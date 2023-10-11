@@ -1,6 +1,6 @@
 package de.slimecloud.hardsmp.player;
 
-import de.slimecloud.hardsmp.Main;
+import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.player.data.Points;
 import de.slimecloud.hardsmp.player.data.Team;
 import lombok.RequiredArgsConstructor;
@@ -89,7 +89,7 @@ public class PlayerController {
 		@Override
 		public @Nullable EventTeam getTeam() {
 			if (getPlayer()==null) throw new IllegalStateException("player must be online to get the team");
-			Long id = getPlayer().getPersistentDataContainer().get(Main.getInstance().TEAM_KEY, PersistentDataType.LONG);
+			Long id = getPlayer().getPersistentDataContainer().get(HardSMP.getInstance().TEAM_KEY, PersistentDataType.LONG);
 			return id == null ? null : new SyncedTeamImpl(id);
 		}
 	}

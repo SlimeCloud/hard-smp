@@ -17,15 +17,15 @@ public class DiscordBot {
     public static JDA jdaInstance;
 
     public DiscordBot() {
-        jdaInstance = JDABuilder.createDefault(Main.getInstance().getConfig().getString("discord.token"))
-                .setActivity(Activity.playing( "auf " + Main.getInstance().getServer().getIp()))
+        jdaInstance = JDABuilder.createDefault(HardSMP.getInstance().getConfig().getString("discord.token"))
+                .setActivity(Activity.playing( "auf " + HardSMP.getInstance().getServer().getIp()))
 
                 .enableIntents(EnumSet.allOf(GatewayIntent.class))
                 .setEventPassthrough(true)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
 
                 //Commands
-                .addEventListeners(new DiscordVerifyCommand(Main.getInstance(), Main.getInstance().getServer().getServicesManager().load(LuckPerms.class)))
+                .addEventListeners(new DiscordVerifyCommand(HardSMP.getInstance(), HardSMP.getInstance().getServer().getServicesManager().load(LuckPerms.class)))
 
 
                 .build();

@@ -1,8 +1,7 @@
 package de.slimecloud.hardsmp.verify;
 
 
-import de.slimecloud.hardsmp.Main;
-import de.slimecloud.hardsmp.database.DataClass;
+import de.slimecloud.hardsmp.HardSMP;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
@@ -30,10 +29,10 @@ import static net.kyori.adventure.text.format.TextColor.*;
 public class Verify implements Listener {
 
     public static HashMap<UUID, String> activeCodes = new HashMap<>();
-    private final Main plugin;
+    private final HardSMP plugin;
     private final LuckPerms luckPerms;
 
-    public Verify(Main plugin, LuckPerms luckPerms) {
+    public Verify(HardSMP plugin, LuckPerms luckPerms) {
         this.plugin = plugin;
         this.luckPerms = luckPerms;
     }
@@ -43,7 +42,7 @@ public class Verify implements Listener {
         User user = this.luckPerms.getPlayerAdapter(Player.class).getUser(event.getPlayer());
         if (!(user.getPrimaryGroup().equals("default"))) return;
 
-        String code = generateCode(Main.getInstance().getConfig().getInt("verify.code-length"));
+        String code = generateCode(HardSMP.getInstance().getConfig().getInt("verify.code-length"));
 
         activeCodes.put(
                 event.getPlayer().getUniqueId(),

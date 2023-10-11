@@ -1,6 +1,6 @@
 package de.slimecloud.hardsmp.database;
 
-import de.slimecloud.hardsmp.Main;
+import de.slimecloud.hardsmp.HardSMP;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
@@ -19,7 +19,7 @@ public class Database {
 
 	public void run(Consumer<Handle> handler) {
 		if (jdbi==null) {
-			Main.getInstance().getLogger().warning("Versuchter Datenbankaufruf nicht möglich: Keine Datenbank konfiguriert");
+			HardSMP.getInstance().getLogger().warning("Versuchter Datenbankaufruf nicht möglich: Keine Datenbank konfiguriert");
 			return;
 		}
 		jdbi.useHandle(handler::accept);
@@ -27,7 +27,7 @@ public class Database {
 
 	public <T> T handle(Function<Handle, T> handler) {
 		if (jdbi==null) {
-			Main.getInstance().getLogger().warning("Versuchter Datenbankaufruf nicht möglich: Keine Datenbank konfiguriert");
+			HardSMP.getInstance().getLogger().warning("Versuchter Datenbankaufruf nicht möglich: Keine Datenbank konfiguriert");
 			return null;
 		}
 		return jdbi.withHandle(handler::apply);

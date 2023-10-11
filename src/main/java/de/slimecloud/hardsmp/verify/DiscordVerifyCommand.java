@@ -1,7 +1,6 @@
 package de.slimecloud.hardsmp.verify;
 
-import de.slimecloud.hardsmp.Main;
-import de.slimecloud.hardsmp.database.DataClass;
+import de.slimecloud.hardsmp.HardSMP;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -25,10 +24,10 @@ import java.util.UUID;
 
 public class DiscordVerifyCommand extends ListenerAdapter {
 
-    private final Main plugin;
+    private final HardSMP plugin;
     private final LuckPerms luckPerms;
 
-    public DiscordVerifyCommand(Main plugin, LuckPerms luckPerms) {
+    public DiscordVerifyCommand(HardSMP plugin, LuckPerms luckPerms) {
         this.plugin = plugin;
         this.luckPerms = luckPerms;
     }
@@ -42,7 +41,7 @@ public class DiscordVerifyCommand extends ListenerAdapter {
             EmbedBuilder embed = new EmbedBuilder()
                     .setTitle("Code nicht gefunden")
                     .setDescription("Der Code **" + code + "** wurde nicht gefunden\n" +
-                            "Bitte joine `" + Main.getInstance().getServer().getIp() + "` und versuche es erneut mit dem angezeigten Code")
+                            "Bitte joine `" + HardSMP.getInstance().getServer().getIp() + "` und versuche es erneut mit dem angezeigten Code")
                     .setColor(Color.decode("#569d3c"))
                     .setTimestamp(Instant.now());
 
@@ -62,9 +61,9 @@ public class DiscordVerifyCommand extends ListenerAdapter {
                 Group group = this.luckPerms.getGroupManager().getGroup("verified");
 
                 if (group == null) {
-                    Main.getInstance().getLogger().warning("Group" + group.toString() + "not found!");
+                    HardSMP.getInstance().getLogger().warning("Group" + group.toString() + "not found!");
                     event.reply("Es ist ein Fehler aufgetreten, bitte wende dich an das Team!").setEphemeral(true).queue();
-                    player.sendMessage(Main.getPrefix().append(Component.text("Es ist ein Fehler aufgetreten, bitte wende dich an das Team!", NamedTextColor.RED)));
+                    player.sendMessage(HardSMP.getPrefix().append(Component.text("Es ist ein Fehler aufgetreten, bitte wende dich an das Team!", NamedTextColor.RED)));
                     return;
                 }
 
@@ -84,7 +83,7 @@ public class DiscordVerifyCommand extends ListenerAdapter {
                 player.sendActionBar(Component.text("Erfolgreich Verifiziert!", TextColor.color(0x88d657)));
 
                 Bukkit.getPlayer(uuid).sendMessage(
-                        Main.getPrefix()
+                        HardSMP.getPrefix()
                                 .append(Component.text("Du wurdest erfolgreich", TextColor.color(0x88d657)))
                                 .append(Component.text(" Verifiziert", TextColor.color(0x55cfc4), TextDecoration.BOLD))
                                 .append(Component.text("!", TextColor.color(0x88d657)))

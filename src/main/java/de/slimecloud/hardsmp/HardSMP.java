@@ -14,13 +14,13 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class Main extends JavaPlugin {
+public final class HardSMP extends JavaPlugin {
 
 
     public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
 
     @Getter
-    private static Main instance;
+    private static HardSMP instance;
 
     @Getter
     private Database database;

@@ -6,6 +6,7 @@ import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import lombok.Getter;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
@@ -33,6 +34,12 @@ public final class Main extends JavaPlugin {
 
         saveDefaultConfig();
 
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
 
         this.itemManager = new ItemManager();
@@ -41,7 +48,7 @@ public final class Main extends JavaPlugin {
 
         registerEvent(new SlimeHandler());
 
-        itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName("Chest Key").build());
+        itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
 
         SlimeHandler.setupOffers(getConfig());
     }

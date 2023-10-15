@@ -4,7 +4,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-public interface EventPlayer extends EventEntity {
+import java.util.UUID;
+
+public interface EventPlayer {
 
     /**
      * adds points to this player
@@ -32,14 +34,6 @@ public interface EventPlayer extends EventEntity {
     double getPoints();
 
     /**
-     * adds the player to a team. If the player is already in a team, he will automatically leave it.
-     * @param team the team to which it should be added
-     * @return the TeamPlayer object of the player
-     * @see TeamPlayer
-     */
-    TeamPlayer joinTeam(EventTeam team);
-
-    /**
      * @return the spigot player object of the EventPlayer or null if the player is offline
      * @see OfflinePlayer
      * @see Player
@@ -53,17 +47,9 @@ public interface EventPlayer extends EventEntity {
     OfflinePlayer getOfflinePlayer();
 
     /**
-     * Creates a team with the specified name and this player as the leader
-     * @param name the name of the new team
-     * @return the TeamPlayer object of the player
-     * @see TeamPlayer
+     * @return the Unique Id of the entity
+     * @see UUID
      */
-    TeamPlayer createTeam(String name);
-
-    /**
-     * @return The player's team if he is in one, otherwise null
-     * @see EventTeam
-     */
-    @Nullable EventTeam getTeam();
+    UUID getUniqueId();
 
 }

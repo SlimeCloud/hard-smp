@@ -1,20 +1,23 @@
 package de.slimecloud.hardsmp;
 
+import de.cyklon.spigotutils.item.ItemBuilder;
 import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
-import de.slimecloud.hardsmp.shop.ShopNPC;
-import dev.sergiferry.playernpc.api.NPCLib;
+import de.slimecloud.hardsmp.shop.SlimeHandler;
 import lombok.Getter;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
 
     public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
+    public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
 
     private static Main instance;
 
@@ -36,11 +39,11 @@ public final class Main extends JavaPlugin {
 
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
 
-        itemManager.registerItem("chest-key", () -> null);
+        registerEvent(new SlimeHandler());
 
-        NPCLib.getInstance().registerPlugin(this);
+        itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName("Chest Key").build());
 
-        ShopNPC.init();
+        SlimeHandler.setupOffers(getConfig());
     }
 
     @Override

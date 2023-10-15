@@ -1,6 +1,9 @@
 package de.slimecloud.hardsmp;
 
 import de.slimecloud.hardsmp.database.Database;
+import de.slimecloud.hardsmp.discord.DiscordBot;
+import de.slimecloud.hardsmp.discord.DiscordHandler;
+import de.slimecloud.hardsmp.discord.LogOutputStream;
 import de.slimecloud.hardsmp.verify.Verify;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -13,6 +16,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.PrintStream;
+import java.util.logging.FileHandler;
 
 public final class HardSMP extends JavaPlugin {
 
@@ -40,6 +46,11 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new Verify(this, this.luckPerms));
 
         new DiscordBot();
+
+        PrintStream stream = new PrintStream(new LogOutputStream());
+        System.setErr(stream);
+        System.setOut(stream);
+        getLogger().addHandler(new DiscordHandler());
     }
 
     @Override

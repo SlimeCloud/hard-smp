@@ -8,3 +8,4 @@ verify:
 
 discord:
   token: xxx
+  log-channel: xxx

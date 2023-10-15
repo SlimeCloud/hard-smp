@@ -37,7 +37,7 @@ public final class Main extends JavaPlugin {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));

@@ -90,11 +90,12 @@ public class SlimeHandler implements Listener {
         Inventory inv = event.getInventory();
         ItemStack item = inv.getItem(event.getSlot());
         Offer offer = Offer.byItem(item, offers);
-        if (ep.getPoints()>=offer.price().requiredPoints()) {
-            event.getWhoClicked().sendMessage(ChatColor.RED + "Fehler\nFür den kauf dieses Items sind %s punkte erforderlich, du hast aber erst %s.\nBitte versuche es später erneut.");
+        if (offer.price().requiredPoints()>ep.getPoints()) {
+            event.getWhoClicked().sendMessage(ChatColor.RED + "Fehler\nFür den kauf dieses Items sind %s punkte erforderlich, du hast aber erst %s.\nBitte versuche es später erneut.".formatted(offer.price().requiredPoints(), ep.getPoints()));
             event.setCancelled(true);
             return;
         }
-        inv.setItem(event.getSlot(), new ItemBuilder(item).removeLore(".*Points required.*").build());
+        item = new ItemBuilder(item).removeLore(".*benötige punkte.*").build();
+        inv.setItem(event.getSlot(), new ItemBuilder(item).removeLore(item.getItemMeta().getLore().size()-1).build());
     }
 }

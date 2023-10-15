@@ -2,11 +2,13 @@ package de.slimecloud.hardsmp.item;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
 import de.slimecloud.hardsmp.Main;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 
 public class ItemManager {
 
@@ -33,7 +35,12 @@ public class ItemManager {
     }
 
     public ItemStack getStack(String id) {
-        return stackMap.get(id).get();
+        Supplier<ItemStack> sup = stackMap.get(id);
+        if (sup==null) {
+            Main.getInstance().getLogger().warning("cannot get stack '%s' because it`s not registered".formatted(id));
+            return new ItemBuilder(Material.BREAD).setDisplayName("Error, please report").build();
+        }
+        return sup.get();
     }
 
     public ItemBuilder getBuilder(String id) {

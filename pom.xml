@@ -83,7 +83,7 @@
         <dependency>
             <groupId>com.github.cyklon73</groupId>
             <artifactId>SpigotUtils</artifactId>
-            <version>67ced70</version>
+            <version>40b0c19</version>
         </dependency>
 
         <!-- Lombok -->

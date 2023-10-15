@@ -1,5 +1,6 @@
 package de.slimecloud.hardsmp.item;
 
+import de.cyklon.spigotutils.item.ItemBuilder;
 import de.slimecloud.hardsmp.Main;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,6 +34,10 @@ public class ItemManager {
 
     public ItemStack getStack(String id) {
         return stackMap.get(id).get();
+    }
+
+    public ItemBuilder getBuilder(String id) {
+        return new ItemBuilder(getStack(id));
     }
 
 }

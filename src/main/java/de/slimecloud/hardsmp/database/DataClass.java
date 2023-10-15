@@ -1,7 +1,7 @@
 package de.slimecloud.hardsmp.database;
 
 import com.google.gson.Gson;
-import de.slimecloud.hardsmp.Main;
+import de.slimecloud.hardsmp.HardSMP;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +50,7 @@ public abstract class DataClass {
 						String.join(", ", keyTypes),
 						String.join(", ", primaryKeys)
 				);
-		Main.getInstance().getDatabase().run(handle -> handle.createUpdate(sql).execute());
+		HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate(sql).execute());
 	}
 
 	private @Nullable String getDataType(@NotNull Class<?> clazz) {
@@ -116,7 +116,7 @@ public abstract class DataClass {
 								.map(n -> '"' + n + "\" = :" + n)
 								.collect(Collectors.joining(", "))
 				);
-		Main.getInstance().getDatabase().run(handle -> handle.createUpdate(sql).bindMap(updatedValues).execute());
+		HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate(sql).bindMap(updatedValues).execute());
 
 		updateCache();
 		return this;
@@ -149,7 +149,7 @@ public abstract class DataClass {
 	public static <T extends DataClass> List<T> loadAll(@NotNull Supplier<T> creator, @NotNull Map<String, Object> keys) {
 		String sql = buildSQL(creator.get().getTableName(), keys);
 
-		return Main.getInstance().getDatabase().handle(handle -> handle.createQuery(sql)
+		return HardSMP.getInstance().getDatabase().handle(handle -> handle.createQuery(sql)
 				.bindMap(keys)
 				.map((rs, ctx) -> setFields(creator.get(), rs))
 				.stream()
@@ -162,7 +162,7 @@ public abstract class DataClass {
 		T instance = creator.get();
 		String sql = buildSQL(instance.getTableName(), keys);
 
-		Optional<T> result = Main.getInstance().getDatabase().handle(handle -> handle.createQuery(sql)
+		Optional<T> result = HardSMP.getInstance().getDatabase().handle(handle -> handle.createQuery(sql)
 				.bindMap(keys)
 				.map((rs, ctx) -> setFields(instance, rs))
 				.findFirst()

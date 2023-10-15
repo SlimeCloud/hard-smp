@@ -1,37 +1,56 @@
 package de.slimecloud.hardsmp;
 
 import de.slimecloud.hardsmp.database.Database;
+import de.slimecloud.hardsmp.verify.Verify;
 import lombok.Getter;
-import lombok.NonNull;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.luckperms.api.LuckPerms;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Logger;
+public final class HardSMP extends JavaPlugin {
 
-public final class Main extends JavaPlugin {
 
     public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
 
-    private static Main instance;
+    @Getter
+    private static HardSMP instance;
 
     @Getter
     private Database database;
 
+    private LuckPerms luckPerms;
+
     @Override
     public void onEnable() {
         instance = this;
+        this.luckPerms = getServer().getServicesManager().load(LuckPerms.class);
 
         saveDefaultConfig();
 
         this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
+
+        //Events
+        registerEvent(new Verify(this, this.luckPerms));
+
+        new DiscordBot();
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public static TextComponent getPrefix() {
+        return Component.text("[", NamedTextColor.DARK_GRAY)
+                .append(Component.text("HardSMP", TextColor.color(0x55cfc4)))
+                .append(Component.text("] ", NamedTextColor.DARK_GRAY));
     }
 
     private void registerEvent(Listener listener) {
@@ -44,7 +63,4 @@ public final class Main extends JavaPlugin {
         return command;
     }
 
-    public static Main getInstance() {
-        return instance;
-    }
 }

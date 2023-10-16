@@ -10,4 +10,4 @@ website: https://discord.gg/slimecloud
 
 commands:
   spawn-shop-npc:
-    permission: manage-shop
+    permission: hardsmp.spawn-shop

@@ -1,12 +1,9 @@
 package de.slimecloud.hardsmp.player;
 
-import de.slimecloud.hardsmp.Main;
 import de.slimecloud.hardsmp.player.data.Points;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;

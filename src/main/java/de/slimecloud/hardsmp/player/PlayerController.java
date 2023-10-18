@@ -2,13 +2,19 @@ package de.slimecloud.hardsmp.player;
 
 import de.slimecloud.hardsmp.player.data.Points;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 public class PlayerController {
+
+	public static EventPlayer getPlayer(HumanEntity player) {
+		return getPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
+	}
 
 	public static EventPlayer getPlayer(OfflinePlayer player) {
 		return new EventPlayerImpl(player);

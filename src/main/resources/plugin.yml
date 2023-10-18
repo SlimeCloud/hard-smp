@@ -6,3 +6,8 @@ prefix: [HardSMP]
 authors: [SlimeCloud Netrunner]
 description: HardSMP (Das 'S' steht für "Slime")
 website: https://discord.gg/slimecloud
+
+
+commands:
+  spawn-shop-npc:
+    permission: hardsmp.spawn-shop

@@ -13,8 +13,7 @@
 
     <description>HardSMP (Das 'S' steht für "Slime")</description>
     <properties>
-        <java.version>1.17</java.version>
-        <java.level>17</java.level>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdbi.version>3.39.0</jdbi.version>
     </properties>
@@ -27,8 +26,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${java.level}</source>
-                    <target>${java.level}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -58,6 +57,10 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io/</url>
+        </repository>
+        <repository>
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
@@ -76,6 +79,13 @@
             <scope>provided</scope>
         </dependency>
 
+
+        <!-- SpigotUtils -->
+        <dependency>
+            <groupId>com.github.cyklon73</groupId>
+            <artifactId>SpigotUtils</artifactId>
+            <version>40b0c19</version>
+        </dependency>
         <!-- LuckPerms -->
 
         <dependency>
@@ -91,6 +101,7 @@
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>5.0.0-beta.11</version>
+
         </dependency>
 
         <!-- Lombok -->

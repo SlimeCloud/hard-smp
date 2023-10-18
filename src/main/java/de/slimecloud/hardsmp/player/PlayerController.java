@@ -1,15 +1,11 @@
 package de.slimecloud.hardsmp.player;
 
-import de.slimecloud.hardsmp.Main;
 import de.slimecloud.hardsmp.player.data.Points;
-import de.slimecloud.hardsmp.player.data.Team;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -22,10 +18,6 @@ public class PlayerController {
 
 	public static EventPlayer getPlayer(OfflinePlayer player) {
 		return new EventPlayerImpl(player);
-	}
-
-	public static TeamPlayer getTeamPlayer(OfflinePlayer player, EventTeam team) {
-		return new TeamPlayerImpl(player, team);
 	}
 
 	@RequiredArgsConstructor
@@ -63,12 +55,6 @@ public class PlayerController {
 		}
 
 		@Override
-		public TeamPlayer joinTeam(EventTeam team) {
-			team.add(this);
-			return getTeamPlayer(getOfflinePlayer(), team);
-		}
-
-		@Override
 		@Nullable
 		public Player getPlayer() {
 			return getOfflinePlayer().getPlayer();
@@ -83,48 +69,6 @@ public class PlayerController {
 		public UUID getUniqueId() {
 			return getOfflinePlayer().getUniqueId();
 		}
-
-		@Override
-		public TeamPlayer createTeam(String name) {
-			Team team = new Team(System.currentTimeMillis(), name, getUniqueId().toString());
-			team.add(this);
-			team.save();
-			return getTeamPlayer(getOfflinePlayer(), new SyncedTeamImpl(team.getID()));
-		}
-
-		@Override
-		public @Nullable EventTeam getTeam() {
-			if (getPlayer()==null) throw new IllegalStateException("player must be online to get the team");
-			Long id = getPlayer().getPersistentDataContainer().get(Main.getInstance().TEAM_KEY, PersistentDataType.LONG);
-			return id == null ? null : new SyncedTeamImpl(id);
-		}
 	}
-
-	private static class TeamPlayerImpl extends EventPlayerImpl implements TeamPlayer {
-
-		private final EventTeam team;
-
-		public TeamPlayerImpl(OfflinePlayer player, EventTeam team) {
-			super(player);
-			this.team = team;
-		}
-
-		@Override
-		public void addMultipliedPoints(double points) {
-			getTeam().getPlayers().forEach(p -> p.addPoints(points * getTeam().getMultiplier()));
-		}
-
-		@Override
-		public @NotNull EventTeam getTeam() {
-			return team;
-		}
-
-		@Override
-		public EventPlayer leaveTeam() {
-			team.remove(this);
-			return PlayerController.getPlayer(player);
-		}
-	}
-
 
 }

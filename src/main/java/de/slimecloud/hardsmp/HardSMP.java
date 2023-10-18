@@ -8,6 +8,13 @@ import de.slimecloud.hardsmp.shop.SlimeHandler;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import de.slimecloud.hardsmp.verify.Verify;
+import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.luckperms.api.LuckPerms;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -20,17 +27,20 @@ public final class Main extends JavaPlugin {
     public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
     public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
 
-    private static Main instance;
+    @Getter
+    private static HardSMP instance;
 
     @Getter
     private Database database;
 
     @Getter
     private ItemManager itemManager;
+    private LuckPerms luckPerms;
 
     @Override
     public void onEnable() {
         instance = this;
+        this.luckPerms = getServer().getServicesManager().load(LuckPerms.class);
 
         saveDefaultConfig();
 
@@ -51,11 +61,22 @@ public final class Main extends JavaPlugin {
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
 
         SlimeHandler.setupOffers(getConfig());
+
+        //Events
+        registerEvent(new Verify(this, this.luckPerms));
+
+        new DiscordBot();
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public static TextComponent getPrefix() {
+        return Component.text("[", NamedTextColor.DARK_GRAY)
+                .append(Component.text("HardSMP", TextColor.color(0x55cfc4)))
+                .append(Component.text("] ", NamedTextColor.DARK_GRAY));
     }
 
     private void registerEvent(Listener listener) {
@@ -68,7 +89,4 @@ public final class Main extends JavaPlugin {
         return command;
     }
 
-    public static Main getInstance() {
-        return instance;
-    }
 }

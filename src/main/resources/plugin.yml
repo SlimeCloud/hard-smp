@@ -1,6 +1,6 @@
 name: hard-smp
 version: '${project.version}'
-main: de.slimecloud.hardsmp.Main
+main: de.slimecloud.hardsmp.HardSMP
 api-version: '1.20'
 prefix: [HardSMP]
 authors: [SlimeCloud Netrunner]

@@ -34,14 +34,6 @@ public interface EventPlayer {
     double getPoints();
 
     /**
-     * adds the player to a team. If the player is already in a team, he will automatically leave it.
-     * @param team the team to which it should be added
-     * @return the TeamPlayer object of the player
-     * @see TeamPlayer
-     */
-    TeamPlayer joinTeam(EventTeam team);
-
-    /**
      * @return the spigot player object of the EventPlayer or null if the player is offline
      * @see OfflinePlayer
      * @see Player
@@ -55,23 +47,9 @@ public interface EventPlayer {
     OfflinePlayer getOfflinePlayer();
 
     /**
-     * @return the Unique Id of the player
+     * @return the Unique Id of the entity
      * @see UUID
      */
     UUID getUniqueId();
-
-    /**
-     * Creates a team with the specified name and this player as the leader
-     * @param name the name of the new team
-     * @return the TeamPlayer object of the player
-     * @see TeamPlayer
-     */
-    TeamPlayer createTeam(String name);
-
-    /**
-     * @return The player's team if he is in one, otherwise null
-     * @see EventTeam
-     */
-    @Nullable EventTeam getTeam();
 
 }

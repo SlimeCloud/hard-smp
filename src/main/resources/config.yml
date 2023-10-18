@@ -13,3 +13,8 @@ shop:
         amount: 2
         second-item: "gold_ingot"
         second-amount: 1
+verify:
+  code-length: 5
+
+discord:
+  token: xxx

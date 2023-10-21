@@ -1,6 +1,9 @@
 package de.slimecloud.hardsmp.player.data;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.function.BiFunction;
 
 @RequiredArgsConstructor
 public enum PointCategory {
@@ -25,14 +28,25 @@ public enum PointCategory {
 
 
     FISH_CAUGHT(0.5),
-    ENCHANT_ITEM(1), // per enchant rarety
+    ENCHANT_ITEM(1, (points, weight) -> points/weight), // points / enchant weight  (lower weight is better enchantment)
     JUMP(1d/20),
-    MOB_KILL(0.1), //  val/mob-hp
+    MOB_KILL(0.05, (points, mob_hp) -> points*mob_hp), //  points*mob-hp
     DEATH(1),
-    PLAYER_KILL(1), // val/hp after kill
+    PLAYER_KILL(0.5, (points, hp) -> points*hp), // points * hp after kill
     RAID_WIN(5),
     VILLAGER_TRADED(1d/15),
-    PLAY_TIME(1); // per 5 min
+    PLAY_TIME(1), // per 5 min
+    ADVANCEMENT(1, (points, lvl) -> ((9*lvl-5)/4)*points);
 
+    @Getter
     private final double points;
+    private final BiFunction<Double, Double, Double> calcFunction;
+
+    PointCategory(double points) {
+        this(points, (p, val) -> p);
+    }
+
+    public double calculate(double val) {
+        return calcFunction.apply(getPoints(), val);
+    }
 }

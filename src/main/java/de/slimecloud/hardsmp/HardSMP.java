@@ -4,6 +4,7 @@ import de.cyklon.spigotutils.item.ItemBuilder;
 import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
+import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -57,14 +58,14 @@ public final class HardSMP extends JavaPlugin {
 
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
 
-        registerEvent(new SlimeHandler());
-
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
 
         SlimeHandler.setupOffers(getConfig());
 
         //Events
         registerEvent(new Verify(this, this.luckPerms));
+        registerEvent(new SlimeHandler());
+        registerEvent(new PointsListener());
 
         try {
             new DiscordBot();

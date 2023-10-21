@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:painting"
+    },
+    "title": "Höhlenmaler",
+    "description": "Male ein Gemälde in einer tiefen Höhle (unter Höhe 0)",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "hard-smp:hard-smp/root",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "player": [],
+        "item": {
+          "items": [
+            "minecraft:painting"
+          ]
+        },
+        "location": {
+          "position": {
+            "y": {
+              "min": -64,
+              "max": 0
+            }
+          }
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "hard-smp:advancement"
+  }
+}
+

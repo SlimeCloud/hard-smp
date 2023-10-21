@@ -1,23 +1,22 @@
 package de.slimecloud.hardsmp.item;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
-import de.slimecloud.hardsmp.Main;
+import de.slimecloud.hardsmp.HardSMP;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 
 public class ItemManager {
 
-    private final Main main;
+    private final HardSMP main;
     private final Map<String, Supplier<ItemStack>> stackMap;
 
 
     public ItemManager() {
-        this.main = Main.getInstance();
+        this.main = HardSMP.getInstance();
         this.stackMap = new HashMap<>();
     }
 
@@ -37,7 +36,7 @@ public class ItemManager {
     public ItemStack getStack(String id) {
         Supplier<ItemStack> sup = stackMap.get(id);
         if (sup==null) {
-            Main.getInstance().getLogger().warning("cannot get stack '%s' because it`s not registered".formatted(id));
+            HardSMP.getInstance().getLogger().warning("cannot get stack '%s' because it`s not registered".formatted(id));
             return new ItemBuilder(Material.BREAD).setDisplayName("Error, please report").build();
         }
         return sup.get();

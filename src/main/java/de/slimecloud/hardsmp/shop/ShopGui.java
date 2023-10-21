@@ -1,6 +1,6 @@
 package de.slimecloud.hardsmp.shop;
 
-import de.slimecloud.hardsmp.Main;
+import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.PlayerController;
 import net.kyori.adventure.text.Component;
@@ -19,7 +19,7 @@ import java.util.List;
 public class ShopGui {
 	
 	public ShopGui(Player player, List<Offer> offers) {
-		ItemManager itemManager = Main.getInstance().getItemManager();
+		ItemManager itemManager = HardSMP.getInstance().getItemManager();
 		List<MerchantRecipe> recipes = new ArrayList<>();
 		double points = PlayerController.getPlayer((OfflinePlayer) player).getPoints();
 		int i = 0;
@@ -28,14 +28,14 @@ public class ShopGui {
 			MerchantRecipe recipe = new MerchantRecipe(itemManager.getBuilder(offer.item()).addLore(List.of("", ChatColor.LIGHT_PURPLE + "benötige punkte: " + price.requiredPoints())).setLocalizedName(String.valueOf(i++)).setAmount(offer.amount()).build(), Integer.MAX_VALUE);
 			Material mat;
 			if ((mat = Material.getMaterial(price.firstItem().toUpperCase()))==null) {
-				Main.getInstance().getLogger().warning("skipped offer '" + offer.item() + "' cause item '" + price.firstItem().toUpperCase() + "' not found");
+				HardSMP.getInstance().getLogger().warning("skipped offer '" + offer.item() + "' cause item '" + price.firstItem().toUpperCase() + "' not found");
 				continue;
 			}
 			recipe.addIngredient(new ItemStack(mat, price.firstAmount()));
 
 			if (price.secondItem()!=null) {
 				if ((mat = Material.getMaterial(price.secondItem().toUpperCase()))==null) {
-					Main.getInstance().getLogger().warning("skipped offer '" + offer.item() + "' cause item '" + price.secondItem().toUpperCase() + "' not found");
+					HardSMP.getInstance().getLogger().warning("skipped offer '" + offer.item() + "' cause item '" + price.secondItem().toUpperCase() + "' not found");
 					continue;
 				}
 				recipe.addIngredient(new ItemStack(mat, price.secondAmount()));

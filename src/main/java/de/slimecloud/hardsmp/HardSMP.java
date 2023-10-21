@@ -6,6 +6,7 @@ import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import de.slimecloud.hardsmp.verify.Verify;
@@ -65,7 +66,11 @@ public final class HardSMP extends JavaPlugin {
         //Events
         registerEvent(new Verify(this, this.luckPerms));
 
-        new DiscordBot();
+        try {
+            new DiscordBot();
+        } catch (Exception e) {
+            getLogger().warning("Failed to init Discord bot: %s".formatted(e));
+        }
     }
 
     @Override

@@ -84,10 +84,10 @@
         <dependency>
             <groupId>com.github.cyklon73</groupId>
             <artifactId>SpigotUtils</artifactId>
-            <version>65c1099</version>
+            <version>019cea4</version>
         </dependency>
-        <!-- LuckPerms -->
 
+        <!-- LuckPerms -->
         <dependency>
             <groupId>net.luckperms</groupId>
             <artifactId>api</artifactId>

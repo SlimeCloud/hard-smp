@@ -22,7 +22,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class Main extends JavaPlugin {
+public final class HardSMP extends JavaPlugin {
 
     public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
     public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");

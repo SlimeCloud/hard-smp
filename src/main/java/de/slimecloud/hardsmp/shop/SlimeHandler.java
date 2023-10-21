@@ -1,7 +1,7 @@
 package de.slimecloud.hardsmp.shop;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
-import de.slimecloud.hardsmp.Main;
+import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.player.EventPlayer;
 import de.slimecloud.hardsmp.player.PlayerController;
 import org.bukkit.ChatColor;
@@ -31,20 +31,20 @@ public class SlimeHandler implements Listener {
     public static void setupOffers(FileConfiguration config) {
         ConfigurationSection section = config.getConfigurationSection("shop.offers");
         if (section==null) {
-            Main.getInstance().getLogger().warning("skipped registration of offers because they are not defined");
+            HardSMP.getInstance().getLogger().warning("skipped registration of offers because they are not defined");
             return;
         }
         for (String key : section.getKeys(false)) {
             String item = section.getString("%s.item".formatted(key));
             if (item==null) {
-                Main.getInstance().getLogger().warning("cannot register offer '%s' because the item is not defined".formatted(key));
+                HardSMP.getInstance().getLogger().warning("cannot register offer '%s' because the item is not defined".formatted(key));
                 continue;
             }
             int amount = section.getInt("%s.amount".formatted(key), 1);
             double requiredPoints = section.getDouble("%s.price.required-points".formatted(key), 0);
             String firstPriceItem = section.getString("%s.price.item".formatted(key));
             if (firstPriceItem==null) {
-                Main.getInstance().getLogger().warning("cannot register offer '%s' because the first price item is not defined".formatted(key));
+                HardSMP.getInstance().getLogger().warning("cannot register offer '%s' because the first price item is not defined".formatted(key));
                 continue;
             }
             int firstPriceAmount = section.getInt("%s.price.amount".formatted(key), 1);
@@ -55,7 +55,7 @@ public class SlimeHandler implements Listener {
             Price price = new Price(firstPriceItem, firstPriceAmount, secondPriceItem, secondPriceAmount, requiredPoints);
             Offer offer = new Offer(item, amount, price);
             offers.add(offer);
-            Main.getInstance().getLogger().info("registered offer '%s'".formatted(key));
+            HardSMP.getInstance().getLogger().info("registered offer '%s'".formatted(key));
         }
     }
 

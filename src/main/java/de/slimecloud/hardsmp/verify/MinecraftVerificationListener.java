@@ -129,7 +129,7 @@ public class MinecraftVerificationListener implements Listener {
     }
 
     private final static Random random = new Random();
-    private final static String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private final static String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     private static String generateCode(int length) {
         StringBuilder builder = new StringBuilder();

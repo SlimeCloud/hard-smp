@@ -17,7 +17,7 @@ public class DiscordBot {
     public final JDA jdaInstance;
 
     public DiscordBot() {
-        var builder = JDABuilder.createDefault(HardSMP.getInstance().getConfig().getString("discord.token"))
+        JDABuilder builder = JDABuilder.createDefault(HardSMP.getInstance().getConfig().getString("discord.token"))
                 .setActivity(Activity.playing( "auf " + HardSMP.getInstance().getServer().getIp()))
 
                 .enableIntents(EnumSet.allOf(GatewayIntent.class))

@@ -60,7 +60,7 @@ public class SlimeHandler implements Listener {
     }
 
     private boolean isShopSlime(Entity entity) {
-        String s = entity.getPersistentDataContainer().get(Main.getInstance().SHOP_KEY, PersistentDataType.STRING);
+        String s = entity.getPersistentDataContainer().get(HardSMP.getInstance().SHOP_KEY, PersistentDataType.STRING);
         return s!=null && s.equals("shop");
     }
 

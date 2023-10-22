@@ -15,20 +15,27 @@
     "requirement": {
       "trigger": "minecraft:item_used_on_block",
       "conditions": {
-        "player": [],
-        "item": {
-          "items": [
-            "minecraft:painting"
-          ]
-        },
-        "location": {
-          "position": {
-            "y": {
-              "min": -64,
-              "max": 0
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "position": {
+                "y": {
+                  "min": -64,
+                  "max": 0
+                }
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:painting"
+              ]
             }
           }
-        }
+        ]
       }
     }
   },
@@ -36,4 +43,3 @@
     "function": "hard-smp:advancement"
   }
 }
-

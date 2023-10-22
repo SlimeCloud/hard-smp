@@ -12,7 +12,7 @@
   },
   "criteria": {
     "requirement": {
-      "trigger": "minecraft:location"
+      "trigger": "minecraft:impossible"
     }
   }
 }

@@ -5,7 +5,7 @@
     },
     "title": "Musikmeister",
     "description": "Sammle und spiele alle verfügbaren Musik-Disc",
-    "frame": "task",
+    "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": false

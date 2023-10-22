@@ -10,7 +10,7 @@
     "announce_to_chat": false,
     "hidden": false
   },
-  "parent": "hard-smp:hard-smp/lightning",
+  "parent": "hard-smp:hard-smp/bed",
   "criteria": {
     "requirement": {
       "trigger": "minecraft:impossible"

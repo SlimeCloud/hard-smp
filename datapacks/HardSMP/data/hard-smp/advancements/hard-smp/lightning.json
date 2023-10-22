@@ -5,7 +5,7 @@
     },
     "title": "Blitzableiter",
     "description": "Werde von einem Blitz getroffen, aber überlebe",
-    "frame": "task",
+    "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": false

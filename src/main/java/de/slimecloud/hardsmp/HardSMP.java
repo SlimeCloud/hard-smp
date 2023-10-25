@@ -5,16 +5,15 @@ import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
-import lombok.Getter;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import de.slimecloud.hardsmp.verify.Verify;
+import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.luckperms.api.LuckPerms;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -22,7 +21,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class Main extends JavaPlugin {
+public final class HardSMP extends JavaPlugin {
 
     public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
     public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
@@ -35,6 +34,8 @@ public final class Main extends JavaPlugin {
 
     @Getter
     private ItemManager itemManager;
+
+    @Getter
     private LuckPerms luckPerms;
 
     @Override
@@ -63,7 +64,7 @@ public final class Main extends JavaPlugin {
         SlimeHandler.setupOffers(getConfig());
 
         //Events
-        registerEvent(new Verify(this, this.luckPerms));
+        registerEvent(new MinecraftVerificationListener());
 
         new DiscordBot();
     }

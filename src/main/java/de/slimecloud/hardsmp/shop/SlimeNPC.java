@@ -1,6 +1,6 @@
 package de.slimecloud.hardsmp.shop;
 
-import de.slimecloud.hardsmp.Main;
+import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.entity.Slime;
@@ -17,7 +17,7 @@ public class SlimeNPC {
         slime.setInvulnerable(true);
         slime.setCollidable(false);
         slime.setCustomNameVisible(true);
-        slime.getPersistentDataContainer().set(Main.getInstance().SHOP_KEY, PersistentDataType.STRING, "shop");
+        slime.getPersistentDataContainer().set(HardSMP.getInstance().SHOP_KEY, PersistentDataType.STRING, "shop");
         slime.customName(Component.text("Shop"));
     }
 

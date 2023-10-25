@@ -1,6 +1,8 @@
 package de.slimecloud.hardsmp;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
+import de.slimecloud.hardsmp.advancement.AdvancementHandler;
+import de.slimecloud.hardsmp.advancement.handler.BlocksAdvancement;
 import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
@@ -64,6 +66,8 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new Verify(this, this.luckPerms));
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());
+
+        AdvancementHandler.registerListeners(this::registerEvent);
 
         try {
             new DiscordBot();

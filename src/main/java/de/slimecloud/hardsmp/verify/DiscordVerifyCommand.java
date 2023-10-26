@@ -92,7 +92,7 @@ public class DiscordVerifyCommand extends ListenerAdapter {
 
                 player.sendActionBar(vevent.getActionbarMessage());
 
-                Bukkit.getPlayer(uuid).sendMessage(vevent.getMessage());
+                player.sendMessage(vevent.getMessage());
                 break;
             }
         }

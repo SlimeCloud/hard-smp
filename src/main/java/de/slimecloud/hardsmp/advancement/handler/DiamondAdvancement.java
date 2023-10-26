@@ -16,8 +16,11 @@ import org.bukkit.plugin.Plugin;
 import java.util.List;
 
 public class DiamondAdvancement extends AdvancementHandler {
+
+    private final NamespacedKey key;
     public DiamondAdvancement(Plugin plugin) {
         super(plugin, CustomAdvancement.DIAMOND);
+        this.key = new NamespacedKey(plugin, "farmed.diamonds");
     }
 
     @EventHandler
@@ -27,7 +30,6 @@ public class DiamondAdvancement extends AdvancementHandler {
         if (block.getType().equals(Material.DIAMOND_ORE) || block.getType().equals(Material.DEEPSLATE_DIAMOND_ORE)) {
             List<ItemStack> drops = event.getDrops();
             PersistentDataContainer container = player.getPersistentDataContainer();
-            NamespacedKey key = new NamespacedKey(plugin, "farmed.diamonds");
             int diamonds = 0;
             if (container.has(key)) diamonds = container.get(key, PersistentDataType.INTEGER);
             for (ItemStack drop : drops) if (drop.getType().equals(Material.DIAMOND)) diamonds+=drop.getAmount();

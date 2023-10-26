@@ -67,6 +67,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());
 
+        AdvancementHandler.register(this);
         AdvancementHandler.registerListeners(this::registerEvent);
 
         try {

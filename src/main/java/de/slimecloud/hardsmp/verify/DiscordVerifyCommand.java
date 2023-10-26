@@ -1,6 +1,7 @@
 package de.slimecloud.hardsmp.verify;
 
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.event.PlayerVerifyEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -80,14 +81,18 @@ public class DiscordVerifyCommand extends ListenerAdapter {
                 data.setDiscordID(event.getMember().getIdLong());
                 data.save();
 
-                player.sendActionBar(Component.text("Erfolgreich Verifiziert!", TextColor.color(0x88d657)));
-
-                Bukkit.getPlayer(uuid).sendMessage(
+                PlayerVerifyEvent vevent = new PlayerVerifyEvent(player, event.getMember(),
+                        Component.text("Erfolgreich Verifiziert!", TextColor.color(0x88d657)),
                         HardSMP.getPrefix()
                                 .append(Component.text("Du wurdest erfolgreich", TextColor.color(0x88d657)))
                                 .append(Component.text(" Verifiziert", TextColor.color(0x55cfc4), TextDecoration.BOLD))
-                                .append(Component.text("!", TextColor.color(0x88d657)))
-                );
+                                .append(Component.text("!", TextColor.color(0x88d657))));
+
+                Bukkit.getPluginManager().callEvent(vevent);
+
+                player.sendActionBar(vevent.getActionbarMessage());
+
+                Bukkit.getPlayer(uuid).sendMessage(vevent.getMessage());
                 break;
             }
         }

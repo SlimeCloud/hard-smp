@@ -4,7 +4,7 @@
       "item": "minecraft:ghast_tear"
     },
     "title": "Geisterjäger",
-    "description": "Bezwinge 5 Geister in einem Nether-Festung",
+    "description": "Bezwinge 5 Geister in einer Nether-Festung",
     "frame": "goal",
     "show_toast": true,
     "announce_to_chat": false,

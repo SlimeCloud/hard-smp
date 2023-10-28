@@ -4,7 +4,7 @@
       "item": "minecraft:music_disc_otherside"
     },
     "title": "Musikmeister",
-    "description": "Sammle und spiele alle verfügbaren Musik-Disc",
+    "description": "Sammle und spiele alle verfügbaren Musik-Discs",
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": false,

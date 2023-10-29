@@ -24,7 +24,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class HardSMP extends JavaPlugin implements Listener {
+public final class HardSMP extends JavaPlugin {
 
     public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
     public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
@@ -66,7 +66,6 @@ public final class HardSMP extends JavaPlugin implements Listener {
         SlimeHandler.setupOffers(getConfig());
 
         //Events
-        registerEvent(this);
         registerEvent(new Verify(this, this.luckPerms));
         registerEvent(blockHandler = new BlockHandler(this));
         registerEvent(new SlimeHandler());

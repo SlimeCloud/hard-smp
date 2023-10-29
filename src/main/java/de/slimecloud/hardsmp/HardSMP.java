@@ -2,7 +2,7 @@ package de.slimecloud.hardsmp;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
-import de.slimecloud.hardsmp.advancement.handler.BlocksAdvancement;
+import de.slimecloud.hardsmp.block.BlockHandler;
 import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
@@ -24,10 +24,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class HardSMP extends JavaPlugin {
+public final class HardSMP extends JavaPlugin implements Listener {
 
     public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
     public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
+
 
     @Getter
     private static HardSMP instance;
@@ -38,6 +39,8 @@ public final class HardSMP extends JavaPlugin {
     @Getter
     private ItemManager itemManager;
     private LuckPerms luckPerms;
+    @Getter
+    private BlockHandler blockHandler;
 
     @Override
     public void onEnable() {
@@ -63,12 +66,13 @@ public final class HardSMP extends JavaPlugin {
         SlimeHandler.setupOffers(getConfig());
 
         //Events
+        registerEvent(this);
         registerEvent(new Verify(this, this.luckPerms));
+        registerEvent(blockHandler = new BlockHandler(this));
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());
 
-        AdvancementHandler.register(this);
-        AdvancementHandler.registerListeners(this::registerEvent);
+        AdvancementHandler.register(this, this::registerEvent);
 
         try {
             new DiscordBot();
@@ -79,7 +83,7 @@ public final class HardSMP extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        blockHandler.save();
     }
 
     public static TextComponent getPrefix() {

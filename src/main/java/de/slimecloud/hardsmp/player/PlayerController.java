@@ -55,6 +55,12 @@ public class PlayerController {
 		}
 
 		@Override
+		public double getActualPoints() {
+			//TODO implement
+			return 0;
+		}
+
+		@Override
 		@Nullable
 		public Player getPlayer() {
 			return getOfflinePlayer().getPlayer();

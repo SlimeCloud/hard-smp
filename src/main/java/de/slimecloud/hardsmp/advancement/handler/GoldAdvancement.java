@@ -1,16 +1,15 @@
 package de.slimecloud.hardsmp.advancement.handler;
 
 import de.cyklon.spigotutils.advancement.AdvancementType;
+import de.cyklon.spigotutils.persistence.PersistentDataHandler;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.advancement.CustomAdvancement;
-import io.papermc.paper.event.block.BlockBreakBlockEvent;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.Plugin;
 
 public class GoldAdvancement extends AdvancementHandler {
@@ -24,14 +23,12 @@ public class GoldAdvancement extends AdvancementHandler {
     }
 
     @EventHandler
-    public void onBreakBlock(BlockBreakBlockEvent event) {
+    public void onBreakBlock(BlockBreakEvent event) {
         Block block = event.getBlock();
-        Player player = null;
+        Player player = event.getPlayer();
         if (block.getType().equals(Material.GOLD_ORE) || block.getType().equals(Material.DEEPSLATE_GOLD_ORE)) {
-            PersistentDataContainer container = player.getPersistentDataContainer();
-            int gold = 0;
-            if (container.has(key)) gold = container.get(key, PersistentDataType.INTEGER);
-            container.set(key, PersistentDataType.INTEGER, ++gold);
+            if (isDone(player)) return;
+            int gold = PersistentDataHandler.get(player).reviseIntWithDefault(key, c -> ++c, 0);
             if (gold>=requiredGold) unlock(player);
         }
     }

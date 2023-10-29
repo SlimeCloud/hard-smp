@@ -1,16 +1,14 @@
 package de.slimecloud.hardsmp.advancement.handler;
 
-import com.destroystokyo.paper.event.block.BlockDestroyEvent;
+import de.cyklon.spigotutils.persistence.PersistentDataHandler;
+import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.advancement.CustomAdvancement;
-import io.papermc.paper.event.block.BlockBreakBlockEvent;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.Plugin;
 
 public class BlocksAdvancement extends AdvancementHandler {
@@ -20,14 +18,12 @@ public class BlocksAdvancement extends AdvancementHandler {
     }
 
     @EventHandler
-    public void onBreakBlock(BlockBreakBlockEvent event) {
-        Player player = null;
+    public void onBreakBlock(BlockBreakEvent event) {
+        Player player = event.getPlayer();
         Block block = event.getBlock();
-        PersistentDataContainer container = player.getPersistentDataContainer();
+        if (!HardSMP.getInstance().getBlockHandler().isNatural(block)) return;
         NamespacedKey key = getKey(block);
-        int i = 0;
-        if (container.has(key)) i = container.get(key, PersistentDataType.INTEGER);
-        container.set(key, PersistentDataType.INTEGER, ++i);
+        int i = PersistentDataHandler.get(player).reviseIntWithDefault(key, c -> ++c, 0);
         if (i>=10000) unlock(player);
     }
 

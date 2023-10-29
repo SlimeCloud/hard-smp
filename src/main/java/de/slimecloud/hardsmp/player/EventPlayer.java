@@ -34,6 +34,11 @@ public interface EventPlayer {
     double getPoints();
 
     /**
+     * @return the actual number of points with all stats (play time, walked...)
+     */
+    double getActualPoints();
+
+    /**
      * @return the spigot player object of the EventPlayer or null if the player is offline
      * @see OfflinePlayer
      * @see Player

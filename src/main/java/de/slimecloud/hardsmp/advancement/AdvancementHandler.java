@@ -33,18 +33,22 @@ public class AdvancementHandler implements Listener {
         };
     }
 
-    private AdvancementProgress getProgress(Player player) {
+    private AdvancementProgress getProgress(Player player, AdvancementType type) {
         return player.getAdvancementProgress(type.getAdvancement());
     }
 
     protected final void unlock(Player player) {
-        AdvancementProgress progress = getProgress(player);
+        AdvancementProgress progress = getProgress(player, type);
         if (progress.isDone()) return;
         for (String c : progress.getRemainingCriteria()) progress.awardCriteria(c);
     }
 
     protected final boolean isDone(Player player) {
-        return getProgress(player).isDone();
+        return isDone(player, type);
+    }
+
+    protected final boolean isDone(Player player, AdvancementType type) {
+        return getProgress(player, type).isDone();
     }
 
     protected void update() {

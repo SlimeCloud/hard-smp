@@ -1,42 +1,57 @@
 package de.slimecloud.hardsmp;
 
+import de.mineking.discord.DiscordUtils;
+import de.mineking.discord.commands.ContextBase;
+import de.mineking.discord.commands.ContextCreator;
 import de.slimecloud.hardsmp.verify.DiscordVerifyCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.luckperms.api.LuckPerms;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.EnumSet;
 
-public class DiscordBot {
-
-    public static JDA jdaInstance;
+public class DiscordBot extends ListenerAdapter {
+    public final DiscordUtils discordUtils;
+    public final JDA jdaInstance;
 
     public DiscordBot() {
-        jdaInstance = JDABuilder.createDefault(HardSMP.getInstance().getConfig().getString("discord.token"))
-                .setActivity(Activity.playing( "auf " + HardSMP.getInstance().getServer().getIp()))
+        JDABuilder builder = JDABuilder.createDefault(HardSMP.getInstance().getConfig().getString("discord.token"))
+                .setActivity(Activity.playing("auf " + HardSMP.getInstance().getServer().getIp()))
 
                 .enableIntents(EnumSet.allOf(GatewayIntent.class))
-                .setEventPassthrough(true)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
+                .setEventPassthrough(true)
 
-                //Commands
-                .addEventListeners(new DiscordVerifyCommand(HardSMP.getInstance(), HardSMP.getInstance().getServer().getServicesManager().load(LuckPerms.class)))
+                .addEventListeners(this);
 
-
-                .build();
-
-        registerDiscordCommands();
+        discordUtils = setupDiscordUtils(builder);
+        jdaInstance = discordUtils.build();
     }
 
-    private void registerDiscordCommands() {
-        jdaInstance.updateCommands().addCommands(
-                Commands.slash("verify", "Verifier deinen Minecraft Account")
-                        .addOption(OptionType.STRING, "code", "Gebe den Code ein der dir im Minecraft Chat angezeigt wird", true)
-        ).queue();
+    private DiscordUtils setupDiscordUtils(JDABuilder builder) {
+        return new DiscordUtils("", builder)
+                .useEventManager(null)
+                .useUIManager(null)
+                .useCommandManager(new ContextCreator<>(ContextBase.class, event -> new ContextBase()), config -> {
+                    config.registerCommand(DiscordVerifyCommand.class);
+                })
+                .useCommandCache(null);
+    }
+
+    @Override
+    public void onReady(@NotNull ReadyEvent event) {
+        discordUtils.getCommandCache().updateGlobalCommands(null);
+    }
+
+    @Override
+    public void onGuildReady(@NotNull GuildReadyEvent event) {
+        discordUtils.getCommandCache().updateGuildCommands(event.getGuild(), Collections.emptyMap(), null);
     }
 }

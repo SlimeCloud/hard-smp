@@ -8,6 +8,7 @@ import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
+import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
 import de.slimecloud.hardsmp.verify.Verify;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -29,7 +30,6 @@ public final class HardSMP extends JavaPlugin {
     public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
     public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
 
-
     @Getter
     private static HardSMP instance;
 
@@ -38,6 +38,8 @@ public final class HardSMP extends JavaPlugin {
 
     @Getter
     private ItemManager itemManager;
+
+    @Getter
     private LuckPerms luckPerms;
     @Getter
     private BlockHandler blockHandler;
@@ -66,7 +68,7 @@ public final class HardSMP extends JavaPlugin {
         SlimeHandler.setupOffers(getConfig());
 
         //Events
-        registerEvent(new Verify(this, this.luckPerms));
+        registerEvent(new MinecraftVerificationListener());
         registerEvent(blockHandler = new BlockHandler(this));
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());

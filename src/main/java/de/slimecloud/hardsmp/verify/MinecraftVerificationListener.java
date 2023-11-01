@@ -1,8 +1,13 @@
 package de.slimecloud.hardsmp.verify;
 
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.slimecloud.hardsmp.HardSMP;
-import net.luckperms.api.LuckPerms;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -11,89 +16,88 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
-import java.util.logging.Level;
-
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import static net.kyori.adventure.text.Component.*;
-import static net.kyori.adventure.text.format.TextColor.*;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.logging.Level;
 
-public class Verify implements Listener {
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.format.TextColor.color;
 
-    public static HashMap<UUID, String> activeCodes = new HashMap<>();
-    private final HardSMP plugin;
-    private final LuckPerms luckPerms;
-
-    public Verify(HardSMP plugin, LuckPerms luckPerms) {
-        this.plugin = plugin;
-        this.luckPerms = luckPerms;
-    }
+public class MinecraftVerificationListener implements Listener {
+    public static Cache<UUID, String> activeCodes = CacheBuilder.newBuilder()
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build();
 
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {
-        User user = this.luckPerms.getPlayerAdapter(Player.class).getUser(event.getPlayer());
-        if (!(user.getPrimaryGroup().equals("default"))) return;
+        User user = HardSMP.getInstance().getLuckPerms().getPlayerAdapter(Player.class).getUser(event.getPlayer());
+        if (!user.getPrimaryGroup().equals("default")) return;
 
-        String code = generateCode(HardSMP.getInstance().getConfig().getInt("verify.code-length"));
+        String code;
+
+        do {
+            code = generateCode(HardSMP.getInstance().getConfig().getInt("verify.code-length"));
+        } while(MinecraftVerificationListener.activeCodes.asMap().containsValue(code));
 
         activeCodes.put(
                 event.getPlayer().getUniqueId(),
                 code
         );
-        new VerifyData(event.getPlayer().getUniqueId().toString())
-                .save();
+
+        new Verification(event.getPlayer().getUniqueId().toString()).save();
 
         sendInfoMessage(event);
-        sendCodeActionBar(event);
+        sendCodeActionBar(event.getPlayer());
     }
 
     @EventHandler()
     private void onLeave(PlayerQuitEvent event) {
-        activeCodes.remove(event.getPlayer().getUniqueId());
+        activeCodes.invalidate(event.getPlayer().getUniqueId());
     }
 
     @EventHandler()
     private void onMove(PlayerMoveEvent event) {
-        User user = this.luckPerms.getPlayerAdapter(Player.class).getUser(event.getPlayer());
-        if (!(user.getPrimaryGroup().equals("default"))) return;
+        User user = HardSMP.getInstance().getLuckPerms().getPlayerAdapter(Player.class).getUser(event.getPlayer());
+        if (!user.getPrimaryGroup().equals("default")) return;
 
-        event.setCancelled(true);
+        event.setCancelled(true); //TODO I would rather let the player walkt and only throw them back if they try to leave the spawn area.
 
         sendInfoMessage(event);
-        sendCodeActionBar(event);
+        sendCodeActionBar(event.getPlayer());
     }
 
-    private void sendCodeActionBar(PlayerEvent event) {
-        String code = activeCodes.get(event.getPlayer().getUniqueId());
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            int c = 0;
-            @Override
-            public void run() {
-                event.getPlayer().sendActionBar(
-                        text("Dein Verifikations-Code: ", color(0x88d657))
-                                .append(text(code, color(0x55cfc4), TextDecoration.BOLD)
-                                        .clickEvent(ClickEvent.copyToClipboard(code)))
-                );
+    private void sendCodeActionBar(Player player) {
+        String code = activeCodes.getIfPresent(player.getUniqueId());
+        if (code == null) return;
 
-                if (c >= 20) timer.cancel();
-                c ++;
-            }
-        }, 0, 500);
+        Bukkit.getAsyncScheduler().runAtFixedRate(
+                HardSMP.getInstance(),
+                new Consumer<>() {
+                    private int c = 0;
+
+                    @Override
+                    public void accept(ScheduledTask task) {
+                        player.sendActionBar(
+                                text("Dein Verifikations-Code: ", color(0x88d657))
+                                        .append(text(code, color(0x55cfc4), TextDecoration.BOLD)
+                                                .clickEvent(ClickEvent.copyToClipboard(code)))
+                        );
+
+                        if (c++ >= 20) task.cancel();
+                    }
+                },
+                0,
+                500,
+                TimeUnit.MILLISECONDS
+        );
     }
 
     private void sendInfoMessage(PlayerEvent event){
-
-        String code = activeCodes.get(event.getPlayer().getUniqueId());
-
+        String code = activeCodes.getIfPresent(event.getPlayer().getUniqueId());
         if (code == null) return;
 
         event.getPlayer().sendMessage(
@@ -124,25 +128,15 @@ public class Verify implements Listener {
         );
     }
 
+    private final static Random random = new Random();
+    private final static String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
     private static String generateCode(int length) {
-        char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-        StringBuilder sb = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < length; i++)
+            builder.append(characters.charAt(random.nextInt(characters.length())));
 
-        for (int i = 0; i < length; i++) {
-            if (Math.random()>0.5) sb.append(Math.round(Math.random()*9));
-            else {
-                char c;
-                try {
-                    c = alphabet[(int) (Math.round(Math.random()*alphabet.length)-1)];
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    c = alphabet[0];
-                }
-
-                sb.append(String.valueOf(c).toUpperCase());
-            }
-        }
-        Bukkit.getLogger().log(Level.INFO, "new code generated: " + sb);
-        return sb.toString();
+        Bukkit.getLogger().log(Level.INFO, "new code generated: " + builder);
+        return builder.toString();
     }
-
 }

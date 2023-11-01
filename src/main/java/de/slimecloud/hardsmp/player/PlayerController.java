@@ -72,6 +72,8 @@ public class PlayerController {
 			points+=PointCategory.MINECART_ONE_CM.calculate(player.getStatistic(Statistic.MINECART_ONE_CM));
 			points+=PointCategory.PIG_ONE_CM.calculate(player.getStatistic(Statistic.PIG_ONE_CM));
 			points+=PointCategory.STRIDER_ONE_CM.calculate(player.getStatistic(Statistic.STRIDER_ONE_CM));
+
+			points*=Math.pow(0.5, ((player.getStatistic(Statistic.PLAY_ONE_MINUTE)*20d*60*60) / 115) - 6.5) + 10;
 			return points;
 		}
 

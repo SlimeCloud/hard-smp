@@ -76,12 +76,7 @@ public class DiscordVerifyCommand {
 							.append(Component.text(" Verifiziert", TextColor.color(0x55cfc4), TextDecoration.BOLD))
 							.append(Component.text("!", TextColor.color(0x88d657))));
 
-			Bukkit.getAsyncScheduler().runNow(HardSMP.getInstance(),scheduledTask -> {
-				try {
-					Bukkit.getPluginManager().callEvent(vevent);
-				} catch (IllegalStateException ignore) {}
-
-			});
+			Bukkit.getScheduler().runTask(HardSMP.getInstance(), () -> Bukkit.getPluginManager().callEvent(vevent));
 
 			player.sendActionBar(vevent.getActionbarMessage());
 

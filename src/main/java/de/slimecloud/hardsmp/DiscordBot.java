@@ -18,40 +18,40 @@ import java.util.Collections;
 import java.util.EnumSet;
 
 public class DiscordBot extends ListenerAdapter {
-    public final DiscordUtils discordUtils;
-    public final JDA jdaInstance;
+	public final DiscordUtils discordUtils;
+	public final JDA jdaInstance;
 
-    public DiscordBot() {
-        JDABuilder builder = JDABuilder.createDefault(HardSMP.getInstance().getConfig().getString("discord.token"))
-                .setActivity(Activity.playing("auf " + HardSMP.getInstance().getServer().getIp()))
+	public DiscordBot() {
+		JDABuilder builder = JDABuilder.createDefault(HardSMP.getInstance().getConfig().getString("discord.token"))
+				.setActivity(Activity.playing("auf " + HardSMP.getInstance().getServer().getIp()))
 
-                .enableIntents(EnumSet.allOf(GatewayIntent.class))
-                .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .setEventPassthrough(true)
+				.enableIntents(EnumSet.allOf(GatewayIntent.class))
+				.setMemberCachePolicy(MemberCachePolicy.ALL)
+				.setEventPassthrough(true)
 
-                .addEventListeners(this);
+				.addEventListeners(this);
 
-        discordUtils = setupDiscordUtils(builder);
-        jdaInstance = discordUtils.build();
-    }
+		discordUtils = setupDiscordUtils(builder);
+		jdaInstance = discordUtils.build();
+	}
 
-    private DiscordUtils setupDiscordUtils(JDABuilder builder) {
-        return new DiscordUtils("", builder)
-                .useEventManager(null)
-                .useUIManager(null)
-                .useCommandManager(new ContextCreator<>(ContextBase.class, event -> new ContextBase()), config -> {
-                    config.registerCommand(DiscordVerifyCommand.class);
-                })
-                .useCommandCache(null);
-    }
+	private DiscordUtils setupDiscordUtils(JDABuilder builder) {
+		return new DiscordUtils("", builder)
+				.useEventManager(null)
+				.useUIManager(null)
+				.useCommandManager(new ContextCreator<>(ContextBase.class, event -> new ContextBase()), config -> {
+					config.registerCommand(DiscordVerifyCommand.class);
+				})
+				.useCommandCache(null);
+	}
 
-    @Override
-    public void onReady(@NotNull ReadyEvent event) {
-        discordUtils.getCommandCache().updateGlobalCommands(null);
-    }
+	@Override
+	public void onReady(@NotNull ReadyEvent event) {
+		discordUtils.getCommandCache().updateGlobalCommands(null);
+	}
 
-    @Override
-    public void onGuildReady(@NotNull GuildReadyEvent event) {
-        discordUtils.getCommandCache().updateGuildCommands(event.getGuild(), Collections.emptyMap(), null);
-    }
+	@Override
+	public void onGuildReady(@NotNull GuildReadyEvent event) {
+		discordUtils.getCommandCache().updateGuildCommands(event.getGuild(), Collections.emptyMap(), null);
+	}
 }

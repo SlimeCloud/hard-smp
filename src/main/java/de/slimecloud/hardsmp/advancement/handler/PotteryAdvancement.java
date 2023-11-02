@@ -3,7 +3,6 @@ package de.slimecloud.hardsmp.advancement.handler;
 import de.cyklon.spigotutils.persistence.PersistentDataHandler;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.advancement.CustomAdvancement;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -39,14 +38,14 @@ public class PotteryAdvancement extends AdvancementHandler {
 	private void check(Player player, ItemStack stack) {
 		Material material = stack.getType();
 		int index = SHERDS.indexOf(material);
-		if (index==-1) return;
+		if (index == -1) return;
 		if (isDone(player)) return;
 		Set<Integer> collected = Arrays.stream(PersistentDataHandler.get(player).reviseIntArrayWithDefault(key, a -> {
 			Set<Integer> set = Arrays.stream(a).boxed().collect(Collectors.toSet());
 			set.add(index);
-			return set.stream().mapToInt(i->i).toArray();
+			return set.stream().mapToInt(i -> i).toArray();
 		}, new int[0])).boxed().collect(Collectors.toSet());
-		if (collected.size()==SHERDS.size()) unlock(player);
+		if (collected.size() == SHERDS.size()) unlock(player);
 	}
 
 	@EventHandler

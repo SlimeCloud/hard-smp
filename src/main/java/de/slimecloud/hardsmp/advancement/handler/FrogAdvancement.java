@@ -32,9 +32,9 @@ public class FrogAdvancement extends AdvancementHandler {
 				Set<Integer> collected = Arrays.stream(PersistentDataHandler.get(killer).reviseIntArrayWithDefault(key, a -> {
 					Set<Integer> set = Arrays.stream(a).boxed().collect(Collectors.toSet());
 					set.add(frog.getVariant().ordinal());
-					return set.stream().mapToInt(i->i).toArray();
+					return set.stream().mapToInt(i -> i).toArray();
 				}, new int[0])).boxed().collect(Collectors.toSet());
-				if (collected.size()==Frog.Variant.values().length) unlock(killer);
+				if (collected.size() == Frog.Variant.values().length) unlock(killer);
 			}
 		}
 	}

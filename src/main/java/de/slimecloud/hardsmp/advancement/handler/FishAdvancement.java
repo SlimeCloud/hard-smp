@@ -31,14 +31,14 @@ public class FishAdvancement extends AdvancementHandler {
 		Player player = event.getPlayer();
 		if (isDone(player)) return;
 		Material material = event.getItem().getType();
-		material = material==Material.COOKED_COD ? Material.COD : material;
-		material = material==Material.COOKED_SALMON ? Material.SALMON : material;
+		material = material == Material.COOKED_COD ? Material.COD : material;
+		material = material == Material.COOKED_SALMON ? Material.SALMON : material;
 		int index = FISHS.indexOf(material);
 		Set<Integer> collected = Arrays.stream(PersistentDataHandler.get(player).reviseIntArrayWithDefault(key, a -> {
 			Set<Integer> set = Arrays.stream(a).boxed().collect(Collectors.toSet());
 			set.add(index);
-			return set.stream().mapToInt(i->i).toArray();
+			return set.stream().mapToInt(i -> i).toArray();
 		}, new int[0])).boxed().collect(Collectors.toSet());
-		if (collected.size()==FISHS.size()) unlock(player);
+		if (collected.size() == FISHS.size()) unlock(player);
 	}
 }

@@ -17,7 +17,7 @@ public class LightningAdvancement extends AdvancementHandler {
 	public void onEntityDamagedByEntity(EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof LightningStrike) {
 			if (event.getEntity() instanceof Player player) {
-				if ((player.getHealth()-event.getFinalDamage())>1) unlock(player);
+				if ((player.getHealth() - event.getFinalDamage()) > 1) unlock(player);
 			}
 		}
 	}

@@ -1,11 +1,8 @@
 package de.slimecloud.hardsmp.advancement.handler;
 
 import de.cyklon.spigotutils.persistence.PersistentDataHandler;
-import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.advancement.CustomAdvancement;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
@@ -18,12 +15,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class FireworkAdvancement extends AdvancementHandler {
@@ -58,7 +52,7 @@ public class FireworkAdvancement extends AdvancementHandler {
 	public void onInteract(PlayerInteractEvent event) {
 		if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR)) return;
 		ItemStack item = event.getItem();
-		if (item==null || !item.getType().equals(Material.FIREWORK_ROCKET)) return;
+		if (item == null || !item.getType().equals(Material.FIREWORK_ROCKET)) return;
 		Player player = event.getPlayer();
 		if (isDone(player)) return;
 		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
@@ -70,7 +64,7 @@ public class FireworkAdvancement extends AdvancementHandler {
 		Set<Integer> collected = Arrays.stream(PersistentDataHandler.get(player).reviseIntArrayWithDefault(key, a -> {
 			Set<Integer> set = Arrays.stream(a).boxed().collect(Collectors.toSet());
 			set.add(color.asRGB());
-			return set.stream().mapToInt(i->i).toArray();
+			return set.stream().mapToInt(i -> i).toArray();
 		}, new int[0])).boxed().collect(Collectors.toSet());
 		if (collected.containsAll(COLORS)) unlock(player);
 	}

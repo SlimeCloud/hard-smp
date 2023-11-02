@@ -13,22 +13,22 @@ import org.bukkit.plugin.Plugin;
 
 public class BlocksAdvancement extends AdvancementHandler {
 
-    public BlocksAdvancement(Plugin plugin) {
-        super(plugin, CustomAdvancement.BLOCKS);
-    }
+	public BlocksAdvancement(Plugin plugin) {
+		super(plugin, CustomAdvancement.BLOCKS);
+	}
 
-    @EventHandler
-    public void onBreakBlock(BlockBreakEvent event) {
-        Player player = event.getPlayer();
-        Block block = event.getBlock();
-        if (!HardSMP.getInstance().getBlockHandler().isNatural(block)) return;
-        NamespacedKey key = getKey(block);
-        int i = PersistentDataHandler.get(player).reviseIntWithDefault(key, c -> ++c, 0);
-        if (i>=10000) unlock(player);
-    }
+	@EventHandler
+	public void onBreakBlock(BlockBreakEvent event) {
+		Player player = event.getPlayer();
+		Block block = event.getBlock();
+		if (!HardSMP.getInstance().getBlockHandler().isNatural(block)) return;
+		NamespacedKey key = getKey(block);
+		int i = PersistentDataHandler.get(player).reviseIntWithDefault(key, c -> ++c, 0);
+		if (i >= 10000) unlock(player);
+	}
 
-    private NamespacedKey getKey(Block block) {
-        return new NamespacedKey(plugin, "broken." + block.getType().getKey().getKey());
-    }
+	private NamespacedKey getKey(Block block) {
+		return new NamespacedKey(plugin, "broken." + block.getType().getKey().getKey());
+	}
 
 }

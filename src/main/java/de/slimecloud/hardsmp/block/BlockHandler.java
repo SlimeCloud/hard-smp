@@ -27,7 +27,7 @@ public class BlockHandler extends BukkitRunnable implements Listener {
 	public BlockHandler(Plugin plugin) {
 		this.plugin = plugin;
 		this.placedBlocksContainer = new PersistentDataFile(new File(plugin.getDataFolder(), "blocks_placed.dat"));
-		runTaskTimer(plugin, 20*60*10, 20*60*10);
+		runTaskTimer(plugin, 20 * 60 * 10, 20 * 60 * 10);
 	}
 
 	public void save() {

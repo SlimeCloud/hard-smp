@@ -10,14 +10,14 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.Plugin;
 
 public class CaveAdvancement extends AdvancementHandler {
-    public CaveAdvancement(Plugin plugin) {
-        super(plugin, CustomAdvancement.CAVE);
-    }
+	public CaveAdvancement(Plugin plugin) {
+		super(plugin, CustomAdvancement.CAVE);
+	}
 
-    @EventHandler
-    public void onPlace(BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-        Block block = event.getBlock();
-        if (block.getType().equals(Material.PAINTING) && block.getLocation().getBlockY()<0) unlock(player);
-    }
+	@EventHandler
+	public void onPlace(BlockPlaceEvent event) {
+		Player player = event.getPlayer();
+		Block block = event.getBlock();
+		if (block.getType().equals(Material.PAINTING) && block.getLocation().getBlockY() < 0) unlock(player);
+	}
 }

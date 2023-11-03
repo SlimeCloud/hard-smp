@@ -1,10 +1,12 @@
 package de.slimecloud.hardsmp;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
+import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
+import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -58,6 +60,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
 
         registerEvent(new SlimeHandler());
+        registerEvent(new ScoreboardManager(this));
 
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
 
@@ -71,7 +74,7 @@ public final class HardSMP extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        ScoreboardUI.getScoreboards().forEach(ScoreboardUI::delete);
     }
 
     public static TextComponent getPrefix() {

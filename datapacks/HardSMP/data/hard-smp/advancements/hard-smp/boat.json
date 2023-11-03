@@ -4,7 +4,7 @@
       "item": "minecraft:spruce_boat"
     },
     "title": "Sturmkapitän",
-    "description": "Fahre während eines Gewitters auf einem Boot",
+    "description": "Fahre während eines Gewitters auf einem Boot mit Kiste",
     "frame": "goal",
     "show_toast": true,
     "announce_to_chat": false,
@@ -26,7 +26,7 @@
             "entity": "this",
             "predicate": {
               "vehicle": {
-                "type": "minecraft:boat"
+                "type": "minecraft:chest_boat"
               }
             }
           }
@@ -38,4 +38,3 @@
     "function": "hard-smp:advancement"
   }
 }
-

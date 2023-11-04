@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:lightning_rod"
+    },
+    "title": "Blitzableiter",
+    "description": "Werde von einem Blitz getroffen, aber überlebe",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "hard-smp:hard-smp/boat",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "function": "hard-smp:advancement"
+  }
+}

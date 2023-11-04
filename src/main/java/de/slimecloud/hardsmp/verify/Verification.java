@@ -10,21 +10,21 @@ import java.util.Map;
 @Table(name = "verification")
 @RequiredArgsConstructor
 public class Verification extends DataClass {
-    @Key
-    private final String minecraftID;
-    private long discordID;
+	@Key
+	private final String minecraftID;
+	private long discordID;
 
-    private boolean verified = false;
+	private boolean verified = false;
 
-    public static Verification load(String minecraftID) {
-        return DataClass.load(() -> new Verification(minecraftID), Map.of("minecraftID", minecraftID))
-                .orElseGet(() -> new Verification(minecraftID));
-    }
+	public static Verification load(String minecraftID) {
+		return DataClass.load(() -> new Verification(minecraftID), Map.of("minecraftID", minecraftID))
+				.orElseGet(() -> new Verification(minecraftID));
+	}
 
-    public Verification setDiscordId(long id) {
-        verified = true;
-        discordID = id;
+	public Verification setDiscordId(long id) {
+		verified = true;
+		discordID = id;
 
-        return this;
-    }
+		return this;
+	}
 }

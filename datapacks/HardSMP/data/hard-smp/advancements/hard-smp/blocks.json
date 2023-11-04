@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:cobblestone"
+    },
+    "title": "Blockmeister",
+    "description": "Sammle mindestens 10.000 Blöcke einer beliebigen Art",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "hard-smp:hard-smp/lumberjack",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "function": "hard-smp:advancement"
+  }
+}

@@ -71,7 +71,8 @@ public abstract class DataClass {
 		this.cache = gson.toJson(this);
 	}
 
-	protected void finishedLoading() {}
+	protected void finishedLoading() {
+	}
 
 	public synchronized DataClass save() {
 		Object cacheObj = gson.fromJson(cache, getClass());

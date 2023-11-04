@@ -1,9 +1,12 @@
 package de.slimecloud.hardsmp;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
+import de.slimecloud.hardsmp.advancement.AdvancementHandler;
+import de.slimecloud.hardsmp.block.BlockHandler;
 import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
+import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
 import lombok.Getter;
@@ -23,71 +26,80 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class HardSMP extends JavaPlugin {
 
-    public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
-    public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
+	public final NamespacedKey TEAM_KEY = new NamespacedKey(this, "team");
+	public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
 
-    @Getter
-    private static HardSMP instance;
+	@Getter
+	private static HardSMP instance;
 
-    @Getter
-    private Database database;
+	@Getter
+	private Database database;
 
-    @Getter
-    private ItemManager itemManager;
+	@Getter
+	private ItemManager itemManager;
 
-    @Getter
-    private LuckPerms luckPerms;
+	@Getter
+	private LuckPerms luckPerms;
+	@Getter
+	private BlockHandler blockHandler;
 
-    @Override
-    public void onEnable() {
-        instance = this;
-        this.luckPerms = getServer().getServicesManager().load(LuckPerms.class);
+	@Override
+	public void onEnable() {
+		instance = this;
+		this.luckPerms = getServer().getServicesManager().load(LuckPerms.class);
 
-        saveDefaultConfig();
+		saveDefaultConfig();
 
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+		try {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 
-        this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
+		this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
 
-        this.itemManager = new ItemManager();
+		this.itemManager = new ItemManager();
 
-        registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
+		registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
 
-        registerEvent(new SlimeHandler());
+		itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
 
-        itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
+		SlimeHandler.setupOffers(getConfig());
 
-        SlimeHandler.setupOffers(getConfig());
+		//Events
+		registerEvent(new MinecraftVerificationListener());
+		registerEvent(blockHandler = new BlockHandler(this));
+		registerEvent(new SlimeHandler());
+		registerEvent(new PointsListener());
 
-        //Events
-        registerEvent(new MinecraftVerificationListener());
+		AdvancementHandler.register(this, this::registerEvent);
 
-        new DiscordBot();
-    }
+		try {
+			new DiscordBot();
+		} catch (Exception e) {
+			getLogger().warning("Failed to init Discord bot: %s".formatted(e));
+		}
+	}
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
+	@Override
+	public void onDisable() {
+		blockHandler.save();
+	}
 
-    public static TextComponent getPrefix() {
-        return Component.text("[", NamedTextColor.DARK_GRAY)
-                .append(Component.text("HardSMP", TextColor.color(0x55cfc4)))
-                .append(Component.text("] ", NamedTextColor.DARK_GRAY));
-    }
+	public static TextComponent getPrefix() {
+		return Component.text("[", NamedTextColor.DARK_GRAY)
+				.append(Component.text("HardSMP", TextColor.color(0x55cfc4)))
+				.append(Component.text("] ", NamedTextColor.DARK_GRAY));
+	}
 
-    private void registerEvent(Listener listener) {
-        getServer().getPluginManager().registerEvents(listener, this);
-    }
+	private void registerEvent(Listener listener) {
+		getServer().getPluginManager().registerEvents(listener, this);
+	}
 
-    private PluginCommand registerCommand(String name, CommandExecutor executor) {
-        PluginCommand command = getCommand(name);
-        if (command!=null) command.setExecutor(executor);
-        return command;
-    }
+	private PluginCommand registerCommand(String name, CommandExecutor executor) {
+		PluginCommand command = getCommand(name);
+		if (command != null) command.setExecutor(executor);
+		return command;
+	}
 
 }

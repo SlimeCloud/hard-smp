@@ -12,13 +12,13 @@ public class Database {
 	public Jdbi jdbi;
 
 	public Database(String host, String user, String password) {
-		if (host==null || user==null || password==null) return;
+		if (host == null || user == null || password == null) return;
 
 		jdbi = Jdbi.create("jdbc:postgresql://" + host, user, password);
 	}
 
 	public void run(Consumer<Handle> handler) {
-		if (jdbi==null) {
+		if (jdbi == null) {
 			HardSMP.getInstance().getLogger().warning("Versuchter Datenbankaufruf nicht möglich: Keine Datenbank konfiguriert");
 			return;
 		}
@@ -26,7 +26,7 @@ public class Database {
 	}
 
 	public <T> T handle(Function<Handle, T> handler) {
-		if (jdbi==null) {
+		if (jdbi == null) {
 			HardSMP.getInstance().getLogger().warning("Versuchter Datenbankaufruf nicht möglich: Keine Datenbank konfiguriert");
 			return null;
 		}

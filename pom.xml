@@ -79,7 +79,6 @@
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.20.1-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
 
 
@@ -87,7 +86,7 @@
         <dependency>
             <groupId>com.github.cyklon73</groupId>
             <artifactId>SpigotUtils</artifactId>
-            <version>40b0c19</version>
+            <version>139e442</version>
         </dependency>
 
         <!-- LuckPerms -->

@@ -5,8 +5,6 @@ import de.slimecloud.hardsmp.player.PlayerController;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,7 +19,7 @@ import java.util.List;
 public class PointCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length<2) return false;
+        if (args.length < 2) return false;
         EventPlayer target = PlayerController.getPlayer(Bukkit.getOfflinePlayer(args[0]));
         if (args[1].equals("get")) {
             sender.sendMessage(Component.text(args[0] + ":")
@@ -38,7 +36,7 @@ public class PointCommand implements CommandExecutor, TabCompleter {
                     ));
             return true;
         }
-        if (args.length<3) {
+        if (args.length < 3) {
             sender.sendMessage(Component.text(command.getUsage().replace("/get", "") + " <value>"));
             return true;
         }
@@ -53,12 +51,12 @@ public class PointCommand implements CommandExecutor, TabCompleter {
             case "add" -> {
                 target.addPoints(value);
                 sender.sendMessage(Component.text(args[0] + " wurden erfolgreich ")
-                                .color(TextColor.color(50, 200, 50))
-                                .append(Component.text(value)
-                                        .color(TextColor.color(50, 180, 200)))
-                                .append(Component.text(" punkte hinzugefügt")
-                                        .color(TextColor.color(50, 200, 50)))
-                        );
+                        .color(TextColor.color(50, 200, 50))
+                        .append(Component.text(value)
+                                .color(TextColor.color(50, 180, 200)))
+                        .append(Component.text(" punkte hinzugefügt")
+                                .color(TextColor.color(50, 200, 50)))
+                );
                 return true;
             }
             case "set" -> {
@@ -99,7 +97,7 @@ public class PointCommand implements CommandExecutor, TabCompleter {
                 list.add("remove");
             }
         }
-        list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length-1].toLowerCase()));
+        list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()));
         return list;
     }
 }

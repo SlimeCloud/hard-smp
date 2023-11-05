@@ -25,14 +25,15 @@ public class ScoreboardManager implements Listener {
     public ScoreboardManager(Plugin plugin) {
         this.plugin = plugin;
         Bukkit.getOnlinePlayers().forEach(this::add);
-        if (updateTask==null) updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        if (updateTask == null) updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             STATS = new BoardStats();
             SCOREBOARD_MAP.forEach((k, v) -> v.update(STATS));
-        }, 0, 20*5);
+        }, 0, 20 * 5);
     }
 
     private void add(Player player) {
-        if (!SCOREBOARD_MAP.containsKey(player.getUniqueId())) SCOREBOARD_MAP.put(player.getUniqueId(), new Scoreboard(plugin, player));
+        if (!SCOREBOARD_MAP.containsKey(player.getUniqueId()))
+            SCOREBOARD_MAP.put(player.getUniqueId(), new Scoreboard(plugin, player));
     }
 
     @EventHandler
@@ -43,6 +44,6 @@ public class ScoreboardManager implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Scoreboard sb = SCOREBOARD_MAP.remove(event.getPlayer().getUniqueId());
-        if (sb!=null) sb.getUI().delete();
+        if (sb != null) sb.getUI().delete();
     }
 }

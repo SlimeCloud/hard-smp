@@ -20,10 +20,10 @@ public class Chat implements Listener {
         Player player = event.getPlayer();
         User user = HardSMP.getInstance().getLuckPerms().getUserManager().getUser(player.getUniqueId());
         String pref;
-        if (user==null) pref = null;
+        if (user == null) pref = null;
         else pref = user.getCachedData().getMetaData().getPrefix();
 
-        Component prefix = pref==null ? Component.empty() : Formatter.parseText("&", "[" + pref + "&r] ");
+        Component prefix = pref == null ? Component.empty() : Formatter.parseText("&", "[" + pref + "&r] ");
         int rank = ScoreboardManager.STATS.get(player.getUniqueId()).first();
         String color = switch (rank) {
             case 1 -> "§6";
@@ -31,7 +31,7 @@ public class Chat implements Listener {
             case 3 -> "§y";
             default -> "";
         };
-        Component name = prefix.append(Formatter.parseText(color + ((rank<=5) ? rank + "#" : "") + player.getName() + "§r: "));
+        Component name = prefix.append(Formatter.parseText(color + ((rank <= 5) ? rank + "#" : "") + player.getName() + "§r: "));
 
         LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
         String msg = serializer.serialize(event.originalMessage());

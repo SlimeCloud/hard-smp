@@ -25,7 +25,7 @@ public class FormattingCommand implements CommandExecutor, EmptyTabCompleter {
         });
         FORMATTINGS = component[0]
                 .append(Component.text("&r -> ")
-                .append(Formatter.parseText("Reset (Setzt die Formatierung zurück)")));
+                        .append(Formatter.parseText("Reset (Setzt die Formatierung zurück)")));
     }
 
     @Override

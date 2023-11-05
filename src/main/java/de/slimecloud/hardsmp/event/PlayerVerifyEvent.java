@@ -8,47 +8,47 @@ import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerVerifyEvent extends PlayerEvent {
-	private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
-	private final Member member;
-	private Component actionbarMessage;
-	private Component message;
+    private final Member member;
+    private Component actionbarMessage;
+    private Component message;
 
-	public PlayerVerifyEvent(@NotNull Player player, @NotNull Member member, @NotNull Component actionbarMessage, @NotNull Component message) {
-		super(player);
-		this.member = member;
-		this.actionbarMessage = actionbarMessage;
-		this.message = message;
-	}
+    public PlayerVerifyEvent(@NotNull Player player, @NotNull Member member, @NotNull Component actionbarMessage, @NotNull Component message) {
+        super(player);
+        this.member = member;
+        this.actionbarMessage = actionbarMessage;
+        this.message = message;
+    }
 
-	public Member getMember() {
-		return member;
-	}
+    public Member getMember() {
+        return member;
+    }
 
-	public Component getActionbarMessage() {
-		return actionbarMessage;
-	}
+    public Component getActionbarMessage() {
+        return actionbarMessage;
+    }
 
-	public void setActionbarMessage(Component actionbarMessage) {
-		this.actionbarMessage = actionbarMessage;
-	}
+    public void setActionbarMessage(Component actionbarMessage) {
+        this.actionbarMessage = actionbarMessage;
+    }
 
-	public Component getMessage() {
-		return message;
-	}
+    public Component getMessage() {
+        return message;
+    }
 
-	public void setMessage(Component message) {
-		this.message = message;
-	}
+    public void setMessage(Component message) {
+        this.message = message;
+    }
 
-	public @NotNull HandlerList getHandlers() {
-		return handlers;
-	}
+    public @NotNull HandlerList getHandlers() {
+        return handlers;
+    }
 
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
 
 }

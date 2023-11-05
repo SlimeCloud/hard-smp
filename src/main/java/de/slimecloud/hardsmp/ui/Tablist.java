@@ -37,27 +37,27 @@ public class Tablist implements Listener {
         this.spark = plugin.getSpark();
         this.updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             Bukkit.getOnlinePlayers().forEach(this::updateTabList);
-        }, 0, 20*10); // period of 10s
+        }, 0, 20 * 10); // period of 10s
     }
 
     private void updateTabList(Player player) {
         DoubleStatistic<StatisticWindow.TicksPerSecond> stat = spark.tps();
         double tps;
-        if (stat==null) tps = Bukkit.getTPS()[0];
+        if (stat == null) tps = Bukkit.getTPS()[0];
         else tps = stat.poll(StatisticWindow.TicksPerSecond.SECONDS_10);
         ChatColor color;
-        if (tps<=15) color = ChatColor.RED;
+        if (tps <= 15) color = ChatColor.RED;
         else if (tps <= 18) color = ChatColor.YELLOW;
         else color = ChatColor.GREEN;
         player.sendPlayerListHeaderAndFooter(header, Formatter.parseText(footer.replace("%tps", color.toString() + Math.round(tps))));
 
         User user = HardSMP.getInstance().getLuckPerms().getUserManager().getUser(player.getUniqueId());
         String prefix;
-        if (user==null) prefix = null;
+        if (user == null) prefix = null;
         else prefix = user.getCachedData().getMetaData().getPrefix();
         EventPlayer ep = PlayerController.getPlayer((HumanEntity) player);
         int points = (int) Math.round(ep.getActualPoints());
-        player.playerListName(Formatter.parseText(name.replace("%prefix", prefix==null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§"))).replace("%name", player.getName()).replace("%points", String.valueOf(points))));
+        player.playerListName(Formatter.parseText(name.replace("%prefix", prefix == null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§"))).replace("%name", player.getName()).replace("%points", String.valueOf(points))));
     }
 
     @EventHandler

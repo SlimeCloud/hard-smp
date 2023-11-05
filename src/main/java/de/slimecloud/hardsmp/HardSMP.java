@@ -84,7 +84,7 @@ public final class HardSMP extends JavaPlugin {
         //UI
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
-        registerEvent(new Chat());
+        registerEvent(new Chat(getConfig()));
 
         AdvancementHandler.register(this, this::registerEvent);
 

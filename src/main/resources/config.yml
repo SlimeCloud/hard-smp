@@ -21,13 +21,29 @@ ui:
       default: "%rank. %name   §u%points"
       rank_1: "§l§6%rank. %name   §r§u%points"
       rank_2: "§l§i%rank. %name   §r§u%points"
-      rank_3: "§l§n%rank. %name   §r§u%points"
+      rank_3: "§l§y%rank. %name   §r§u%points"
 
   tablist:
     header: "§j-----  §2Hard-SMP  §j-----"
     prefix: "§8[§7%prefix§8]"
-    name: "%prefix §r%name  §ppoints"
+    name: "%prefix §r%name  §p%points"
     footer: "§j---  §7[%tps §8TPS§7]  §j---"
+
+  chat:
+    prefix: "§7[%prefix§7]"
+    #colr = color rank
+    #coln = color name
+    format: "%colr#%rank %prefix %coln%name:"
+    color:
+      name_default: "§a"
+      name_1: "§6"
+      name_2: "§i"
+      name_3: "§y"
+
+      rank_default: ""
+      rank_1: "§6"
+      rank_2: "§i"
+      rank_3: "§y"
 
 verify:
   code-length: 5

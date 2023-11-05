@@ -13,5 +13,8 @@ website: https://discord.gg/slimecloud
 
 commands:
   formatting:
+  point:
+    usage: "§cUsage: /point <Player> add/set/remove/get"
+    permission: hardsmp.point
   spawn-shop-npc:
     permission: hardsmp.spawn-shop

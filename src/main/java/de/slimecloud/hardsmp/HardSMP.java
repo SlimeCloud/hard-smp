@@ -101,7 +101,7 @@ public final class HardSMP extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        blockHandler.save();
+        if (blockHandler!=null) blockHandler.save();
         ScoreboardUI.getScoreboards().forEach(ScoreboardUI::delete);
     }
 

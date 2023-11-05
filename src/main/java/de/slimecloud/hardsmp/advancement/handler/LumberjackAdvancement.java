@@ -1,11 +1,10 @@
 package de.slimecloud.hardsmp.advancement.handler;
 
-import de.cyklon.spigotutils.persistence.PersistentDataHandler;
-import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.advancement.CustomAdvancement;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Statistic;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,11 +30,16 @@ public class LumberjackAdvancement extends AdvancementHandler {
 		if (!WOOD.contains(block.getType())) return;
 		Player player = event.getPlayer();
 		if (isDone(player)) return;
-		if (!HardSMP.getInstance().getBlockHandler().isNatural(block)) return;
-		int i = PersistentDataHandler.get(player).reviseIntWithDefault(key, c -> ++c, 0);
+		int i = getLogsMined(player);
 		//1000 = 1000 tree`s
 		//5 = 5 log`s per tree
 		if (i >= 1000 * 5) unlock(player);
+	}
+
+	private int getLogsMined(Player player) {
+		int i = 0;
+		for (Material material : WOOD) i+=player.getStatistic(Statistic.TIME_SINCE_REST, material);
+		return i;
 	}
 
 }

@@ -13,6 +13,22 @@ shop:
         amount: 2
         second-item: "gold_ingot"
         second-amount: 1
+
+ui:
+  scoreboard:
+    title: "§2Hard-SMP"
+    text:
+      default: "%rank. %name   §u%points"
+      rank_1: "§l§6%rank. %name   §r§u%points"
+      rank_2: "§l§i%rank. %name   §r§u%points"
+      rank_3: "§l§n%rank. %name   §r§u%points"
+
+  tablist:
+    header: "§j-----  §2Hard-SMP  §j-----"
+    prefix: "§8[§7%prefix§8]"
+    name: "%prefix §r%name  §ppoints"
+    footer: "§j---  §7[%tps §8TPS§7]  §j---"
+
 verify:
   code-length: 5
 

@@ -17,8 +17,10 @@ import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
 import lombok.ConfigurationKeys;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import me.lucko.spark.api.Spark;
 import me.lucko.spark.api.SparkProvider;
+import net.dv8tion.jda.api.JDA;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -53,6 +55,9 @@ public final class HardSMP extends JavaPlugin {
 
     @Getter
     private Spark spark;
+
+    @Getter
+    private DiscordBot discordBot;
 
     @Override
     public void onEnable() {
@@ -98,15 +103,22 @@ public final class HardSMP extends JavaPlugin {
         AdvancementHandler.register(this, this::registerEvent);
 
         try {
-            new DiscordBot();
+            this.discordBot = new DiscordBot();
         } catch (Exception e) {
             getLogger().warning("Failed to init Discord bot: %s".formatted(e));
         }
     }
 
+    @SneakyThrows(InterruptedException.class)
     @Override
     public void onDisable() {
         ScoreboardUI.getScoreboards().forEach(ScoreboardUI::delete);
+
+        this.discordBot.jdaInstance.shutdownNow();
+        while (!this.discordBot.jdaInstance.getStatus().equals(JDA.Status.SHUTDOWN)) {
+            Thread.sleep(20);
+        }
+
     }
 
     public static TextComponent getPrefix() {

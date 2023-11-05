@@ -4,10 +4,14 @@ main: de.slimecloud.hardsmp.HardSMP
 api-version: '1.20'
 prefix: HardSMP
 authors: [SlimeCloud Netrunner]
+depend:
+  - LuckPerms
+  - spark
 description: HardSMP (Das 'S' steht für "Slime")
 website: https://discord.gg/slimecloud
 
 
 commands:
+  formatting:
   spawn-shop-npc:
     permission: hardsmp.spawn-shop

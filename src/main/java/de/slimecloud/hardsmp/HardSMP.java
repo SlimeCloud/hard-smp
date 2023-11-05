@@ -1,5 +1,6 @@
 package de.slimecloud.hardsmp;
 
+import de.cyklon.spigotutils.adventure.Formatter;
 import de.cyklon.spigotutils.item.ItemBuilder;
 import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
@@ -14,6 +15,7 @@ import de.slimecloud.hardsmp.ui.Chat;
 import de.slimecloud.hardsmp.ui.Tablist;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
+import lombok.ConfigurationKeys;
 import lombok.Getter;
 import me.lucko.spark.api.Spark;
 import me.lucko.spark.api.SparkProvider;
@@ -27,6 +29,8 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.ConfigurationOptions;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -85,6 +89,11 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
         registerEvent(new Chat());
+
+        ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
+        for (String format : formattings.getKeys(false)) {
+            Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
+        }
 
         AdvancementHandler.register(this, this::registerEvent);
 

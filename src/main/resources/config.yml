@@ -15,6 +15,11 @@ shop:
         second-amount: 1
 
 ui:
+  custom-formatting:
+    v: "#fcd217"
+    w: "#bdbdbd"
+    z: "#bf8970"
+
   scoreboard:
     title: "§2Hard-SMP"
     text:

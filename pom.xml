@@ -87,7 +87,15 @@
         <dependency>
             <groupId>com.github.cyklon73</groupId>
             <artifactId>SpigotUtils</artifactId>
-            <version>ef58309</version>
+            <version>fad6dbf</version>
+        </dependency>
+
+        <!-- Spark API -->
+        <dependency>
+            <groupId>me.lucko</groupId>
+            <artifactId>spark-api</artifactId>
+            <version>0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- LuckPerms -->

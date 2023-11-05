@@ -12,14 +12,13 @@ import java.util.stream.IntStream;
 
 public class BoardStats {
 
-	private final Map<UUID, Integer> pointMap = new HashMap<>();
 	private final List<Map.Entry<UUID, Integer>> topList;
 
 	public BoardStats() {
+		Map<UUID, Integer> pointMap = new HashMap<>();
 		for (OfflinePlayer p : Bukkit.getOfflinePlayers()) {
 			EventPlayer player = PlayerController.getPlayer(p);
-			//TODO replace getPoints with getActualPoints
-			pointMap.put(player.getUniqueId(), (int) Math.round(player.getPoints()));
+			pointMap.put(player.getUniqueId(), (int) Math.round(player.getActualPoints()));
 		}
 		this.topList = pointMap.entrySet().stream()
 				.sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))

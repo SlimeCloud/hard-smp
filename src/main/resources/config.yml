@@ -38,17 +38,17 @@ ui:
     prefix: "§7[%prefix§7]"
     #colr = color rank
     #coln = color name
-    format: "%colr#%rank %prefix %coln%name:"
+    format: "%colr#%rank %prefix %coln%name: "
     color:
       name_default: "§a"
-      name_1: "§6"
-      name_2: "§i"
-      name_3: "§y"
+      name_1: "§v"
+      name_2: "§w"
+      name_3: "§z"
 
-      rank_default: ""
-      rank_1: "§6"
-      rank_2: "§i"
-      rank_3: "§y"
+      rank_default: "§7"
+      rank_1: "§v"
+      rank_2: "§w"
+      rank_3: "§z"
 
 verify:
   code-length: 5

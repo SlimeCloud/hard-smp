@@ -6,15 +6,11 @@ import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Set;
 import java.util.function.Consumer;
 
 public class AdvancementHandler implements Listener {
-
-	private static Set<AdvancementHandler> handler = null;
-	private static BukkitRunnable updateTask;
 
 	//boat
 	//lava
@@ -25,12 +21,6 @@ public class AdvancementHandler implements Listener {
 	public AdvancementHandler(Plugin plugin, AdvancementType type) {
 		this.plugin = plugin;
 		this.type = type;
-		updateTask = new BukkitRunnable() {
-			@Override
-			public void run() {
-				if (handler != null) handler.forEach(AdvancementHandler::update);
-			}
-		};
 	}
 
 	private AdvancementProgress getProgress(Player player, AdvancementType type) {
@@ -51,12 +41,8 @@ public class AdvancementHandler implements Listener {
 		return getProgress(player, type).isDone();
 	}
 
-	protected void update() {
-
-	}
-
 	public static void register(Plugin plugin, Consumer<Listener> c) {
-		handler = Set.of(
+		Set.of(
 				new BedAdvancement(plugin),
 				new BlocksAdvancement(plugin),
 				new CaveAdvancement(plugin),
@@ -74,10 +60,7 @@ public class AdvancementHandler implements Listener {
 				new MusicAdvancement(plugin),
 				new PotteryAdvancement(plugin),
 				new RootAdvancement(plugin)
-		);
-		handler.forEach(c);
-		//run every 10 minutes (20 ticks * 60 seconds * 10 minutes)
-		updateTask.runTaskTimer(plugin, 0, 20 * 60 * 10);
+		).forEach(c);
 	}
 
 }

@@ -2,7 +2,7 @@ package de.slimecloud.hardsmp;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
-import de.slimecloud.hardsmp.block.BlockHandler;
+import de.slimecloud.hardsmp.commands.PointCommand;
 import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
@@ -40,8 +40,6 @@ public final class HardSMP extends JavaPlugin {
 
 	@Getter
 	private LuckPerms luckPerms;
-	@Getter
-	private BlockHandler blockHandler;
 
 	@Override
 	public void onEnable() {
@@ -61,6 +59,7 @@ public final class HardSMP extends JavaPlugin {
 		this.itemManager = new ItemManager();
 
 		registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
+		registerCommand("point", new PointCommand());
 
 		itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
 
@@ -68,7 +67,6 @@ public final class HardSMP extends JavaPlugin {
 
 		//Events
 		registerEvent(new MinecraftVerificationListener());
-		registerEvent(blockHandler = new BlockHandler(this));
 		registerEvent(new SlimeHandler());
 		registerEvent(new PointsListener());
 
@@ -83,7 +81,7 @@ public final class HardSMP extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		blockHandler.save();
+
 	}
 
 	public static TextComponent getPrefix() {

@@ -88,7 +88,7 @@ public final class HardSMP extends JavaPlugin {
         //UI
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
-        registerEvent(new Chat());
+        registerEvent(new Chat(getConfig()));
 
         ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
         for (String format : formattings.getKeys(false)) {

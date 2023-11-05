@@ -1,9 +1,8 @@
 package de.slimecloud.hardsmp;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
-import de.slimecloud.hardsmp.advancement.AdvancementHandler;
-import de.slimecloud.hardsmp.block.BlockHandler;
 import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
+import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.FormattingCommand;
 import de.slimecloud.hardsmp.commands.PointCommand;
 import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
@@ -23,7 +22,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.luckperms.api.LuckPerms;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

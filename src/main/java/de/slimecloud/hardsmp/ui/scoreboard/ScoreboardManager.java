@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -13,6 +14,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ScoreboardManager implements Listener {
+
+    public static BoardStats STATS = null;
 
     private final Map<UUID, Scoreboard> SCOREBOARD_MAP = new HashMap<>();
     private static BukkitTask updateTask = null;
@@ -23,8 +26,8 @@ public class ScoreboardManager implements Listener {
         this.plugin = plugin;
         Bukkit.getOnlinePlayers().forEach(this::add);
         if (updateTask==null) updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
-            BoardStats stats = new BoardStats();
-            SCOREBOARD_MAP.forEach((k, v) -> v.update(stats));
+            STATS = new BoardStats();
+            SCOREBOARD_MAP.forEach((k, v) -> v.update(STATS));
         }, 0, 20*5);
     }
 
@@ -35,5 +38,11 @@ public class ScoreboardManager implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         add(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Scoreboard sb = SCOREBOARD_MAP.remove(event.getPlayer().getUniqueId());
+        if (sb!=null) sb.getUI().delete();
     }
 }

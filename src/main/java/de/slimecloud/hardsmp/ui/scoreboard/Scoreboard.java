@@ -1,5 +1,6 @@
 package de.slimecloud.hardsmp.ui.scoreboard;
 
+import de.cyklon.spigotutils.adventure.Formatter;
 import de.cyklon.spigotutils.tuple.Pair;
 import de.cyklon.spigotutils.ui.scoreboard.PlayerScoreboardUI;
 import net.kyori.adventure.text.Component;
@@ -7,9 +8,12 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -18,31 +22,33 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Scoreboard {
 
 	private final PlayerScoreboardUI<Component> scoreboard;
+	private final String lineDefault;
+	private final Map<Integer, String> lines;
 
 	public Scoreboard(Plugin plugin, Player player) {
+		FileConfiguration config = plugin.getConfig();
+		this.lineDefault = config.getString("ui.scoreboard.text.default", "%rank. %name   %points");
+		this.lines = new HashMap<>();
+		ConfigurationSection section = config.getConfigurationSection("ui.scoreboard.text");
+		if (section!=null) for (String key : section.getKeys(false)) {
+			if (key.startsWith("rank_")) {
+				String line = section.getString(key);
+				if (line!=null) lines.put(Integer.parseInt(key.split("_")[1]), line);
+			}
+		}
 		this.scoreboard = PlayerScoreboardUI.getAdventurePlayerScoreboard(plugin, player);
-		scoreboard.setTitle(Component.text("Hard")
-				.color(TextColor.color(0xFFA100))
-				.append(Component.text("-")
-						.color(TextColor.color(0x434343)))
-				.append(Component.text("SMP")
-						.color(TextColor.color(0x358D90))));
+		scoreboard.setTitle(Component.text(plugin.getConfig().getString("ui.scoreboard.title", "Hard-SMP")));
+	}
+
+	public PlayerScoreboardUI<Component> getUI() {
+		return scoreboard;
 	}
 
 	private Component getLine(int rank, OfflinePlayer player, int points) {
-		int color = switch (rank) {
-			case 1 -> 15444788;
-			case 2 -> 12632256;
-			case 3 -> 13206886;
-			default -> -1;
-		};
-		TextDecoration[] decoration = rank<=3 ?  new TextDecoration[]{TextDecoration.BOLD} : new TextDecoration[0];
-		return Component.text(rank + ". ")
-				.color(TextColor.color(color))
-				.decorate(decoration)
-				.append(Component.text(Objects.requireNonNullElse(player.getName(), player.getUniqueId().toString())))
-				.append(Component.text("     " + points)
-						.color(TextColor.color(0x605AF6)));
+		return Formatter.parseText(lines.getOrDefault(rank, lineDefault)
+				.replace("%rank", String.valueOf(rank))
+				.replace("%name", Objects.requireNonNullElse(player.getName(), player.getUniqueId().toString()))
+				.replace("%points", String.valueOf(points)));
 	}
 
 	private Component getLine(Pair<Integer, Map.Entry<UUID, Integer>> data) {

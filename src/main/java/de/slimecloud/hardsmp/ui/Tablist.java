@@ -29,6 +29,8 @@ public class Tablist implements Listener {
 
     private final BukkitTask updateTask;
 
+    private int max;
+
     public Tablist(HardSMP plugin) {
         this.header = Formatter.parseText(plugin.getConfig().getString("ui.tablist.header", "Hard-SMP"));
         this.prefix = plugin.getConfig().getString("ui.tablist.prefix", "[%prefix]");
@@ -57,7 +59,16 @@ public class Tablist implements Listener {
         else prefix = user.getCachedData().getMetaData().getPrefix();
         EventPlayer ep = PlayerController.getPlayer((HumanEntity) player);
         int points = (int) Math.round(ep.getActualPoints());
-        player.playerListName(Formatter.parseText(name.replace("%prefix", prefix == null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§"))).replace("%name", player.getName()).replace("%points", String.valueOf(points))));
+        final int maxBefore = max;
+        String tabName = name.replace("%prefix", prefix == null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§"))).replace("%name", player.getName());
+        final int length = tabName.length();
+        if (length > max) max = length;
+        while (tabName.length() != max) tabName += "";
+        if (max != maxBefore) updateTabList(player);
+        else {
+            tabName = tabName.replace("%points", String.valueOf(points));
+            player.playerListName(Formatter.parseText(tabName));
+        }
     }
 
     @EventHandler

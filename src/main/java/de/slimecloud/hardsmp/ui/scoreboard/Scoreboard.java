@@ -4,6 +4,7 @@ import de.cyklon.spigotutils.adventure.Formatter;
 import de.cyklon.spigotutils.tuple.Pair;
 import de.cyklon.spigotutils.ui.scoreboard.PlayerScoreboardUI;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -22,6 +23,7 @@ public class Scoreboard {
     private final PlayerScoreboardUI<Component> scoreboard;
     private final String lineDefault;
     private final Map<Integer, String> lines;
+    private int max = 0;
 
     public Scoreboard(Plugin plugin, Player player) {
         FileConfiguration config = plugin.getConfig();
@@ -42,15 +44,19 @@ public class Scoreboard {
         return scoreboard;
     }
 
-    private Component getLine(int rank, OfflinePlayer player, int points) {
-        return Formatter.parseText(lines.getOrDefault(rank, lineDefault)
+    private Component getLine(int rank, OfflinePlayer player, int points, Character style) {
+        StringBuilder s = new StringBuilder((style!=null ? '§'+style : "") + lines.getOrDefault(rank, lineDefault)
                 .replace("%rank", String.valueOf(rank))
-                .replace("%name", Objects.requireNonNullElse(player.getName(), player.getUniqueId().toString()))
-                .replace("%points", String.valueOf(points)));
+                .replace("%name", Objects.requireNonNullElse(player.getName(), player.getUniqueId().toString())));
+        if (style!=null) s.append("§r");
+        if (s.length()>max) max = s.length();
+        while (s.length()!=max) s.append(" ");
+        s = new StringBuilder(s.toString().replace("%points", String.valueOf(points)));
+        return Formatter.parseText(s.toString());
     }
 
-    private Component getLine(Pair<Integer, Map.Entry<UUID, Integer>> data) {
-        return getLine(data.first(), Bukkit.getOfflinePlayer(data.second().getKey()), data.second().getValue());
+    private Component getLine(Pair<Integer, Map.Entry<UUID, Integer>> data, Character style) {
+        return getLine(data.first(), Bukkit.getOfflinePlayer(data.second().getKey()), data.second().getValue(), style);
     }
 
     public void update(BoardStats stats) {
@@ -60,12 +66,14 @@ public class Scoreboard {
 
         Map<UUID, Integer> top = stats.getTopPlayers(5);
 
+        final int maxBefore = max;
+
         scoreboard.clearLines();
 
         AtomicInteger score = new AtomicInteger(9);
         AtomicInteger rank = new AtomicInteger(1);
 
-        top.forEach((k, v) -> scoreboard.setLine(score.getAndDecrement(), getLine(rank.getAndIncrement(), Bukkit.getOfflinePlayer(k), v)));
+        top.forEach((k, v) -> scoreboard.setLine(score.getAndDecrement(), getLine(rank.getAndIncrement(), Bukkit.getOfflinePlayer(k), v, null)));
         while (score.get() > 4) scoreboard.setEmptyLine(score.getAndDecrement());
 
         Pair<Integer, Integer> userData = stats.get(player.getUniqueId());
@@ -74,14 +82,15 @@ public class Scoreboard {
 
         scoreboard.setEmptyLine(4);
 
-        if (nextData != null) scoreboard.setLine(3, getLine(nextData));
+        if (nextData != null) scoreboard.setLine(3, getLine(nextData, 'o'));
         else scoreboard.setEmptyLine(3);
 
-        scoreboard.setLine(2, getLine(userData.first(), player, userData.second()));
+        scoreboard.setLine(2, getLine(userData.first(), player, userData.second(), 'l'));
 
-        if (previousData != null) scoreboard.setLine(1, getLine(previousData));
+        if (previousData != null) scoreboard.setLine(1, getLine(previousData, 'o'));
         else scoreboard.setEmptyLine(1);
 
-        scoreboard.update();
+        if (max!=maxBefore) update(stats);
+        else scoreboard.update();
     }
 }

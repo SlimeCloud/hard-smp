@@ -86,7 +86,7 @@
         <dependency>
             <groupId>com.github.cyklon73</groupId>
             <artifactId>SpigotUtils</artifactId>
-            <version>139e442</version>
+            <version>bb13832</version>
         </dependency>
 
         <!-- LuckPerms -->

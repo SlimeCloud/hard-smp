@@ -35,10 +35,10 @@ public class Chat implements Listener {
             String line = section.getString(key);
             if (line != null) {
                 if (key.equals("name_default")) nameColor.put(-1, line);
-                else if (key.startsWith("name_"))  nameColor.put(Integer.parseInt(key.split("_")[1]), line);
+                else if (key.startsWith("name_")) nameColor.put(Integer.parseInt(key.split("_")[1]), line);
 
                 else if (key.equals("rank_default")) rankColor.put(-1, line);
-                else if (key.startsWith("rank_"))  rankColor.put(Integer.parseInt(key.split("_")[1]), line);
+                else if (key.startsWith("rank_")) rankColor.put(Integer.parseInt(key.split("_")[1]), line);
             }
         }
     }

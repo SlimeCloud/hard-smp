@@ -4,7 +4,6 @@ import de.cyklon.spigotutils.adventure.Formatter;
 import de.cyklon.spigotutils.tuple.Pair;
 import de.cyklon.spigotutils.ui.scoreboard.PlayerScoreboardUI;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -45,12 +44,12 @@ public class Scoreboard {
     }
 
     private Component getLine(int rank, OfflinePlayer player, int points, Character style) {
-        StringBuilder s = new StringBuilder((style!=null ? '§'+style : "") + lines.getOrDefault(rank, lineDefault)
+        StringBuilder s = new StringBuilder((style != null ? '§' + style : "") + lines.getOrDefault(rank, lineDefault)
                 .replace("%rank", String.valueOf(rank))
                 .replace("%name", Objects.requireNonNullElse(player.getName(), player.getUniqueId().toString())));
-        if (style!=null) s.append("§r");
-        if (s.length()>max) max = s.length();
-        while (s.length()!=max) s.append(" ");
+        if (style != null) s.append("§r");
+        if (s.length() > max) max = s.length();
+        while (s.length() != max) s.append(" ");
         s = new StringBuilder(s.toString().replace("%points", String.valueOf(points)));
         return Formatter.parseText(s.toString());
     }
@@ -90,7 +89,7 @@ public class Scoreboard {
         if (previousData != null) scoreboard.setLine(1, getLine(previousData, 'o'));
         else scoreboard.setEmptyLine(1);
 
-        if (max!=maxBefore) update(stats);
+        if (max != maxBefore) update(stats);
         else scoreboard.update();
     }
 }

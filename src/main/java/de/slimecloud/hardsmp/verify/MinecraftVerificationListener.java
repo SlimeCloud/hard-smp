@@ -64,7 +64,7 @@ public class MinecraftVerificationListener implements Listener {
 		User user = HardSMP.getInstance().getLuckPerms().getPlayerAdapter(Player.class).getUser(event.getPlayer());
 		if (!user.getPrimaryGroup().equals("default")) return;
 
-		event.setCancelled(true); //TODO I would rather let the player walkt and only throw them back if they try to leave the spawn area.
+		event.setCancelled(true);
 
 		sendInfoMessage(event);
 		sendCodeActionBar(event.getPlayer());

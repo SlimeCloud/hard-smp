@@ -4,6 +4,7 @@ import de.cyklon.spigotutils.item.ItemBuilder;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.PointCommand;
 import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
+import de.slimecloud.hardsmp.commands.TeamChatCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
@@ -60,6 +61,7 @@ public final class HardSMP extends JavaPlugin {
 
 		registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
 		registerCommand("point", new PointCommand());
+		registerCommand("teamchat", new TeamChatCommand());
 
 		itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
 

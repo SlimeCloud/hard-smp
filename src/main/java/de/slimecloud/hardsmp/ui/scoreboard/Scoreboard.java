@@ -49,9 +49,8 @@ public class Scoreboard {
                 .replace("%name", Objects.requireNonNullElse(player.getName(), player.getUniqueId().toString())));
         if (style != null) s.append("§r");
         if (s.length() > max) max = s.length();
-        while (s.length() != max) s.append(" ");
-        s = new StringBuilder(s.toString().replace("%points", String.valueOf(points)));
-        return Formatter.parseText(s.toString());
+
+        return Formatter.parseText(s.toString().replace("%points", String.format("%" + (max + 6 - s.length() - String.valueOf(points).length()) + "s", points)));
     }
 
     private Component getLine(Pair<Integer, Map.Entry<UUID, Integer>> data, Character style) {

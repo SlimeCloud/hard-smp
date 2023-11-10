@@ -44,12 +44,11 @@ public class Scoreboard {
     }
 
     private Component getLine(int rank, OfflinePlayer player, int points, Character style) {
-        StringBuilder s = new StringBuilder((style != null ? '§' + style : "") + lines.getOrDefault(rank, lineDefault)
+        StringBuilder s = new StringBuilder((style != null ? '§' + style.toString() : "") + lines.getOrDefault(rank, lineDefault)
                 .replace("%rank", String.valueOf(rank))
                 .replace("%name", Objects.requireNonNullElse(player.getName(), player.getUniqueId().toString())));
         if (style != null) s.append("§r");
         if (s.length() > max) max = s.length();
-
         return Formatter.parseText(s.toString().replace("%points", String.format("%" + (max + 6 - s.length() - String.valueOf(points).length()) + "s", points)));
     }
 

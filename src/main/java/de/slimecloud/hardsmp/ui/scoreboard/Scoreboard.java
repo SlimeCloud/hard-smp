@@ -43,18 +43,19 @@ public class Scoreboard {
         return scoreboard;
     }
 
-    private Component getLine(int rank, OfflinePlayer player, int points, Character style) {
+    private Component getLine(int rank, OfflinePlayer player, int points, Character style, Boolean isLowerSection) {
         StringBuilder s = new StringBuilder((style != null ? '§' + style.toString() : "") + lines.getOrDefault(rank, lineDefault)
                 .replace("%rank", String.valueOf(rank))
                 .replace("%points", String.valueOf(points))
+                .replace("§l", (isLowerSection ? "" : "§l")) //remove bold format in lower Section
                 .replace("%name", Objects.requireNonNullElse(player.getName(), player.getUniqueId().toString())));
         if (style != null) s.append("§r");
         if (s.length() > max) max = s.length();
         return Formatter.parseText(s.toString());
     }
 
-    private Component getLine(Pair<Integer, Map.Entry<UUID, Integer>> data, Character style) {
-        return getLine(data.first(), Bukkit.getOfflinePlayer(data.second().getKey()), data.second().getValue(), style);
+    private Component getLine(Pair<Integer, Map.Entry<UUID, Integer>> data, Character style, Boolean isLowerSection) {
+        return getLine(data.first(), Bukkit.getOfflinePlayer(data.second().getKey()), data.second().getValue(), style, isLowerSection);
     }
 
     public void update(BoardStats stats) {
@@ -71,7 +72,7 @@ public class Scoreboard {
         AtomicInteger score = new AtomicInteger(9);
         AtomicInteger rank = new AtomicInteger(1);
 
-        top.forEach((k, v) -> scoreboard.setLine(score.getAndDecrement(), getLine(rank.getAndIncrement(), Bukkit.getOfflinePlayer(k), v, null)));
+        top.forEach((k, v) -> scoreboard.setLine(score.getAndDecrement(), getLine(rank.getAndIncrement(), Bukkit.getOfflinePlayer(k), v, null, false)));
         while (score.get() > 4) scoreboard.setEmptyLine(score.getAndDecrement());
 
         Pair<Integer, Integer> userData = stats.get(player.getUniqueId());
@@ -80,12 +81,12 @@ public class Scoreboard {
 
         scoreboard.setEmptyLine(4);
 
-        if (nextData != null) scoreboard.setLine(3, getLine(nextData, 'o'));
+        if (nextData != null) scoreboard.setLine(3, getLine(nextData, 'o', true));
         else scoreboard.setEmptyLine(3);
 
-        scoreboard.setLine(2, getLine(userData.first(), player, userData.second(), 'l'));
+        scoreboard.setLine(2, getLine(userData.first(), player, userData.second(), 'l', true));
 
-        if (previousData != null) scoreboard.setLine(1, getLine(previousData, 'o'));
+        if (previousData != null) scoreboard.setLine(1, getLine(previousData, 'o', true));
         else scoreboard.setEmptyLine(1);
 
         if (max != maxBefore) update(stats);

@@ -14,26 +14,26 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.StructureSearchResult;
 
 public class GhastAdvancement extends AdvancementHandler {
-	private final NamespacedKey key;
+    private final NamespacedKey key;
 
-	public GhastAdvancement(Plugin plugin) {
-		super(plugin, CustomAdvancement.GHAST);
-		this.key = new NamespacedKey(plugin, "killed.ghast.nether");
-	}
+    public GhastAdvancement(Plugin plugin) {
+        super(plugin, CustomAdvancement.GHAST);
+        this.key = new NamespacedKey(plugin, "killed.ghast.nether");
+    }
 
-	@EventHandler
-	public void onEntityKill(EntityDeathEvent event) {
-		if (event.getEntity() instanceof Ghast ghast) {
-			Player killer = ghast.getKiller();
-			if (killer != null) {
-				if (isDone(killer)) return;
-				Location location = killer.getLocation();
-				StructureSearchResult result = location.getWorld().locateNearestStructure(location, StructureType.FORTRESS, 4, false);
-				if (result != null) {
-					int i = PersistentDataHandler.get(killer).reviseIntWithDefault(key, c -> ++c, 0);
-					if (i >= 5) unlock(killer);
-				}
-			}
-		}
-	}
+    @EventHandler
+    public void onEntityKill(EntityDeathEvent event) {
+        if (event.getEntity() instanceof Ghast ghast) {
+            Player killer = ghast.getKiller();
+            if (killer != null) {
+                if (isDone(killer)) return;
+                Location location = killer.getLocation();
+                StructureSearchResult result = location.getWorld().locateNearestStructure(location, StructureType.FORTRESS, 4, false);
+                if (result != null) {
+                    int i = PersistentDataHandler.get(killer).reviseIntWithDefault(key, c -> ++c, 0);
+                    if (i >= 5) unlock(killer);
+                }
+            }
+        }
+    }
 }

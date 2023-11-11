@@ -16,24 +16,24 @@ import java.util.Collection;
 
 public class DiamondAdvancement extends AdvancementHandler {
 
-	private final NamespacedKey key;
+    private final NamespacedKey key;
 
-	public DiamondAdvancement(Plugin plugin) {
-		super(plugin, CustomAdvancement.DIAMOND);
-		this.key = new NamespacedKey(plugin, "farmed.diamonds");
-	}
+    public DiamondAdvancement(Plugin plugin) {
+        super(plugin, CustomAdvancement.DIAMOND);
+        this.key = new NamespacedKey(plugin, "farmed.diamonds");
+    }
 
-	@EventHandler
-	public void onBreakBlock(BlockBreakEvent event) {
-		Block block = event.getBlock();
-		Player player = event.getPlayer();
-		if (block.getType().equals(Material.DIAMOND_ORE) || block.getType().equals(Material.DEEPSLATE_DIAMOND_ORE)) {
-			Collection<ItemStack> drops = event.getBlock().getDrops(player.getInventory().getItemInMainHand(), player);
-			int dias = PersistentDataHandler.get(player).reviseIntWithDefault(key, diamonds -> {
-				for (ItemStack drop : drops) if (drop.getType().equals(Material.DIAMOND)) diamonds += drop.getAmount();
-				return diamonds;
-			}, 0);
-			if (dias >= 100) unlock(player);
-		}
-	}
+    @EventHandler
+    public void onBreakBlock(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
+        if (block.getType().equals(Material.DIAMOND_ORE) || block.getType().equals(Material.DEEPSLATE_DIAMOND_ORE)) {
+            Collection<ItemStack> drops = event.getBlock().getDrops(player.getInventory().getItemInMainHand(), player);
+            int dias = PersistentDataHandler.get(player).reviseIntWithDefault(key, diamonds -> {
+                for (ItemStack drop : drops) if (drop.getType().equals(Material.DIAMOND)) diamonds += drop.getAmount();
+                return diamonds;
+            }, 0);
+            if (dias >= 100) unlock(player);
+        }
+    }
 }

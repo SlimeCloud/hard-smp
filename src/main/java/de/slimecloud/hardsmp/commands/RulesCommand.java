@@ -2,15 +2,18 @@ package de.slimecloud.hardsmp.commands;
 
 import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.event.PlayerVerifyEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
-public class RulesCommand implements CommandExecutor, EmptyTabCompleter {
+public class RulesCommand implements CommandExecutor, EmptyTabCompleter, Listener {
 
     private final Component msg;
 
@@ -41,5 +44,10 @@ public class RulesCommand implements CommandExecutor, EmptyTabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         sender.sendMessage(this.msg);
         return true;
+    }
+
+    @EventHandler
+    public void onVerify(PlayerVerifyEvent event) {
+        event.getPlayer().sendMessage(this.msg);
     }
 }

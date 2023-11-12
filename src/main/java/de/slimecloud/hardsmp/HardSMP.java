@@ -7,6 +7,7 @@ import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.FormattingCommand;
 import de.slimecloud.hardsmp.commands.PointCommand;
 import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
+import de.slimecloud.hardsmp.commands.TeamChatCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
@@ -72,6 +73,7 @@ public final class HardSMP extends JavaPlugin {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+
 
         this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
 

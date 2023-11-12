@@ -18,3 +18,7 @@ commands:
     permission: hardsmp.point
   spawn-shop-npc:
     permission: hardsmp.spawn-shop
+  teamchat:
+    aliases: ["tc"]
+    usage: "§cUsage: /teamcaht <Message>"
+    permission: hardsmp.teamchat.send

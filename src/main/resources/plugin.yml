@@ -11,6 +11,12 @@ description: HardSMP (Das 'S' steht für "Slime")
 website: https://discord.gg/slimecloud
 
 
+permissions:
+  hardsmp.help:
+    default: true
+  hardsmp.rules:
+    default: true
+
 commands:
   formatting:
   point:
@@ -18,3 +24,7 @@ commands:
     permission: hardsmp.point
   spawn-shop-npc:
     permission: hardsmp.spawn-shop
+  help:
+    permission: hardsmp.help
+  rules:
+    permission: hardsmp.rules

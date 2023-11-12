@@ -11,16 +11,16 @@ import org.bukkit.plugin.Plugin;
 
 public class BlocksAdvancement extends AdvancementHandler {
 
-	public BlocksAdvancement(Plugin plugin) {
-		super(plugin, CustomAdvancement.BLOCKS);
-	}
+    public BlocksAdvancement(Plugin plugin) {
+        super(plugin, CustomAdvancement.BLOCKS);
+    }
 
-	@EventHandler
-	public void onBreakBlock(BlockBreakEvent event) {
-		Player player = event.getPlayer();
-		Block block = event.getBlock();
-		int i = player.getStatistic(Statistic.MINE_BLOCK, block.getType());
-		if (i >= 10000) unlock(player);
-	}
+    @EventHandler
+    public void onBreakBlock(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        int i = player.getStatistic(Statistic.MINE_BLOCK, block.getType());
+        if (i >= 10000) unlock(player);
+    }
 
 }

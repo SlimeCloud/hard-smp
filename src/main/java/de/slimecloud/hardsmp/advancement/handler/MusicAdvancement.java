@@ -14,29 +14,29 @@ import java.util.List;
 
 public class MusicAdvancement extends AdvancementHandler {
 
-	private final static List<Material> DISCS;
+    private final static List<Material> DISCS;
 
-	static {
-		DISCS = new ArrayList<>();
-		for (Material value : Material.values()) if (value.name().contains("MUSIC_DISC")) DISCS.add(value);
-	}
+    static {
+        DISCS = new ArrayList<>();
+        for (Material value : Material.values()) if (value.name().contains("MUSIC_DISC")) DISCS.add(value);
+    }
 
-	public MusicAdvancement(Plugin plugin) {
-		super(plugin, CustomAdvancement.MUSIC);
-	}
+    public MusicAdvancement(Plugin plugin) {
+        super(plugin, CustomAdvancement.MUSIC);
+    }
 
-	@EventHandler
-	public void onStatisticIncrement(PlayerStatisticIncrementEvent event) {
-		if (event.getStatistic().equals(Statistic.USE_ITEM)) {
-			if (!DISCS.contains(event.getMaterial())) return;
-			Player player = event.getPlayer();
-			if (isDone(player)) return;
-			if (checkDiscs(player)) unlock(player);
-		}
-	}
+    @EventHandler
+    public void onStatisticIncrement(PlayerStatisticIncrementEvent event) {
+        if (event.getStatistic().equals(Statistic.USE_ITEM)) {
+            if (!DISCS.contains(event.getMaterial())) return;
+            Player player = event.getPlayer();
+            if (isDone(player)) return;
+            if (checkDiscs(player)) unlock(player);
+        }
+    }
 
-	private boolean checkDiscs(Player player) {
-		for (Material disc : DISCS) if (player.getStatistic(Statistic.USE_ITEM, disc)==0) return false;
-		return true;
-	}
+    private boolean checkDiscs(Player player) {
+        for (Material disc : DISCS) if (player.getStatistic(Statistic.USE_ITEM, disc) == 0) return false;
+        return true;
+    }
 }

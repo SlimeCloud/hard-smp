@@ -11,8 +11,8 @@ import java.util.List;
 
 public interface EmptyTabCompleter extends TabCompleter {
 
-	@Override
-	default @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-		return Collections.emptyList();
-	}
+    @Override
+    default @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        return Collections.emptyList();
+    }
 }

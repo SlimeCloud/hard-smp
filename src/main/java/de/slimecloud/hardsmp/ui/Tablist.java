@@ -63,7 +63,6 @@ public class Tablist implements Listener {
         String tabName = name.replace("%prefix", prefix == null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§"))).replace("%name", player.getName());
         final int length = tabName.length();
         if (length > max) max = length;
-        while (tabName.length() != max) tabName += "";
         if (max != maxBefore) updateTabList(player);
         else {
             tabName = tabName.replace("%points", String.valueOf(points));

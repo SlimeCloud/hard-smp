@@ -17,12 +17,10 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.InflaterOutputStream;
 
 public class BuildFormat {
 
-    private static final String SEPERATOR = "♦";
+    private static final String SEPERATOR = " ";
 
     private static Vector relativ(Vector relativPoint, Vector other) {
         return new Vector(
@@ -30,10 +28,6 @@ public class BuildFormat {
                 other.getY()-relativPoint.getY(),
                 other.getZ()-relativPoint.getZ()
         );
-    }
-
-    private static double difference(double d1, double d2) {
-        return Math.max(d1, d2) - Math.min(d1, d2);
     }
 
     private static Vector parseVector(String s) {

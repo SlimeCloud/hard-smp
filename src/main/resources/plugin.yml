@@ -22,3 +22,9 @@ commands:
     aliases: ["tc"]
     usage: "§cUsage: /teamcaht <Message>"
     permission: hardsmp.teamchat.send
+  register-schematic:
+    usage: "§cUsage: /register-schematic <name> <pos1> <pos2>"
+    permission: hardsmp.schematic.register
+  build-schematic:
+    usage: "§cUsage: /build-schematic <name>"
+    permission: hardsmp.schematic.build

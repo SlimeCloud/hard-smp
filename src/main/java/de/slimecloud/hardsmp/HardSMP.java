@@ -12,10 +12,14 @@ import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
+import de.slimecloud.hardsmp.subevent.replika.Replika;
+import de.slimecloud.hardsmp.subevent.replika.commands.BuildSchematicCommand;
+import de.slimecloud.hardsmp.subevent.replika.commands.RegisterSchematicCommand;
 import de.slimecloud.hardsmp.ui.Chat;
 import de.slimecloud.hardsmp.ui.Tablist;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
+import lombok.AccessLevel;
 import lombok.ConfigurationKeys;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -36,6 +40,7 @@ import org.bukkit.configuration.ConfigurationOptions;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class HardSMP extends JavaPlugin {
@@ -60,6 +65,9 @@ public final class HardSMP extends JavaPlugin {
     @Getter
     private DiscordBot discordBot;
 
+    @Getter
+    private SubEvent subEvents;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -79,12 +87,15 @@ public final class HardSMP extends JavaPlugin {
 
         this.itemManager = new ItemManager();
 
+        getLogger().info("initialize Commands");
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
         registerCommand("formatting", new FormattingCommand());
 
+        getLogger().info("initialize Custom Items");
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
 
+        getLogger().info("initialize Shop Orders");
         SlimeHandler.setupOffers(getConfig());
 
         //Events
@@ -93,10 +104,12 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new PointsListener());
 
         //UI
+        getLogger().info("initialize UI");
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
         registerEvent(new Chat(getConfig()));
 
+        getLogger().info("initialize Custom Formatting's");
         ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
         for (String format : formattings.getKeys(false)) {
             Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
@@ -104,6 +117,10 @@ public final class HardSMP extends JavaPlugin {
 
         AdvancementHandler.register(this, this::registerEvent);
 
+        getLogger().info("initialize Sub Events");
+        this.subEvents = new SubEvent(this);
+
+        getLogger().info("initialize Discord Bot");
         try {
             this.discordBot = new DiscordBot();
         } catch (Exception e) {
@@ -111,16 +128,11 @@ public final class HardSMP extends JavaPlugin {
         }
     }
 
-    @SneakyThrows(InterruptedException.class)
     @Override
     public void onDisable() {
         ScoreboardUI.getScoreboards().forEach(ScoreboardUI::delete);
 
         this.discordBot.jdaInstance.shutdownNow();
-        while (!this.discordBot.jdaInstance.getStatus().equals(JDA.Status.SHUTDOWN)) {
-            Thread.sleep(20);
-        }
-
     }
 
     public static TextComponent getPrefix() {
@@ -137,6 +149,20 @@ public final class HardSMP extends JavaPlugin {
         PluginCommand command = getCommand(name);
         if (command != null) command.setExecutor(executor);
         return command;
+    }
+
+    public class SubEvent {
+
+        @Getter
+        private final Replika replika;
+
+        public SubEvent(Plugin plugin) {
+            this.replika = new Replika(plugin);
+
+            registerCommand("register-schematic", new RegisterSchematicCommand());
+            registerCommand("build-schematic", new BuildSchematicCommand());
+        }
+
     }
 
 }

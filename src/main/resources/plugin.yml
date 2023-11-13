@@ -12,19 +12,24 @@ website: https://discord.gg/slimecloud
 
 
 permissions:
-  hardsmp.help:
+  hardsmp.command.help:
     default: true
-  hardsmp.rules:
+  hardsmp.command.rules:
     default: true
 
 commands:
   formatting:
+    permission: hardsmp.command.formatting
   point:
     usage: "§cUsage: /point <Player> add/set/remove/get"
-    permission: hardsmp.point
+    permission: hardsmp.command.point
   spawn-shop-npc:
-    permission: hardsmp.spawn-shop
+    permission: hardsmp.command.spawn-shop
   help:
-    permission: hardsmp.help
+    permission: hardsmp.command.help
   rules:
-    permission: hardsmp.rules
+    permission: hardsmp.command.rules
+  teamchat:
+    aliases: ["tc"]
+    usage: "§cUsage: /teamcaht <Message>"
+    permission: hardsmp.teamchat.send

@@ -71,6 +71,7 @@ public final class HardSMP extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
+
         this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
 
         this.itemManager = new ItemManager();

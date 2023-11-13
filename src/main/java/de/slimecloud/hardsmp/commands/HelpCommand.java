@@ -5,6 +5,8 @@ import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,16 +34,19 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
                         msg = Component.text("Command info...");
                         break;
                     }
-                    msg = Component.text("Commands:");
+                    msg = Formatter.parseText("§a----- §bCommands §a-----");
                     for (String key : section.getKeys(false)) {
                         msg = msg.appendNewline()
                                 .append(Component.text(key)
                                         .decorate(TextDecoration.BOLD)
                                         .clickEvent(ClickEvent.suggestCommand("/" + key))
-                                        .hoverEvent(HoverEvent.showText(Component.text("Klicke zum ausführen."))))
-                                .append(Component.text(":"))
+                                        .hoverEvent(HoverEvent.showText(Component.text("Klicke zum ausführen.")))
+                                        .color(TextColor.color(NamedTextColor.AQUA)))
+                                .append(Component.text(":", TextColor.color(NamedTextColor.GRAY)))
                                 .appendSpace()
-                                .append(Formatter.parseText(section.getString(key, "...")));
+                                .append(Formatter.parseText("§a" + section.getString(key, "...")))
+                                .appendNewline()
+                                .append(Formatter.parseText("§a----- §bCommands §a-----"));
                     }
                 }
             }

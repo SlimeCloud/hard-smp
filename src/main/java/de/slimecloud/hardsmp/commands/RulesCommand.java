@@ -21,18 +21,18 @@ public class RulesCommand implements CommandExecutor, EmptyTabCompleter, Listene
         ConfigurationSection section = HardSMP.getInstance().getConfig().getConfigurationSection("rules");
         if (section==null) this.msg = Component.text("Es ist ein fehler aufgetreten.\nBitte melde dieses Problem dem support").color(Formatter.getColorFormattings().get('4'));
         else {
-            Component msg = Component.text("Regeln:").decorate(TextDecoration.BOLD);
+            Component msg = Formatter.parseText("§a----- §bRegeln §a-----");
             for (String key : section.getKeys(false)) {
                 ConfigurationSection s = section.getConfigurationSection(key);
                 msg = msg.appendNewline();
-                if (s==null) msg = msg.append(Formatter.parseText("§l" + key + ":§r " + section.getString(key, "rule")));
+                if (s==null) msg = msg.append(Formatter.parseText("§b" + key + "§7:§a " + section.getString(key, "rule")));
                 else {
-                    msg = msg.append(Formatter.parseText("§l" + key + ":§r"));
+                    msg = msg.append(Formatter.parseText("§b" + key + "§7:§a"));
                     for (String sKey : s.getKeys(false)) {
                         msg = msg.appendNewline()
                                 .appendSpace()
                                 .appendSpace()
-                                .append(Formatter.parseText("§l" + sKey + ":§r " + s.getString(key, "rule")));
+                                .append(Formatter.parseText("§b" + sKey + "§7:§a " + s.getString(key, "rule")));
                     }
                 }
             }

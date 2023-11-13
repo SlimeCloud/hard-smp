@@ -23,14 +23,16 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Component msg = null;
-        if (args.length!=0) {
+        if (args.length != 0) {
             String cmd = args[0];
             if (!cmd.isBlank()) switch (cmd.toLowerCase()) {
-                case "event" -> msg = Formatter.parseText(HardSMP.getInstance().getConfig().getString("help.event-info", "Event info..."));
-                case "support" -> msg = Formatter.parseText(HardSMP.getInstance().getConfig().getString("help.support-info", "Support info..."));
+                case "event" ->
+                        msg = Formatter.parseText(HardSMP.getInstance().getConfig().getString("help.event-info", "Event info..."));
+                case "support" ->
+                        msg = Formatter.parseText(HardSMP.getInstance().getConfig().getString("help.support-info", "Support info..."));
                 case "command" -> {
                     ConfigurationSection section = HardSMP.getInstance().getConfig().getConfigurationSection("help.command-info");
-                    if (section==null || section.getKeys(false).size()==0) {
+                    if (section == null || section.getKeys(false).size() == 0) {
                         msg = Component.text("Command info...");
                         break;
                     }
@@ -51,7 +53,8 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        if (msg==null) sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("help.root", "Help...")));
+        if (msg == null)
+            sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("help.root", "Help...")));
         else sender.sendMessage(msg);
         return true;
     }
@@ -59,7 +62,7 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> list = new ArrayList<>();
-        if (args.length==1) {
+        if (args.length == 1) {
             list.add("event");
             list.add("support");
             list.add("command");

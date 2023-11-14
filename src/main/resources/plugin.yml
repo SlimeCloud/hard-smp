@@ -35,6 +35,9 @@ commands:
     aliases: ["tc"]
     usage: "§cUsage: /teamcaht <Message>"
     permission: hardsmp.teamchat.send
+  start-event:
+    usage: "§cUsage: /start-event <event-name>"
+    permission: hardsmp.command.start-event
   register-schematic:
     usage: "§cUsage: /register-schematic <name> <pos1> <pos2>"
     permission: hardsmp.schematic.register

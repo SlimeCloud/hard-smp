@@ -3,3 +3,4 @@ plot:
   width: 7
   length: 7
   spacing: 2
+  top-border-height: 30

@@ -9,6 +9,8 @@ import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
+import de.slimecloud.hardsmp.subevent.SubEvent;
+import de.slimecloud.hardsmp.subevent.commands.StartEventCommand;
 import de.slimecloud.hardsmp.subevent.replika.Replika;
 import de.slimecloud.hardsmp.subevent.replika.commands.BuildSchematicCommand;
 import de.slimecloud.hardsmp.subevent.replika.commands.RegisterSchematicCommand;
@@ -35,6 +37,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Map;
+
 public final class HardSMP extends JavaPlugin {
 
     public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
@@ -58,7 +62,7 @@ public final class HardSMP extends JavaPlugin {
     private DiscordBot discordBot;
 
     @Getter
-    private SubEvent subEvents;
+    private SubEvents subEvents;
 
     @Override
     @SuppressWarnings({"deprecation", "ConstantConditions"})
@@ -117,7 +121,7 @@ public final class HardSMP extends JavaPlugin {
         AdvancementHandler.register(this, this::registerEvent);
 
         getLogger().info("initialize Sub Events");
-        this.subEvents = new SubEvent(this);
+        this.subEvents = new SubEvents(this);
 
         getLogger().info("initialize Discord Bot");
         try {
@@ -150,16 +154,24 @@ public final class HardSMP extends JavaPlugin {
         return command;
     }
 
-    public class SubEvent {
+    public class SubEvents {
 
         @Getter
         private final Replika replika;
 
-        public SubEvent(Plugin plugin) {
+        public SubEvents(Plugin plugin) {
+            registerCommand("start-event", new StartEventCommand());
+
             this.replika = new Replika(plugin);
 
             registerCommand("register-schematic", new RegisterSchematicCommand());
             registerCommand("build-schematic", new BuildSchematicCommand());
+        }
+
+        public Map<String, SubEvent> getEvents() {
+            return Map.of(
+                    "replika", replika
+            );
         }
 
     }

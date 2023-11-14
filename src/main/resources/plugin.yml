@@ -11,13 +11,26 @@ description: HardSMP (Das 'S' steht für "Slime")
 website: https://discord.gg/slimecloud
 
 
+permissions:
+  hardsmp.command.formatting:
+    default: true
+  hardsmp.command.help:
+    default: true
+  hardsmp.command.rules:
+    default: true
+
 commands:
   formatting:
+    permission: hardsmp.command.formatting
   point:
     usage: "§cUsage: /point <Player> add/set/remove/get"
-    permission: hardsmp.point
+    permission: hardsmp.command.point
   spawn-shop-npc:
-    permission: hardsmp.spawn-shop
+    permission: hardsmp.command.spawn-shop
+  help:
+    permission: hardsmp.command.help
+  rules:
+    permission: hardsmp.command.rules
   teamchat:
     aliases: ["tc"]
     usage: "§cUsage: /teamcaht <Message>"
@@ -28,3 +41,4 @@ commands:
   build-schematic:
     usage: "§cUsage: /build-schematic <name>"
     permission: hardsmp.schematic.build
+

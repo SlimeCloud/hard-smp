@@ -4,10 +4,7 @@ import de.cyklon.spigotutils.adventure.Formatter;
 import de.cyklon.spigotutils.item.ItemBuilder;
 import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
-import de.slimecloud.hardsmp.commands.FormattingCommand;
-import de.slimecloud.hardsmp.commands.PointCommand;
-import de.slimecloud.hardsmp.commands.SpawnShopNPCCommand;
-import de.slimecloud.hardsmp.commands.TeamChatCommand;
+import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
@@ -88,9 +85,14 @@ public final class HardSMP extends JavaPlugin {
         this.itemManager = new ItemManager();
 
         getLogger().info("initialize Commands");
+        RulesCommand rules;
+
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
         registerCommand("formatting", new FormattingCommand());
+        registerCommand("help", new HelpCommand());
+        registerCommand("rules", rules = new RulesCommand());
+        registerCommand("teamchat", new TeamChatCommand());
 
         getLogger().info("initialize Custom Items");
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
@@ -102,6 +104,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());
+        registerEvent(rules);
 
         //UI
         getLogger().info("initialize UI");

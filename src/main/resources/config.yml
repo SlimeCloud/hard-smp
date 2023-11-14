@@ -14,6 +14,16 @@ shop:
         second-item: "gold_ingot"
         second-amount: 1
 
+help:
+  root: "Das ist der help command"
+  event-info: "event infos..."
+  support-info: "support infos..."
+  command-info:
+    rules: "Zeigt dir die Server regeln an."
+
+rules:
+  1: "test"
+
 ui:
   custom-formatting:
     v: "#fcd217"
@@ -55,3 +65,7 @@ verify:
 
 discord:
   token: xxx
+
+teamchat:
+  messageFormat: "§8[§aTeam§bChat§8] §c%player§7:"
+  messageColor: "§6"

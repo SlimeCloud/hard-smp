@@ -71,15 +71,22 @@ public final class HardSMP extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
+
         this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
 
         this.itemManager = new ItemManager();
+
+        RulesCommand rules;
 
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
         registerCommand("formatting", new FormattingCommand());
         registerCommand("verify", new VerifyCommand());
         registerCommand("unverify", new UnverifyCommand());
+        registerCommand("help", new HelpCommand());
+        registerCommand("rules", rules = new RulesCommand());
+        registerCommand("teamchat", new TeamChatCommand());
+
 
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
 
@@ -89,6 +96,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());
+        registerEvent(rules);
 
         //UI
         registerEvent(new ScoreboardManager(this));
@@ -109,16 +117,11 @@ public final class HardSMP extends JavaPlugin {
         }
     }
 
-    @SneakyThrows(InterruptedException.class)
     @Override
     public void onDisable() {
         ScoreboardUI.getScoreboards().forEach(ScoreboardUI::delete);
 
         this.discordBot.jdaInstance.shutdownNow();
-        while (!this.discordBot.jdaInstance.getStatus().equals(JDA.Status.SHUTDOWN)) {
-            Thread.sleep(20);
-        }
-
     }
 
     public static TextComponent getPrefix() {

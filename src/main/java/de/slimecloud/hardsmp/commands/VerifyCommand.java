@@ -52,6 +52,9 @@ public class VerifyCommand implements CommandExecutor, EmptyTabCompleter {
 
             return true;
         }
+        else if(strings.length == 0) {
+            commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Zu wenig Argumente!", NamedTextColor.RED)));
+        }
         else {
             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Zu viele Argumente!", NamedTextColor.RED)));
         }

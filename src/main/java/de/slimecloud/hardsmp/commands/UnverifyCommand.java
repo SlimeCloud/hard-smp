@@ -14,10 +14,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class UnverifyCommand implements CommandExecutor, EmptyTabCompleter {
+import java.util.ArrayList;
+import java.util.List;
+
+public class UnverifyCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (args.length == 1) {
@@ -53,5 +58,12 @@ public class UnverifyCommand implements CommandExecutor, EmptyTabCompleter {
             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Benutzung: /verify [name]!", NamedTextColor.RED)));
         }
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        List<String> list = new ArrayList<>(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
+        list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()));
+        return list;
     }
 }

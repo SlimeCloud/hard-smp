@@ -13,12 +13,9 @@ import de.slimecloud.hardsmp.ui.Chat;
 import de.slimecloud.hardsmp.ui.Tablist;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
-import lombok.ConfigurationKeys;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import me.lucko.spark.api.Spark;
 import me.lucko.spark.api.SparkProvider;
-import net.dv8tion.jda.api.JDA;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -29,7 +26,6 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.ConfigurationOptions;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
@@ -118,7 +114,7 @@ public final class HardSMP extends JavaPlugin {
     public void onDisable() {
         ScoreboardUI.getScoreboards().forEach(ScoreboardUI::delete);
 
-        this.discordBot.jdaInstance.shutdownNow();
+        this.discordBot.shutdown();
     }
 
     public static TextComponent getPrefix() {

@@ -14,24 +14,6 @@ shop:
         amount: 2
         second-item: "gold_ingot"
         second-amount: 1
-    invisible-frame:
-      item: "invisible-frame"
-      amount: 1
-      price:
-        required-points: 800
-        item: "item_frame"
-        amount: 1
-        second-item: "iron_ingot"
-        second-amount: 5
-    light-block:
-      item: "light-block"
-      amount: 1
-      price:
-        required-points: 300
-        item: "torch"
-        amount: 1
-        second-item: "glass"
-        second-amount: 10
     mending-Infinity-bow:
       item: "mending-Infinity-bow"
       amount: 1

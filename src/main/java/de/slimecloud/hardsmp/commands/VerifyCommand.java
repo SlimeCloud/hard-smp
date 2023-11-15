@@ -19,22 +19,22 @@ import org.jetbrains.annotations.NotNull;
 
 public class VerifyCommand implements CommandExecutor, EmptyTabCompleter {
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if(strings.length == 1) {
-            Player player = Bukkit.getPlayer(strings[0]);
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if(args.length == 1) {
+            Player player = Bukkit.getPlayer(args[0]);
             Group group = HardSMP.getInstance().getLuckPerms().getGroupManager().getGroup("verified");
 
             if(player == null) {
                 commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Dieser Spieler ist nicht registriert!", NamedTextColor.RED)));
 
-                return false;
+                return true;
             }
 
             if(group == null) {
                 HardSMP.getInstance().getLogger().warning("Group 'verified' not found!");
                 commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Es ist ein Fehler aufgetreten, bitte wende dich an das Team!", NamedTextColor.RED)));
 
-                return false;
+                return true;
             }
 
             HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(player.getUniqueId(), (User user) -> {
@@ -50,14 +50,10 @@ public class VerifyCommand implements CommandExecutor, EmptyTabCompleter {
 
             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Erfolgreich verifiziert!", TextColor.color(0x88d657))));
 
-            return true;
-        }
-        else if(strings.length == 0) {
-            commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Zu wenig Argumente!", NamedTextColor.RED)));
         }
         else {
-            commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Zu viele Argumente!", NamedTextColor.RED)));
+            commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Benutzung: /verify [name]!", NamedTextColor.RED)));
         }
-        return false;
+        return true;
     }
 }

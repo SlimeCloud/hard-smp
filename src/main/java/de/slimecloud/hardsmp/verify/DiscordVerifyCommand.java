@@ -1,8 +1,8 @@
 package de.slimecloud.hardsmp.verify;
 
-import de.mineking.discord.commands.annotated.ApplicationCommand;
-import de.mineking.discord.commands.annotated.ApplicationCommandMethod;
-import de.mineking.discord.commands.annotated.option.Option;
+import de.mineking.discordutils.commands.ApplicationCommand;
+import de.mineking.discordutils.commands.ApplicationCommandMethod;
+import de.mineking.discordutils.commands.option.Option;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.event.PlayerVerifyEvent;
 import net.dv8tion.jda.api.EmbedBuilder;

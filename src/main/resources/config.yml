@@ -65,6 +65,7 @@ verify:
 
 discord:
   token: xxx
+  console-channel: xxx
 
 teamchat:
   messageFormat: "§8[§aTeam§bChat§8] §c%player§7:"

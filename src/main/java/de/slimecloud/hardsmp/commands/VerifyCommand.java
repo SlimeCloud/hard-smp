@@ -14,23 +14,24 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class VerifyCommand implements CommandExecutor, EmptyTabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if(args.length == 1) {
+        if (args.length == 1) {
             Player player = Bukkit.getPlayer(args[0]);
             Group group = HardSMP.getInstance().getLuckPerms().getGroupManager().getGroup("verified");
 
-            if(player == null) {
+            if (player == null) {
                 commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Dieser Spieler ist nicht registriert!", NamedTextColor.RED)));
 
                 return true;
             }
 
-            if(group == null) {
+            if (group == null) {
                 HardSMP.getInstance().getLogger().warning("Group 'verified' not found!");
                 commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Es ist ein Fehler aufgetreten, bitte wende dich an das Team!", NamedTextColor.RED)));
 
@@ -50,8 +51,7 @@ public class VerifyCommand implements CommandExecutor, EmptyTabCompleter {
 
             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Erfolgreich verifiziert!", TextColor.color(0x88d657))));
 
-        }
-        else {
+        } else {
             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Benutzung: /verify [name]!", NamedTextColor.RED)));
         }
         return true;

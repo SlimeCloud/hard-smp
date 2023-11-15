@@ -9,10 +9,20 @@ shop:
       item: "chest-key"
       amount: 1
       price:
+        required-points: 100
         item: "iron_ingot"
         amount: 2
         second-item: "gold_ingot"
         second-amount: 1
+    mending-Infinity-bow:
+      item: "mending-Infinity-bow"
+      amount: 1
+      price:
+        required-points: 3000
+        item: "bow"
+        amount: 1
+        second-item: "netherite_ingot"
+        second-amount: 3
 
 help:
   root: "Das ist der help command"

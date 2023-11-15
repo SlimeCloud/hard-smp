@@ -84,8 +84,6 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("teamchat", new TeamChatCommand());
 
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
-        itemManager.registerItem("invisible-frame", () -> new ItemBuilder(Material.ITEM_FRAME).setDisplayName(ChatColor.GREEN + "Invisible Item Frame") .build()); //ToDo so it invisible
-        itemManager.registerItem("light-block", () -> new ItemBuilder(Material.LIGHT).build());
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1) .build());
 
         SlimeHandler.setupOffers(getConfig());

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.function.BiFunction;
 
+@Getter
 @RequiredArgsConstructor
 public enum PointCategory {
 
@@ -13,7 +14,7 @@ public enum PointCategory {
     EAT_CAKE_SLICE(1),
 
     //Every 100cm
-  
+
     CROUCH_ONE_CM(0.05d / (1.83 * 100), (points, cm) -> points * cm),
     FLY_ONE_CM(0.05d / (4.35 * 100), (points, cm) -> points * cm),
     SPRINT_ONE_CM(0.05d / (5.73 * 100), (points, cm) -> points * cm),
@@ -38,10 +39,9 @@ public enum PointCategory {
     VILLAGER_TRADED(1d / 15),
     PLAY_TIME(1), // per 5 min
 
-    ADVANCEMENT(1, (points, lvl) -> List.of(50, 100, 200, 400, 800).get((int) (lvl-1))*points);
+    ADVANCEMENT(1, (points, lvl) -> List.of(50, 100, 200, 400, 800).get((int) (lvl - 1)) * points);
     //50, 100, 200, 400 und 800
 
-    @Getter
     private final double points;
     private final BiFunction<Double, Double, Double> calcFunction;
 

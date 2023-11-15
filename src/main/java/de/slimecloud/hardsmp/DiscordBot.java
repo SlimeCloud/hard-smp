@@ -34,7 +34,7 @@ public class DiscordBot extends ListenerAdapter {
 
         discordUtils = setupDiscordUtils();
 
-        if(HardSMP.getInstance().getConfig().contains("discord.console-channel")) {
+        if (HardSMP.getInstance().getConfig().contains("discord.console-channel")) {
             ((Logger) LogManager.getRootLogger()).addAppender(consoleMirror = new DiscordAppender("discord", message ->
                     HardSMP.getInstance().getDiscordBot().jdaInstance.getChannelById(MessageChannel.class, HardSMP.getInstance().getConfig().getLong("discord.console-channel"))
                             .sendMessage(message)
@@ -45,7 +45,7 @@ public class DiscordBot extends ListenerAdapter {
 
     public void shutdown() {
         jdaInstance.shutdownNow();
-        if(consoleMirror != null) {
+        if (consoleMirror != null) {
             ((Logger) LogManager.getRootLogger()).removeAppender(consoleMirror);
             consoleMirror.stop();
         }
@@ -54,8 +54,10 @@ public class DiscordBot extends ListenerAdapter {
     private DiscordUtils<DiscordBot> setupDiscordUtils() {
         return new DiscordUtils<>(jdaInstance, this)
                 .useCommandManager(
-                        e -> new ContextBase<>(e) {},
-                        e -> new ContextBase<>(e) {},
+                        e -> new ContextBase<>(e) {
+                        },
+                        e -> new ContextBase<>(e) {
+                        },
                         cmdMan -> {
                             cmdMan.updateCommands();
                             cmdMan.registerCommand(DiscordVerifyCommand.class);

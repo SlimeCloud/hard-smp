@@ -63,7 +63,7 @@ public class MinecraftVerificationListener implements Listener {
         User user = HardSMP.getInstance().getLuckPerms().getPlayerAdapter(Player.class).getUser(event.getPlayer());
         if (!user.getPrimaryGroup().equals("default")) return;
 
-        event.setCancelled(true); 
+        event.setCancelled(true);
 
         sendInfoMessage(event);
         sendCodeActionBar(event.getPlayer());

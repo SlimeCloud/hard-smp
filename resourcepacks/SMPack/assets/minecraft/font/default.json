@@ -1,0 +1,11 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "scoreboard/title.png",
+            "ascent": 11,
+            "height": 11,
+            "chars": ["\uE001"]
+        }
+    ]
+}

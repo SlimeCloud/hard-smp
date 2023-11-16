@@ -16,6 +16,10 @@ permissions:
     default: true
   hardsmp.command.rules:
     default: true
+  hardsmp.command.feedback:
+    default: true
+  hardsmp.command.bug:
+    default: true
 
 commands:
   formatting:
@@ -39,3 +43,7 @@ commands:
   verify:
     usage: "§cUsage: /verify <Player>"
     permission: hardsmp.command.verify
+  feedback:
+    permission: hardsmp.command.feedback
+  bug:
+    permission: hardsmp.command.bug

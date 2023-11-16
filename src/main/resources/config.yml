@@ -69,3 +69,9 @@ discord:
 teamchat:
   messageFormat: "§8[§aTeam§bChat§8] §c%player§7:"
   messageColor: "§6"
+
+feedback:
+  link: "test"
+
+bugform:
+  link: "test"

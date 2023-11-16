@@ -36,7 +36,7 @@ public class Scoreboard {
             }
         }
         this.scoreboard = PlayerScoreboardUI.getAdventurePlayerScoreboard(plugin, player);
-        scoreboard.setTitle(Component.text(plugin.getConfig().getString("ui.scoreboard.title", "Hard-SMP")));
+        scoreboard.setTitle(Component.text(plugin.getConfig().getString("ui.scoreboard.title", "\uE001")));
     }
 
     public PlayerScoreboardUI<Component> getUI() {

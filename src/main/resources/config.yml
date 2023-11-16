@@ -31,7 +31,7 @@ ui:
     z: "#bf8970"
 
   scoreboard:
-    title: "§2Hard-SMP"
+    title: "\uE001"
     text:
       default: "%rank. %name   §u%points"
       rank_1: "§l§6%rank. %name   §r§u%points"

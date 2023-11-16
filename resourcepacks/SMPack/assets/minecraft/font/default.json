@@ -4,16 +4,25 @@
             "chars": [
                 "\uE001"
             ],
-            "file": "scoreboard/title.png",
+            "file": "imgs/title.png",
             "ascent": 46,
             "height": 76,
             "type": "bitmap"
         },
         {
             "chars": [
+                "\uE005"
+            ],
+            "file": "imgs/title.png",
+            "ascent": 38,
+            "height": 64,
+            "type": "bitmap"
+        },
+        {
+            "chars": [
                 "\uE002"
             ],
-            "file": "scoreboard/first_place.png",
+            "file": "imgs/first_place.png",
             "ascent": 9,
             "height": 9,
             "type": "bitmap"
@@ -22,7 +31,7 @@
             "chars": [
                 "\uE003"
             ],
-            "file": "scoreboard/second_place.png",
+            "file": "imgs/second_place.png",
             "ascent": 9,
             "height": 9,
             "type": "bitmap"
@@ -31,7 +40,7 @@
             "chars": [
                 "\uE004"
             ],
-            "file": "scoreboard/third_place.png",
+            "file": "imgs/third_place.png",
             "ascent": 9,
             "height": 9,
             "type": "bitmap"

@@ -13,8 +13,7 @@
 
     <description>HardSMP (Das 'S' steht für "Slime")</description>
     <properties>
-        <java.version>1.17</java.version>
-        <java.level>17</java.level>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdbi.version>3.39.0</jdbi.version>
     </properties>
@@ -27,8 +26,11 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${java.level}</source>
-                    <target>${java.level}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -58,6 +60,10 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io/</url>
+        </repository>
+        <repository>
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
@@ -68,19 +74,64 @@
     </repositories>
 
     <dependencies>
-        <!-- Spigot -->
+        <!-- Paper -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.20.1-R0.1-SNAPSHOT</version>
+            <version>1.20.2-R0.1-SNAPSHOT</version>
+        </dependency>
+
+
+        <!-- SpigotUtils -->
+        <dependency>
+            <groupId>com.github.cyklon73</groupId>
+            <artifactId>SpigotUtils</artifactId>
+            <version>bb13832</version>
+        </dependency>
+
+        <!-- Spark API -->
+        <dependency>
+            <groupId>me.lucko</groupId>
+            <artifactId>spark-api</artifactId>
+            <version>0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- LuckPerms -->
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Log handling -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.21.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <!-- Discord -->
+        <dependency>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>5.0.0-beta.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.MineKingBot</groupId>
+            <artifactId>DiscordUtils</artifactId>
+            <version>68f9ac8</version>
         </dependency>
 
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
+            <version>1.18.30</version>
         </dependency>
 
         <!-- Gson -->
@@ -88,6 +139,7 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Postgres -->

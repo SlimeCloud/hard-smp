@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:red_bed"
+    },
+    "title": "Nachteule",
+    "description": "Bleibe 10 Nächte lang wach",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "hard-smp:hard-smp/root",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "function": "hard-smp:advancement"
+  }
+}

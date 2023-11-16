@@ -9,28 +9,28 @@ import java.util.function.Function;
 
 public class Database {
 
-	public Jdbi jdbi;
+    public Jdbi jdbi;
 
-	public Database(String host, String user, String password) {
-		if (host==null || user==null || password==null) return;
+    public Database(String host, String user, String password) {
+        if (host == null || user == null || password == null) return;
 
-		jdbi = Jdbi.create("jdbc:postgresql://" + host, user, password);
-	}
+        jdbi = Jdbi.create("jdbc:postgresql://" + host, user, password);
+    }
 
-	public void run(Consumer<Handle> handler) {
-		if (jdbi==null) {
-			HardSMP.getInstance().getLogger().warning("Versuchter Datenbankaufruf nicht möglich: Keine Datenbank konfiguriert");
-			return;
-		}
-		jdbi.useHandle(handler::accept);
-	}
+    public void run(Consumer<Handle> handler) {
+        if (jdbi == null) {
+            HardSMP.getInstance().getLogger().warning("Versuchter Datenbankaufruf nicht möglich: Keine Datenbank konfiguriert");
+            return;
+        }
+        jdbi.useHandle(handler::accept);
+    }
 
-	public <T> T handle(Function<Handle, T> handler) {
-		if (jdbi==null) {
-			HardSMP.getInstance().getLogger().warning("Versuchter Datenbankaufruf nicht möglich: Keine Datenbank konfiguriert");
-			return null;
-		}
-		return jdbi.withHandle(handler::apply);
-	}
+    public <T> T handle(Function<Handle, T> handler) {
+        if (jdbi == null) {
+            HardSMP.getInstance().getLogger().warning("Versuchter Datenbankaufruf nicht möglich: Keine Datenbank konfiguriert");
+            return null;
+        }
+        return jdbi.withHandle(handler::apply);
+    }
 
 }

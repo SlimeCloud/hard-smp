@@ -2,3 +2,81 @@ database:
   host: "localhost:5432/"
   user: postgres
   password: pwd
+
+shop:
+  offers:
+    chest-key:
+      item: "chest-key"
+      amount: 1
+      price:
+        required-points: 100
+        item: "iron_ingot"
+        amount: 2
+        second-item: "gold_ingot"
+        second-amount: 1
+    mending-Infinity-bow:
+      item: "mending-Infinity-bow"
+      amount: 1
+      price:
+        required-points: 3000
+        item: "bow"
+        amount: 1
+        second-item: "netherite_ingot"
+        second-amount: 3
+
+help:
+  root: "Das ist der help command"
+  event-info: "event infos..."
+  support-info: "support infos..."
+  command-info:
+    rules: "Zeigt dir die Server regeln an."
+
+rules:
+  1: "test"
+
+ui:
+  custom-formatting:
+    v: "#fcd217"
+    w: "#bdbdbd"
+    z: "#bf8970"
+
+  scoreboard:
+    title: "§2Hard-SMP"
+    text:
+      default: "%rank. %name   §u%points"
+      rank_1: "§l§6%rank. %name   §r§u%points"
+      rank_2: "§l§i%rank. %name   §r§u%points"
+      rank_3: "§l§y%rank. %name   §r§u%points"
+
+  tablist:
+    header: "§j-----  §2Hard-SMP  §j-----"
+    prefix: "§8[§7%prefix§8]"
+    name: "%prefix §r%name  §p%points"
+    footer: "§j---  §7[%tps §8TPS§7]  §j---"
+
+  chat:
+    prefix: "§7[%prefix§7]"
+    #colr = color rank
+    #coln = color name
+    format: "%colr#%rank %prefix %coln%name: "
+    color:
+      name_default: "§a"
+      name_1: "§v"
+      name_2: "§w"
+      name_3: "§z"
+
+      rank_default: "§7"
+      rank_1: "§v"
+      rank_2: "§w"
+      rank_3: "§z"
+
+verify:
+  code-length: 5
+
+discord:
+  token: xxx
+  console-channel: xxx
+
+teamchat:
+  messageFormat: "§8[§aTeam§bChat§8] §c%player§7:"
+  messageColor: "§6"

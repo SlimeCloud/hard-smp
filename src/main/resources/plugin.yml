@@ -1,8 +1,35 @@
 name: hard-smp
 version: '${project.version}'
-main: de.slimecloud.hardsmp.Main
+main: de.slimecloud.hardsmp.HardSMP
 api-version: '1.20'
-prefix: [HardSMP]
+prefix: HardSMP
 authors: [SlimeCloud Netrunner]
+depend:
+  - LuckPerms
+  - spark
 description: HardSMP (Das 'S' steht für "Slime")
 website: https://discord.gg/slimecloud
+
+
+permissions:
+  hardsmp.command.help:
+    default: true
+  hardsmp.command.rules:
+    default: true
+
+commands:
+  formatting:
+    permission: hardsmp.command.formatting
+  point:
+    usage: "§cUsage: /point <Player> add/set/remove/get"
+    permission: hardsmp.command.point
+  spawn-shop-npc:
+    permission: hardsmp.command.spawn-shop
+  help:
+    permission: hardsmp.command.help
+  rules:
+    permission: hardsmp.command.rules
+  teamchat:
+    aliases: ["tc"]
+    usage: "§cUsage: /teamcaht <Message>"
+    permission: hardsmp.teamchat.send

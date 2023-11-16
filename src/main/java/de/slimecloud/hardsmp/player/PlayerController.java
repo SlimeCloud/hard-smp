@@ -1,124 +1,97 @@
 package de.slimecloud.hardsmp.player;
 
-import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.player.data.PointCategory;
 import de.slimecloud.hardsmp.player.data.Points;
-import de.slimecloud.hardsmp.player.data.Team;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Statistic;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 public class PlayerController {
 
-	public static EventPlayer getPlayer(OfflinePlayer player) {
-		return new EventPlayerImpl(player);
-	}
+    public static EventPlayer getPlayer(HumanEntity player) {
+        return getPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
+    }
 
-	public static TeamPlayer getTeamPlayer(OfflinePlayer player, EventTeam team) {
-		return new TeamPlayerImpl(player, team);
-	}
+    public static EventPlayer getPlayer(OfflinePlayer player) {
+        return new EventPlayerImpl(player);
+    }
 
-	@RequiredArgsConstructor
-	private static class EventPlayerImpl implements EventPlayer {
+    @RequiredArgsConstructor
+    private static class EventPlayerImpl implements EventPlayer {
 
-		protected final OfflinePlayer player;
+        protected final OfflinePlayer player;
 
 
-		protected Points getData() {
-			return Points.load(getOfflinePlayer().getUniqueId().toString());
-		}
+        protected Points getData() {
+            return Points.load(getOfflinePlayer().getUniqueId().toString());
+        }
 
-		@Override
-		public void addPoints(double points) {
-			Points p = getData();
-			p.setPoints(p.getPoints()+points);
-			p.save();
-		}
+        @Override
+        public void addPoints(double points) {
+            Points p = getData();
+            p.setPoints(p.getPoints() + points);
+            p.save();
+        }
 
-		@Override
-		public void setPoints(double points) {
-			Points p = getData();
-			p.setPoints(points);
-			p.save();
-		}
+        @Override
+        public void setPoints(double points) {
+            Points p = getData();
+            p.setPoints(points);
+            p.save();
+        }
 
-		@Override
-		public void removePoints(double points) {
-			addPoints(points*-1);
-		}
+        @Override
+        public void removePoints(double points) {
+            addPoints(points * -1);
+        }
 
-		@Override
-		public double getPoints() {
-			return getData().getPoints();
-		}
+        @Override
+        public double getPoints() {
+            return getData().getPoints();
+        }
 
-		@Override
-		public TeamPlayer joinTeam(EventTeam team) {
-			team.add(this);
-			return getTeamPlayer(getOfflinePlayer(), team);
-		}
+        @Override
+        public double getActualPoints() {
+            double points = getPoints();
+            points += PointCategory.CROUCH_ONE_CM.calculate(player.getStatistic(Statistic.CROUCH_ONE_CM));
+            points += PointCategory.FLY_ONE_CM.calculate(player.getStatistic(Statistic.FLY_ONE_CM));
+            points += PointCategory.SPRINT_ONE_CM.calculate(player.getStatistic(Statistic.SPRINT_ONE_CM));
+            points += PointCategory.SWIM_ONE_CM.calculate(player.getStatistic(Statistic.SWIM_ONE_CM));
+            points += PointCategory.WALK_ONE_CM.calculate(player.getStatistic(Statistic.WALK_ONE_CM));
+            points += PointCategory.WALK_ON_WATER_ONE_CM.calculate(player.getStatistic(Statistic.WALK_ON_WATER_ONE_CM));
+            points += PointCategory.WALK_UNDER_WATER_ONE_CM.calculate(player.getStatistic(Statistic.WALK_UNDER_WATER_ONE_CM));
+            points += PointCategory.BOAT_ONE_CM.calculate(player.getStatistic(Statistic.BOAT_ONE_CM));
+            points += PointCategory.AVIATE_ONE_CM.calculate(player.getStatistic(Statistic.AVIATE_ONE_CM));
+            points += PointCategory.HORSE_ONE_CM.calculate(player.getStatistic(Statistic.HORSE_ONE_CM));
+            points += PointCategory.MINECART_ONE_CM.calculate(player.getStatistic(Statistic.MINECART_ONE_CM));
+            points += PointCategory.PIG_ONE_CM.calculate(player.getStatistic(Statistic.PIG_ONE_CM));
+            points += PointCategory.STRIDER_ONE_CM.calculate(player.getStatistic(Statistic.STRIDER_ONE_CM));
 
-		@Override
-		@Nullable
-		public Player getPlayer() {
-			return getOfflinePlayer().getPlayer();
-		}
+            points *= 0.1 * (Math.pow(0.5, (player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (115 * 180d) - 6.5)) + 10);
+            return points;
+        }
 
-		@Override
-		public OfflinePlayer getOfflinePlayer() {
-			return player;
-		}
+        @Override
+        @Nullable
+        public Player getPlayer() {
+            return getOfflinePlayer().getPlayer();
+        }
 
-		@Override
-		public UUID getUniqueId() {
-			return getOfflinePlayer().getUniqueId();
-		}
+        @Override
+        public OfflinePlayer getOfflinePlayer() {
+            return player;
+        }
 
-		@Override
-		public TeamPlayer createTeam(String name) {
-			Team team = new Team(System.currentTimeMillis(), name, getUniqueId().toString());
-			team.add(this);
-			team.save();
-			return getTeamPlayer(getOfflinePlayer(), new SyncedTeamImpl(team.getID()));
-		}
-
-		@Override
-		public @Nullable EventTeam getTeam() {
-			if (getPlayer()==null) throw new IllegalStateException("player must be online to get the team");
-			Long id = getPlayer().getPersistentDataContainer().get(HardSMP.getInstance().TEAM_KEY, PersistentDataType.LONG);
-			return id == null ? null : new SyncedTeamImpl(id);
-		}
-	}
-
-	private static class TeamPlayerImpl extends EventPlayerImpl implements TeamPlayer {
-
-		private final EventTeam team;
-
-		public TeamPlayerImpl(OfflinePlayer player, EventTeam team) {
-			super(player);
-			this.team = team;
-		}
-
-		@Override
-		public void addMultipliedPoints(double points) {
-			getTeam().getPlayers().forEach(p -> p.addPoints(points * getTeam().getMultiplier()));
-		}
-
-		@Override
-		public @NotNull EventTeam getTeam() {
-			return team;
-		}
-
-		@Override
-		public EventPlayer leaveTeam() {
-			team.remove(this);
-			return PlayerController.getPlayer(player);
-		}
-	}
-
+        @Override
+        public UUID getUniqueId() {
+            return getOfflinePlayer().getUniqueId();
+        }
+    }
 
 }

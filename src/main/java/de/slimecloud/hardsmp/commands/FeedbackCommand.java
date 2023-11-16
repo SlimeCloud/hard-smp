@@ -19,7 +19,6 @@ public class FeedbackCommand implements CommandExecutor, EmptyTabCompleter {
             this.msg = Component.text("Es ist ein fehler aufgetreten.\nBitte melde dieses Problem dem support").color(Formatter.getColorFormattings().get('4'));
         else {
             Component msg = Formatter.parseText("§a----- §bFeedback §a-----");
-            ConfigurationSection s = section.getConfigurationSection("link");
             msg = msg.appendNewline();
             msg = msg.append(Formatter.parseText("§b" + section.getString("link", "feedback")));
 

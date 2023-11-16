@@ -62,8 +62,9 @@ public class UnverifyCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        List<String> list = new ArrayList<>(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
-        list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()));
-        return list;
+        return Bukkit.getOnlinePlayers().stream()
+                .map(Player::getName)
+                .filter(n -> n.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                .toList();
     }
 }

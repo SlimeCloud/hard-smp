@@ -47,3 +47,6 @@ commands:
     permission: hardsmp.command.feedback
   bug:
     permission: hardsmp.command.bug
+  leaderboard:
+    usage: "§cUsage: /leaderboard <Page>"
+    permission: hardsmp.command.leaderboard

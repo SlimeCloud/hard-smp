@@ -1,11 +1,40 @@
 {
     "providers": [
         {
-            "type": "bitmap",
+            "chars": [
+                "\uE001"
+            ],
             "file": "scoreboard/title.png",
-            "ascent": 11,
-            "height": 11,
-            "chars": ["\uE001"]
+            "ascent": 46,
+            "height": 76,
+            "type": "bitmap"
+        },
+        {
+            "chars": [
+                "\uE002"
+            ],
+            "file": "scoreboard/first_place.png",
+            "ascent": 9,
+            "height": 9,
+            "type": "bitmap"
+        },
+        {
+            "chars": [
+                "\uE003"
+            ],
+            "file": "scoreboard/second_place.png",
+            "ascent": 9,
+            "height": 9,
+            "type": "bitmap"
+        },
+        {
+            "chars": [
+                "\uE004"
+            ],
+            "file": "scoreboard/third_place.png",
+            "ascent": 9,
+            "height": 9,
+            "type": "bitmap"
         }
     ]
 }

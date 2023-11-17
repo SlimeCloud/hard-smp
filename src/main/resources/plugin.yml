@@ -33,3 +33,9 @@ commands:
     aliases: ["tc"]
     usage: "§cUsage: /teamcaht <Message>"
     permission: hardsmp.teamchat.send
+  unverify:
+    usage: "§cUsage: /unverify <Player>"
+    permission: hardsmp.command.unverify
+  verify:
+    usage: "§cUsage: /verify <Player>"
+    permission: hardsmp.command.verify

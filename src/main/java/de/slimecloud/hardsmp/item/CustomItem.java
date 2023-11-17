@@ -1,6 +1,7 @@
 package de.slimecloud.hardsmp.item;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,11 +15,14 @@ public abstract class CustomItem {
     private static final Set<CustomItem> ITEMS = new HashSet<>();
 
     protected final ItemBuilder builder;
+    @Getter
+    private final String name;
     private final int customModelData;
     private final Material material;
 
-    protected CustomItem(Material material, int customModelData) {
+    protected CustomItem(String name, Material material, int customModelData) {
         this.builder = new ItemBuilder(material);
+        this.name = name;
         this.customModelData = customModelData;
         this.material = material;
     }

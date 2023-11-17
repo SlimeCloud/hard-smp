@@ -36,7 +36,7 @@ public class Scoreboard {
             }
         }
         this.scoreboard = PlayerScoreboardUI.getAdventurePlayerScoreboard(plugin, player);
-        scoreboard.setTitle(Component.text(plugin.getConfig().getString("ui.scoreboard.title", "Hard-SMP")));
+        scoreboard.setTitle(Component.text(plugin.getConfig().getString("ui.scoreboard.title", "\uE001")));
     }
 
     public PlayerScoreboardUI<Component> getUI() {
@@ -44,11 +44,14 @@ public class Scoreboard {
     }
 
     private Component getLine(int rank, OfflinePlayer player, int points, Character style, Boolean isLowerSection) {
-        StringBuilder s = new StringBuilder((style != null ? '§' + style.toString() : "") + lines.getOrDefault(rank, lineDefault)
-                .replace("%rank", String.valueOf(rank))
+        StringBuilder s = new StringBuilder((style != null ? '§' + style.toString() : "") //set style
+                + (lines.getOrDefault(rank, lineDefault).charAt(0) == '§' ? "" : "§r") //reset style if rank is a unicode
+                + lines.getOrDefault(rank, lineDefault) //get format from config
+                .replace("%rank", String.valueOf(rank)) //replace placeholder
                 .replace("%points", String.valueOf(points))
                 .replace("§l", (isLowerSection ? "" : "§l")) //remove bold format in lower Section
-                .replace("%name", Objects.requireNonNullElse(player.getName(), player.getUniqueId().toString())));
+                .replace("%name", Objects.requireNonNullElse(player.getName(), player.getUniqueId().toString())))
+                .insert(5, (lines.getOrDefault(rank, lineDefault).charAt(0) != '§' && style != null ? "§" + style : ""));//insert style if it was removed because of the unicode char
         if (style != null) s.append("§r");
         if (s.length() > max) max = s.length();
         return Formatter.parseText(s.toString());

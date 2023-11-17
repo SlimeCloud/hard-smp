@@ -53,19 +53,40 @@ public class Chat implements Listener {
         else prefix = user.getCachedData().getMetaData().getPrefix();
 
         prefix = prefix == null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§"));
-        int rank = ScoreboardManager.STATS.get(player.getUniqueId()).first();
-        String nameColor = this.nameColor.getOrDefault(rank, this.nameColor.get(-1));
-        String rankColor = this.rankColor.getOrDefault(rank, this.rankColor.get(-1));
-        Component format = Formatter.parseText(this.format
+        String rank = ScoreboardManager.STATS.get(player.getUniqueId()).first().toString();
+        String nameColor = this.nameColor.getOrDefault(Integer.valueOf(rank), this.nameColor.get(-1));
+        String rankColor = this.rankColor.getOrDefault(Integer.valueOf(rank), this.rankColor.get(-1));
+
+
+        switch (rank) {
+            case "1":
+                rank = "\uE002";
+            case "2":
+                rank = "\uE003";
+            case "3":
+                rank = "\uE004";
+        }
+        String formattedFormat = this.format
                 .replace("%colr", rankColor)
                 .replace("%coln", nameColor)
-                .replace("%rank", String.valueOf(rank))
+                .replace("%rank", rank)
                 .replace("%prefix", prefix)
-                .replace("%name", player.getName()));
-
+                .replace("%name", player.getName());
+        if (!isInt(String.valueOf(formattedFormat.charAt(3))))
+            formattedFormat = formattedFormat.substring(3, formattedFormat.length() - 1);
+        Component format = Formatter.parseText(formattedFormat);
         LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
         String msg = serializer.serialize(event.originalMessage());
-        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(format.append(Formatter.parseText("&", "&r" + msg))));
+        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(format.append(Formatter.parseText("&", "&r" + " " + msg))));
+    }
+
+    private boolean isInt(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
 }

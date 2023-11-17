@@ -79,6 +79,8 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
         registerCommand("formatting", new FormattingCommand());
+        registerCommand("verify", new VerifyCommand());
+        registerCommand("unverify", new UnverifyCommand());
         registerCommand("help", new HelpCommand());
         registerCommand("rules", rules = new RulesCommand());
         registerCommand("teamchat", new TeamChatCommand());

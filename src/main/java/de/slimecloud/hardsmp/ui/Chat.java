@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,9 +59,12 @@ public class Chat implements Listener {
 
 
         switch (rank) {
-            case "1": rank = "\uE002";
-            case "2": rank = "\uE003";
-            case "3": rank = "\uE004";
+            case "1":
+                rank = "\uE002";
+            case "2":
+                rank = "\uE003";
+            case "3":
+                rank = "\uE004";
         }
         String formattedFormat = this.format
                 .replace("%colr", rankColor)
@@ -70,7 +72,8 @@ public class Chat implements Listener {
                 .replace("%rank", rank)
                 .replace("%prefix", prefix)
                 .replace("%name", player.getName());
-        if (!isInt(String.valueOf(formattedFormat.charAt(3)))) formattedFormat = formattedFormat.substring(3,formattedFormat.length()-1);
+        if (!isInt(String.valueOf(formattedFormat.charAt(3))))
+            formattedFormat = formattedFormat.substring(3, formattedFormat.length() - 1);
         Component format = Formatter.parseText(formattedFormat);
         LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
         String msg = serializer.serialize(event.originalMessage());

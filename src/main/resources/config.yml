@@ -15,14 +15,30 @@ shop:
         second-amount: 1
 
 help:
-  root: "Das ist der help command"
-  event-info: "event infos..."
-  support-info: "support infos..."
+  root: "Dies ist der Help-command. Verwende die verfügbaren Unterbefehle um informationen über eine Kategorie zu erhalten."
+  event-info: |-
+    Willkommen beim §cHard-SMP (Das 'S' steht für Schleim)§r Event. Dies ist ein Minecraft-Server Projekt, das über den §9Dezember 2023§r läuft.
+    Am Spawn befindet sich ein kleines Dorf, an dem du dich mit §3anderen Spielern treffen§r, §6kleine Secrets finden§r und den §aShop besuchen§r, der besondere Items zur Verfügung stellt.
+    
+    Durch verschiedene Statistiken und Sammeln von Achievements kannst ud Punkte sammeln, mit denen am Ende des Events der Gewinner festgestellt wird.
+    Um das Event fair für alle Teilnehmer zu halten, sind §4TEAMS VERBOTEN§r.
+    
+    Jede Woche wird es §ezusätzlich Events§r geben, an denen du teilnehmen kannst. Sie decken §2unterschiedliche Gebiete von Minecraft§r ab, es ist also für jeden was dabei.
+    Mit den Events kannst du §cextra Punkte verdienen§r, die dir Helfen können, das §egesamte Hard-SMP Event§r für dich zu entscheiden.
+    
+    Aber Achtung! Abhängig von deiner §eSpielzeit§r werden Punkte weniger Wert. Du solltest deine §cSpielzeit auf dem Server also Produktiv nutzen§r...
+    
+    Viel Spaß!
+  support-info: |-
+    Wenn du support erhalten möchtest, kannst du dich jeder Zeit an das Server-Team melden.
+    Du kannst entweder im Minecraft-Chat mit einem Team-Mitglied Kontakt aufnehmen oder dich auf dem §2Slimecloud Discord§r an uns wenden.
+    Zusätzlich kannst du §b/bug§r und §b/feedback§r verwenden, um auf ein Formular weitergeleitet zu werden.
   command-info:
-    rules: "Zeigt dir die Server regeln an."
+    rules: "Zeigt die Regeln des Hard-SMP Events an."
 
 rules:
-  1: "test"
+  1: "test1"
+  2: "test2"
 
 ui:
   custom-formatting:

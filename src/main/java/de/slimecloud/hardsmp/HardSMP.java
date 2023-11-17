@@ -7,6 +7,7 @@ import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ChestKey;
+import de.slimecloud.hardsmp.item.CustomItem;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
@@ -85,7 +86,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("rules", rules = new RulesCommand());
         registerCommand("teamchat", new TeamChatCommand());
 
-        itemManager.registerItem("chest-key", ChestKey.BUILDER::build);
+        CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
 
         SlimeHandler.setupOffers(getConfig());
@@ -94,6 +95,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());
+        registerEvent(new ChestKey());
         registerEvent(rules);
 
         //UI

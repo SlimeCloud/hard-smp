@@ -109,6 +109,7 @@ public class ChestKey extends CustomItem implements Listener {
         PersistentDataHandler data = PersistentDataHandler.get(container);
         data.set(lockKey, true);
         data.set(idKey, id);
+        container.update();
         data = PersistentDataHandler.get(key);
         List<Long> ids = Longs.asList(Objects.requireNonNullElse(data.getLongArray(idKey), new long[0]));
         ids.add(id);

@@ -49,23 +49,35 @@ public class ChestKey extends CustomItem implements Listener {
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (event.getClickedBlock() != null) {
                 Block clickedBlock = event.getClickedBlock();
-                if (isContainerLocked(clickedBlock.getState()) || (!LOCKABLE.contains(clickedBlock.getType()) && clickedBlock instanceof Container)) {
-                    long keyId = getID((Container) clickedBlock.getState());
-                    if (!playerHasKeyForContainer(event.getPlayer(), keyId)) {
-                        event.getPlayer().sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.no-key", "§cVerschlossen")));
-                        event.setCancelled(true);
-                    }
-                } else {
-                    if (isItem(event.getItem())) {
-                        if (LOCKABLE.contains(clickedBlock.getType())) {
-                            if (event.getPlayer().isSneaking()) {
-                                bindKey((Container) clickedBlock.getState(), event.getItem());
-                                event.getPlayer().sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.success", "§2Verschlossen")));
+                ItemStack item = event.getItem();
+                Player player = event.getPlayer();
+                boolean flag = true;
+                if (isItem(item)) {
+                    if (LOCKABLE.contains(clickedBlock.getType()) && clickedBlock.getState() instanceof Container container) {
+                        if (isContainerLocked(container)) {
+                            if (player.isSneaking()) {
+                                unbindKey(container, item);
+                                event.getPlayer().sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.success.unlock", "§2Geöffnet")));
+                                flag = false;
                             }
-                        } else event.setCancelled(true);
-                    }
+                        } else {
+                            if (player.isSneaking()) {
+                                bindKey(container, item);
+                                event.getPlayer().sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.success.lock", "§2Verschlossen")));
+                                flag = false;
+                            }
+                        }
+                    } else flag = false;
                 }
 
+                if (flag) {
+                    if (clickedBlock.getState() instanceof Container container && isContainerLocked(container)) {
+                        if (!playerHasKeyForContainer(player, getID(container))) {
+                            player.sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.no-key", "§cVerschlossen")));
+                            event.setCancelled(true);
+                        }
+                    }
+                } else event.setCancelled(true);
 
             } else if (isItem(event.getItem())) event.setCancelled(true);
         }

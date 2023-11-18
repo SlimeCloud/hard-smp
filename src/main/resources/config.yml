@@ -26,6 +26,8 @@ shop:
 
 chest-key:
   lockable: ["CHEST", "TRAPPED_CHEST", "BARREL"]
+  no-key: "§cVerschlossen"
+  success: "§2Erfolgreich verschlossen"
 
 help:
   root: "Das ist der help command"

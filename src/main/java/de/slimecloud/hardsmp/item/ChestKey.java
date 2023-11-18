@@ -1,7 +1,9 @@
 package de.slimecloud.hardsmp.item;
 
 import com.google.common.primitives.Longs;
+import de.cyklon.spigotutils.adventure.Formatter;
 import de.cyklon.spigotutils.persistence.PersistentDataHandler;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -23,8 +25,8 @@ import java.util.*;
 
 public class ChestKey extends CustomItem implements Listener {
 
+    private final Plugin plugin;
     private final Set<Material> LOCKABLE;
-    private final NamespacedKey lockKey;
     private final NamespacedKey idKey;
 
     public ChestKey(Plugin plugin) {
@@ -33,10 +35,10 @@ public class ChestKey extends CustomItem implements Listener {
                 .setUnbreakable(true)
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
 
+        this.plugin = plugin;
         this.LOCKABLE = new HashSet<>();
         List<String> list = plugin.getConfig().getStringList("chest-key.lockable");
         list.forEach(s -> LOCKABLE.add(Material.valueOf(s.toUpperCase())));
-        this.lockKey = new NamespacedKey(plugin, "locked");
         this.idKey = new NamespacedKey(plugin, "lock-id");
         add();
     }
@@ -47,10 +49,10 @@ public class ChestKey extends CustomItem implements Listener {
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (event.getClickedBlock() != null) {
                 Block clickedBlock = event.getClickedBlock();
-                if (isContainerLocked(clickedBlock.getState())) {
+                if (isContainerLocked(clickedBlock.getState()) || (!LOCKABLE.contains(clickedBlock.getType()) && clickedBlock instanceof Container)) {
                     long keyId = getID((Container) clickedBlock.getState());
                     if (!playerHasKeyForContainer(event.getPlayer(), keyId)) {
-                        playerHasNoKey(event.getPlayer());
+                        event.getPlayer().sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.no-key", "§cVerschlossen")));
                         event.setCancelled(true);
                     }
                 } else {
@@ -58,7 +60,7 @@ public class ChestKey extends CustomItem implements Listener {
                         if (LOCKABLE.contains(clickedBlock.getType())) {
                             if (event.getPlayer().isSneaking()) {
                                 bindKey((Container) clickedBlock.getState(), event.getItem());
-                                event.getPlayer().sendMessage("locking container");
+                                event.getPlayer().sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.success", "§2Verschlossen")));
                             }
                         } else event.setCancelled(true);
                     }
@@ -89,7 +91,7 @@ public class ChestKey extends CustomItem implements Listener {
      * @return true if the container is bound to a key. otherwise false
      */
     private boolean isContainerLocked(BlockState block) {
-        return LOCKABLE.contains(block.getType()) && block instanceof Container container && PersistentDataHandler.get(container).contains(lockKey);
+        return LOCKABLE.contains(block.getType()) && block instanceof Container container && PersistentDataHandler.get(container).contains(idKey);
     }
 
 
@@ -120,17 +122,24 @@ public class ChestKey extends CustomItem implements Listener {
     private void bindKey(Container container, ItemStack key) {
         long id = System.nanoTime();
         PersistentDataHandler data = PersistentDataHandler.get(container);
-        data.set(lockKey, true);
         data.set(idKey, id);
         container.update();
         data = PersistentDataHandler.get(key);
-        List<Long> ids = new ArrayList<>(Longs.asList(Objects.requireNonNullElse(data.getLongArray(idKey), new long[0])));
+        Set<Long> ids = new HashSet<>(Longs.asList(Objects.requireNonNullElse(data.getLongArray(idKey), new long[0])));
         ids.add(id);
         data.set(idKey, Longs.toArray(ids));
     }
 
-    private void playerHasNoKey(Player player) {
-        player.sendMessage("This Container is locked. You dont have a matching key!");
+    @SuppressWarnings("ConstantConditions")
+    private void unbindKey(Container container, ItemStack key) {
+        PersistentDataHandler data = PersistentDataHandler.get(container);
+        if (!data.contains(idKey)) return;
+        long id = data.getLong(idKey);
+        data.remove(idKey);
+        container.update();
+        Set<Long> ids = new HashSet<>(Longs.asList(Objects.requireNonNullElse(data.getLongArray(idKey), new long[0])));
+        ids.remove(id);
+        data.set(idKey, Longs.toArray(ids));
     }
 
     private boolean playerHasKeyForContainer(Player player, long id) {

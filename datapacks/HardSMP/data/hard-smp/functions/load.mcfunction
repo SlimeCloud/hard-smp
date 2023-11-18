@@ -1,0 +1,1 @@
+scoreboard objectives add invisible_item_frame dummy

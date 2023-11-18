@@ -1,0 +1,13 @@
+{
+  "criteria": {
+    "unlock": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hard-smp:invisible_item_frame"
+      }
+    }
+  },
+  "rewards": {
+    "function": "hard-smp:craft/invisible_item_frame/detect_craft"
+  }
+}

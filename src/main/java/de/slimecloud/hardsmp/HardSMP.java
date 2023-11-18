@@ -86,11 +86,6 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("rules", rules = new RulesCommand());
         registerCommand("teamchat", new TeamChatCommand());
 
-        CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
-        itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
-
-        SlimeHandler.setupOffers(getConfig());
-
         //Events
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
@@ -102,6 +97,11 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
         registerEvent(new Chat(getConfig()));
+
+        CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
+        itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
+
+        SlimeHandler.setupOffers(getConfig());
 
         ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
         for (String format : formattings.getKeys(false)) {

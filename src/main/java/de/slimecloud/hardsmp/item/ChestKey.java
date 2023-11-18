@@ -2,13 +2,12 @@ package de.slimecloud.hardsmp.item;
 
 import com.google.common.primitives.Longs;
 import de.cyklon.spigotutils.persistence.PersistentDataHandler;
-import de.slimecloud.hardsmp.player.PlayerController;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Container;
-import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -43,15 +42,29 @@ public class ChestKey extends CustomItem implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!isItem(event.getItem())) return;
-        if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) event.setCancelled(true);
+        if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && isItem(event.getItem())) event.setCancelled(true);
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (event.getClickedBlock() != null) {
-                if (LOCKABLE.contains(event.getClickedBlock().getType()))
-                        PlayerController.getPlayer((HumanEntity) event.getPlayer()).addPoints(1);
+                Block clickedBlock = event.getClickedBlock();
+                if (isContainerLocked(clickedBlock.getState())) {
+                    long keyId = getID((Container) clickedBlock.getState());
+                    if (!playerHasKeyForContainer(event.getPlayer(), keyId)) {
+                        playerHasNoKey(event.getPlayer());
+                        event.setCancelled(true);
+                    }
+                } else {
+                    if (isItem(event.getItem())) {
+                        if (LOCKABLE.contains(clickedBlock.getType())) {
+                            if (event.getPlayer().isSneaking()) {
+                                bindKey((Container) clickedBlock.getState(), event.getItem());
+                                event.getPlayer().sendMessage("locking container");
+                            }
+                        } else event.setCancelled(true);
+                    }
+                }
 
-                else event.setCancelled(true);
-            }
+
+            } else if (isItem(event.getItem())) event.setCancelled(true);
         }
     }
 
@@ -64,7 +77,6 @@ public class ChestKey extends CustomItem implements Listener {
         if (inventory instanceof PlayerInventory) return false;
         if (inventory.getLocation() != null) {
             Block block = inventory.getLocation().getBlock();
-
             if (LOCKABLE.contains(block.getType())) return isContainerLocked(block.getState());
         }
         return false;
@@ -110,9 +122,20 @@ public class ChestKey extends CustomItem implements Listener {
         data.set(lockKey, true);
         data.set(idKey, id);
         data = PersistentDataHandler.get(key);
-        List<Long> ids = Longs.asList(Objects.requireNonNullElse(data.getLongArray(idKey), new long[0]));
+        List<Long> ids = new ArrayList<>(Longs.asList(Objects.requireNonNullElse(data.getLongArray(idKey), new long[0])));
         ids.add(id);
         data.set(idKey, Longs.toArray(ids));
+    }
+
+    private void playerHasNoKey(Player player) {
+        player.sendMessage("This Container is locked. You dont have a matching key!");
+    }
+
+    private boolean playerHasKeyForContainer(Player player, long id) {
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (isItem(item) && Longs.asList(getIDS(item)).contains(id)) return true;
+        }
+        return false;
     }
 
 }

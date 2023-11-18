@@ -95,7 +95,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());
-        registerEvent(new ChestKey());
+        registerEvent(new ChestKey(this));
         registerEvent(rules);
 
         //UI

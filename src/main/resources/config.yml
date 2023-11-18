@@ -24,6 +24,9 @@ shop:
         second-item: "netherite_ingot"
         second-amount: 3
 
+chest-key:
+  lockable: ["CHEST", "TRAPPED_CHEST", "BARREL"]
+
 help:
   root: "Das ist der help command"
   event-info: "event infos..."

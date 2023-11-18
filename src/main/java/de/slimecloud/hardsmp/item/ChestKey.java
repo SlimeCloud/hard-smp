@@ -1,11 +1,9 @@
 package de.slimecloud.hardsmp.item;
 
-import de.cyklon.spigotutils.item.ItemBuilder;
 import de.slimecloud.hardsmp.player.PlayerController;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EntityType;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,14 +12,23 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.plugin.Plugin;
+
+import java.util.*;
 
 public class ChestKey extends CustomItem implements Listener {
 
-    public ChestKey() {
+    private final Set<Material> LOCKABLE;
+
+    public ChestKey(Plugin plugin) {
         super("chest-key", Material.IRON_HOE, 0);
         builder.setDisplayName("Schlüssel")
                 .setUnbreakable(true)
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
+
+        this.LOCKABLE = new HashSet<>();
+        List<String> list = plugin.getConfig().getStringList("chest-key.lockable");
+        list.forEach(s -> LOCKABLE.add(Material.valueOf(s.toUpperCase())));
     }
 
     @EventHandler
@@ -52,7 +59,5 @@ public class ChestKey extends CustomItem implements Listener {
             }
         }
     }
-
-
 
 }

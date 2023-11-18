@@ -14,7 +14,7 @@ public class DeathPointHandler implements Listener {
     private void onDeath(PlayerDeathEvent event) {
         EventPlayer player = PlayerController.getPlayer(Bukkit.getOfflinePlayer(event.getPlayer().getUniqueId()));
         double points = event.getPlayer().getStatistic(Statistic.DEATHS) * 100;
-        System.out.println(points);
+
         if (points > player.getPoints()) player.setPoints(0);
         else player.removePoints(points);
 

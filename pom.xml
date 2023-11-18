@@ -86,7 +86,7 @@
         <dependency>
             <groupId>com.github.cyklon73</groupId>
             <artifactId>SpigotUtils</artifactId>
-            <version>a54eaad</version>
+            <version>dc2f375</version>
         </dependency>
 
         <!-- Spark API -->

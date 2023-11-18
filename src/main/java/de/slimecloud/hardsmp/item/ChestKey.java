@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
@@ -36,28 +37,32 @@ public class ChestKey extends CustomItem implements Listener {
         if (!isItem(event.getItem())) return;
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) event.setCancelled(true);
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            switch (event.getClickedBlock().getType()) {
-                case CHEST, TRAPPED_CHEST, BARREL -> {
-                    PlayerController.getPlayer((HumanEntity) event.getPlayer()).addPoints(1);
-                }
-                default -> event.setCancelled(true);
+            if (event.getClickedBlock() != null) {
+                if (LOCKABLE.contains(event.getClickedBlock().getType()))
+                        PlayerController.getPlayer((HumanEntity) event.getPlayer()).addPoints(1);
+
+                else event.setCancelled(true);
             }
         }
     }
-    
+
     @EventHandler
     public void onItemMoveInInventory(InventoryMoveItemEvent event) {
-        if (event.getSource() instanceof PlayerInventory) return;
-        if (event.getSource().getLocation() != null) {
-            Block source = event.getSource().getLocation().getBlock();
+        event.setCancelled(isInventoryBlockLocked(event.getSource()) || isInventoryBlockLocked(event.getDestination()));
+    }
 
-            switch (source.getType()) {
-                case CHEST, TRAPPED_CHEST, BARREL -> {
-                    // check if is locked ...
-                    event.setCancelled(true);
-                }
-            }
+    private boolean isInventoryBlockLocked(Inventory inventory) {
+        if (inventory instanceof PlayerInventory) return false;
+        if (inventory.getLocation() != null) {
+            Block block = inventory.getLocation().getBlock();
+
+            if (LOCKABLE.contains(block.getType())) return isContainerLocked(block.getState());
         }
+        return false;
+    }
+
+    public static boolean isContainerLocked(BlockState block) {
+        return false;
     }
 
 }

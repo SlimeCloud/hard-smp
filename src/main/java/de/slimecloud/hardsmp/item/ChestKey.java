@@ -38,6 +38,7 @@ public class ChestKey extends CustomItem implements Listener {
         list.forEach(s -> LOCKABLE.add(Material.valueOf(s.toUpperCase())));
         this.lockKey = new NamespacedKey(plugin, "locked");
         this.idKey = new NamespacedKey(plugin, "lock-id");
+        add();
     }
 
     @EventHandler

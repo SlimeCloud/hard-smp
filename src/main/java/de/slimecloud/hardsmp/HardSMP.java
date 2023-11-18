@@ -98,6 +98,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new Tablist(this));
         registerEvent(new Chat(getConfig()));
 
+
         CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
 

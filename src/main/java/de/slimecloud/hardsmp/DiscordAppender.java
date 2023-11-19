@@ -43,11 +43,11 @@ public class DiscordAppender extends AbstractAppender {
 
     @Override
     public void append(LogEvent event) {
-        upstream.print(dateFormat.format(new Date(event.getTimeMillis())));
-
         if(event.getLevel() == Level.ERROR) jda.getChannelById(MessageChannel.class, channel)
-                .sendMessage("<&" + HardSMP.getInstance().getConfig().getLong("discord.netrunner-role") + ">")
+                .sendMessage("<@&" + HardSMP.getInstance().getConfig().getLong("discord.netrunner-role") + ">")
                 .queue();
+
+        upstream.print(dateFormat.format(new Date(event.getTimeMillis())));
 
         upstream.printf(" \033[1;36m%-20s\033[0m ", event.getLoggerName().substring(event.getLoggerName().length() <= 20 ? 0 : event.getLoggerName().length() - 20));
         upstream.printf("%s%-5s\033[0m ", levelColor.getOrDefault(event.getLevel(), ""), event.getLevel().name());

@@ -1,9 +1,10 @@
 package de.slimecloud.hardsmp.item;
 
 import com.google.common.primitives.Longs;
+import de.cyklon.spigotutils.adventure.Formatter;
 import de.cyklon.spigotutils.persistence.PersistentDataHandler;
 import de.cyklon.spigotutils.tuple.Tuple;
-import de.cyklon.spigotutils.adventure.Formatter;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -23,6 +24,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
+@Getter
 public class ChestKey extends CustomItem implements Listener {
 
     private final Plugin plugin;
@@ -58,7 +60,7 @@ public class ChestKey extends CustomItem implements Listener {
                 if (isItem(item)) {
                     if (LOCKABLE.contains(clickedBlock.getType()) && clickedBlock.getState() instanceof Container container) {
                         if (isContainerLocked(container)) {
-                            if (player.isSneaking()) {
+                            if (player.isSneaking() && playerHasKeyForContainer(player, getID(container))) {
                                 unbindKey(event.getClickedBlock(), item);
                                 event.getPlayer().sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.success.unlock", "§2Geöffnet")));
                                 flag = false;
@@ -111,7 +113,7 @@ public class ChestKey extends CustomItem implements Listener {
         event.setCancelled(isInventoryBlockLocked(event.getSource()) || isInventoryBlockLocked(event.getDestination()));
     }
 
-    private boolean isInventoryBlockLocked(Inventory inventory) {
+    public boolean isInventoryBlockLocked(Inventory inventory) {
         if (inventory instanceof PlayerInventory) return false;
         if (inventory.getLocation() != null) {
             Block block = inventory.getLocation().getBlock();
@@ -125,11 +127,11 @@ public class ChestKey extends CustomItem implements Listener {
      * @param block the block to be checked
      * @return true if the container is bound to a key. otherwise false
      */
-    private boolean isContainerLocked(BlockState block) {
+    public boolean isContainerLocked(BlockState block) {
         return LOCKABLE.contains(block.getType()) && block instanceof Container container && PersistentDataHandler.get(container).contains(idKey);
     }
 
-    private Tuple<Boolean, Inventory, Inventory> isDoubleChest(Block block) {
+    public Tuple<Boolean, Inventory, Inventory> isDoubleChest(Block block) {
         boolean isDoubleChest = false;
         Inventory leftSide = null;
         Inventory rightSide = null;
@@ -149,7 +151,7 @@ public class ChestKey extends CustomItem implements Listener {
      * @return the id of the container
      */
     @SuppressWarnings("ConstantConditions")
-    private long getID(Container container) {
+    public long getID(Container container) {
         return PersistentDataHandler.get(container).getLong(idKey);
     }
 
@@ -158,12 +160,12 @@ public class ChestKey extends CustomItem implements Listener {
      * @param key the key from which the bound containers are to be returned
      * @return the IDs of all containers that are bound to this key
      */
-    private long[] getIDS(ItemStack key) {
+    public long[] getIDS(ItemStack key) {
         return PersistentDataHandler.get(key).getLongArray(idKey);
     }
 
 
-    private void bindIdToBlock(Block block, long id) {
+    public void bindIdToBlock(Block block, long id) {
         if (block.getState() instanceof Container blockContainer) {
             PersistentDataHandler.get(blockContainer).set(idKey, id);
             blockContainer.update();
@@ -175,7 +177,7 @@ public class ChestKey extends CustomItem implements Listener {
      * @param block the container to be bound to the key
      * @param key the key to which the container is to be bound
      */
-    private void bindKey(Block block, ItemStack key) {
+    public void bindKey(Block block, ItemStack key) {
         if (block.getState() instanceof Container) {
             Tuple<Boolean, Inventory, Inventory> isDoubleChest = isDoubleChest(block);
             List<Block> lockBlocks = new ArrayList<>();
@@ -197,7 +199,7 @@ public class ChestKey extends CustomItem implements Listener {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void unbindKey(Block block, ItemStack key) {
+    public void unbindKey(Block block, ItemStack key) {
         if (block.getState() instanceof Container) {
             Tuple<Boolean, Inventory, Inventory> isDoubleChest = isDoubleChest(block);
             List<Block> lockBlocks = new ArrayList<>();
@@ -225,7 +227,7 @@ public class ChestKey extends CustomItem implements Listener {
         }
     }
 
-    private boolean playerHasKeyForContainer(Player player, long id) {
+    public boolean playerHasKeyForContainer(Player player, long id) {
         for (ItemStack item : player.getInventory().getContents()) {
             if (isItem(item) && Longs.asList(getIDS(item)).contains(id)) return true;
         }

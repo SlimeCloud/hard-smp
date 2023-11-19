@@ -161,7 +161,7 @@ public class ChestKey extends CustomItem implements Listener {
      * @return the IDs of all containers that are bound to this key
      */
     public long[] getIDS(ItemStack key) {
-        return PersistentDataHandler.get(key).getLongArray(idKey);
+        return PersistentDataHandler.get(key).getLongArrayOrDefault(idKey, new long[0]);
     }
 
 
@@ -200,31 +200,40 @@ public class ChestKey extends CustomItem implements Listener {
 
     @SuppressWarnings("ConstantConditions")
     public void unbindKey(Block block, ItemStack key) {
+        long id = unbindKey(block);
+        if (id!=-1) unbindKey(key, id);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public long unbindKey(Block block) {
+        long id = -1;
         if (block.getState() instanceof Container) {
             Tuple<Boolean, Inventory, Inventory> isDoubleChest = isDoubleChest(block);
             List<Block> lockBlocks = new ArrayList<>();
-            if (isDoubleChest.first() && isDoubleChest.second().getLocation() != null && isDoubleChest.third().getLocation() != null) {
+            if (isDoubleChest.first() && isDoubleChest.second().getLocation()!=null && isDoubleChest.third().getLocation()!=null) {
                 lockBlocks.add(isDoubleChest.second().getLocation().getBlock());
                 lockBlocks.add(isDoubleChest.third().getLocation().getBlock());
             } else lockBlocks.add(block);
 
             PersistentDataHandler data;
-            long id = 0;
             for (Block lockBlock : lockBlocks) {
                 if (lockBlock.getState() instanceof Container blockContainer) {
                     data = PersistentDataHandler.get(blockContainer);
-                    if (!data.contains(idKey)) return;
+                    if (!data.contains(idKey)) break;
                     id = data.getLong(idKey);
                     data.remove(idKey);
                     blockContainer.update();
                 }
             }
-
-            data = PersistentDataHandler.get(key);
-            Set<Long> ids = new HashSet<>(Longs.asList(Objects.requireNonNullElse(data.getLongArray(idKey), new long[0])));
-            ids.remove(id);
-            data.set(idKey, Longs.toArray(ids));
         }
+        return id;
+    }
+
+    public void unbindKey(ItemStack key, long id) {
+        PersistentDataHandler data = PersistentDataHandler.get(key);
+        Set<Long> ids = new HashSet<>(Longs.asList(data.getLongArrayOrDefault(idKey, new long[0])));
+        ids.remove(id);
+        data.set(idKey, Longs.toArray(ids));
     }
 
     public boolean playerHasKeyForContainer(Player player, long id) {

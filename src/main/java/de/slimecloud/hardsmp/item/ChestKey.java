@@ -60,7 +60,7 @@ public class ChestKey extends CustomItem implements Listener {
                 if (isItem(item)) {
                     if (LOCKABLE.contains(clickedBlock.getType()) && clickedBlock.getState() instanceof Container container) {
                         if (isContainerLocked(container)) {
-                            if (player.isSneaking() && playerHasKeyForContainer(player, getID(container))) {
+                            if (player.isSneaking() && Longs.asList(getIDS(item)).contains(getID(container))) {
                                 unbindKey(event.getClickedBlock(), item);
                                 event.getPlayer().sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.success.unlock", "§2Geöffnet")));
                                 flag = false;

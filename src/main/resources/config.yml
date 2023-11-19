@@ -44,7 +44,7 @@ rules:
     4: "..."
   Fairness: "Unfaires Spielen wie Griefing oder Hacking ist nicht erlaubt. Als Client-Modifikationen sind nur Optifine oder ähnliche (z.B. Sodium) zulässig!"
   Lags: "Das bewusste verursachen von Server-Lags ist verboten! Redstone-Mechanismen sollten ausgeleuchtet und performant gebaut werden"
-  Teaming: "Teaming is grundsätzlich verboten, um das Event für alle Spieler fair zu halten. §lKURZE§r§a Zweck-Allianzen und Tauschgeschäfte sind erlaubt"
+  Teaming: "Teaming is grundsätzlich verboten, um das Event für alle Spieler fair zu halten. §l§cKURZE§r§a Zweck-Allianzen und Tauschgeschäfte sind erlaubt"
   Fehler: "Das aktive suchen und ausnutzen von Bugs ist verboten. Solltest du einen Fehler finden, melde ihn bitte mit /bug"
   Unwissenheit: "Unwissenheit schützt nicht vor Strafe! Jeder Spieler ist für seinen Account verantwortlich!"
   Team: "Das Team behält sich das Recht vor, die Regeln jederzeit anzupassen und unangemessenes Verhalten zu ahnden"

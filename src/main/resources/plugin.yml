@@ -39,3 +39,7 @@ commands:
   verify:
     usage: "§cUsage: /verify <Player>"
     permission: hardsmp.command.verify
+  enderchest:
+    aliases: ["ec"]
+    usage: "§cUsage: /enderchest <Player>"
+    permission: hardsmp.command.enderchest

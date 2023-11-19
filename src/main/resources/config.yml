@@ -81,3 +81,6 @@ discord:
 teamchat:
   messageFormat: "§8[§aTeam§bChat§8] §c%player§7:"
   messageColor: "§6"
+
+enderchest:
+  playerNotFoundErrorMessage: "§cDer angegebene Spieler konnte nicht gefunden werden!"

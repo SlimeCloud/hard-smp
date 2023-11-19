@@ -15,7 +15,7 @@ shop:
         second-amount: 1
 
 help:
-  root: "Dies ist der Help-command. Verwende die verfügbaren Unterbefehle um informationen über eine Kategorie zu erhalten."
+  root: "§a----- §bHilfe §a----- \n\n§aNutze §b/help event §afür kommende Events \n§aNutze §b/help command §afür eine Command-Übersicht \n§aNutze §b/help support §afür Infos zum Support \n\n§a----- §bHilfe §a-----"
   event-info: |-
     Willkommen beim §cHard-SMP (Das 'S' steht für Schleim)§r Event. Dies ist ein Minecraft-Server Projekt, das über den §9Dezember 2023§r läuft.
     Am Spawn befindet sich ein kleines Dorf, an dem du dich mit §3anderen Spielern treffen§r, §6kleine Secrets finden§r und den §aShop besuchen§r, der besondere Items zur Verfügung stellt.
@@ -34,7 +34,14 @@ help:
     Du kannst entweder im Minecraft-Chat mit einem Team-Mitglied Kontakt aufnehmen oder dich auf dem §2Slimecloud Discord§r an uns wenden.
     Zusätzlich kannst du §b/bug§r und §b/feedback§r verwenden, um auf ein Formular weitergeleitet zu werden.
   command-info:
-    rules: "Zeigt die Regeln des Hard-SMP Events an."
+    rules: "Zeigt die Regeln des Hard-SMP Events an"
+    spawn: "Teleportiert dich zum Spawn-Dorf"
+    msg: "Sende eine private Nachricht zu einem anderen Spieler"
+    formatting: "Zeige verfügbare Formations-Zeichen für den Chat an"
+    help: "Zeigt die Hilfe zu Kategorien oder Befehlen an"
+    feedback: "Zeigt den Link zum Feedback-Formular"
+    bug: "Zeigt den Link zum Bugreport-Formular"
+    leaderboard: "Zeigt das aktuelle Punkte-Leaderboard an"
 
 rules:
   1: "test1"

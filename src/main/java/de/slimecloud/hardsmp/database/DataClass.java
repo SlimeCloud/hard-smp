@@ -97,7 +97,7 @@ public abstract class DataClass {
 
         if (keys.containsAll(updatedValues.keySet())) return this;
 
-        String sql = "insert into %s(%s) values(%s) on conflict(%s) do update set %s"
+        String sql = "insert into %s(%s) values(%s)"
                 .formatted(
                         getTableName(),
                         updatedValues.keySet().stream()
@@ -106,18 +106,22 @@ public abstract class DataClass {
 
                         updatedValues.keySet().stream()
                                 .map(n -> ":" + n)
-                                .collect(Collectors.joining(", ")),
-
-                        keys.stream()
-                                .map(n -> '"' + n + '"')
-                                .collect(Collectors.joining(", ")),
-
-                        updatedValues.keySet().stream()
-                                .filter(n -> !keys.contains(n))
-                                .map(n -> '"' + n + "\" = :" + n)
                                 .collect(Collectors.joining(", "))
                 );
-        HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate(sql).bindMap(updatedValues).execute());
+
+        if(!keys.isEmpty()) sql += " on conflict(%s) do update set %s".formatted(
+                keys.stream()
+                        .map(n -> '"' + n + '"')
+                        .collect(Collectors.joining(", ")),
+
+                updatedValues.keySet().stream()
+                        .filter(n -> !keys.contains(n))
+                        .map(n -> '"' + n + "\" = :" + n)
+                        .collect(Collectors.joining(", "))
+        );
+
+        final String fSql = sql;
+        HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate(fSql).bindMap(updatedValues).execute());
 
         updateCache();
         return this;

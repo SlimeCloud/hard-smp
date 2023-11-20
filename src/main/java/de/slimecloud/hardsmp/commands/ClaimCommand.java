@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
-    public final Map<UUID, ClaimInfo> claimingPlayers = new HashMap<>();
+    public final Map<String, ClaimInfo> claimingPlayers = new HashMap<>();
     public record ClaimInfo(ScheduledTask task, AtomicInteger x1, AtomicInteger z1, AtomicInteger x2, AtomicInteger z2) {
         public ClaimInfo(ScheduledTask task) {
             this(task, null, null, null, null);
@@ -35,7 +35,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (args.length == 1) {
-            UUID uuid = ((Player) commandSender).getUniqueId();
+            String uuid = ((Player) commandSender).getUniqueId().toString();
 
             switch (args[0]) {
                 case "start" -> {
@@ -64,7 +64,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         if (task.x1 != null && task.x2 != null && task.z1 != null && task.z2 != null) {
                             claimingPlayers.remove(uuid);
                             task.task.cancel();
-                            new Claim(uuid.toString(), task.x1.get(), task.z1.get(), task.x2.get(), task.z2.get()).save();
+                            new Claim(uuid, task.x1.get(), task.z1.get(), task.x2.get(), task.z2.get()).save();
                             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text(
                                     "Der Bereich von (" + task.x1 + ", " + task.z1 + ") bis (" + task.x2 + ", " + task.z2 + ")\nwurde erfolgreich geclaimt!",
                                     NamedTextColor.GREEN
@@ -97,7 +97,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     @EventHandler
     private void onInteract(PlayerInteractEvent event) {
-        ClaimInfo info = claimingPlayers.get(event.getPlayer().getUniqueId());
+        ClaimInfo info = claimingPlayers.get(event.getPlayer().getUniqueId().toString());
         if(info == null) return;
         if(event.getClickedBlock() == null) return;
 

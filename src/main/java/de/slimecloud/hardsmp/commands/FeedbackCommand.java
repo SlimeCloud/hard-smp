@@ -20,7 +20,7 @@ public class FeedbackCommand implements CommandExecutor, EmptyTabCompleter {
         else {
             Component msg = Formatter.parseText("§a----- §bFeedback §a-----");
             msg = msg.appendNewline();
-            msg = msg.append(Formatter.parseText("§b" + section.getString("link", "feedback")));
+            msg = msg.append(Formatter.parseText("§b" + section.getString("feedback.link")));
 
             this.msg = msg;
         }

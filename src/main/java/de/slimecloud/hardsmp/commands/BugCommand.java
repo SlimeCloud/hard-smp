@@ -20,7 +20,7 @@ public class BugCommand implements CommandExecutor, EmptyTabCompleter {
         else {
             Component msg = Formatter.parseText("§a----- §bBugformular §a-----");
             msg = msg.appendNewline();
-            msg = msg.append(Formatter.parseText("§b" + section.getString("link", "bugform")));
+            msg = msg.append(Formatter.parseText("§b" + section.getString("bugform.link")));
 
             this.msg = msg;
         }

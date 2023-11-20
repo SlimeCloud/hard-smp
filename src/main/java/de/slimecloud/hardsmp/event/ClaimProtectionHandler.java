@@ -106,11 +106,10 @@ public class ClaimProtectionHandler implements Listener {
         }
     }
 
-    //ToDo: Test if this method triggers when moving blocks via slime blocks
     @EventHandler
     private void onPistonExtend(BlockPistonExtendEvent event) {
         List<Claim> claims = DataClass.loadAll(Claim::new, Collections.emptyMap());
-        if (event.getBlocks().stream().anyMatch(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation())))) {
+        if (event.getBlocks().stream().anyMatch(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation().add(event.getDirection().getDirection()))))) {
             event.setCancelled(true);
         }
     }

@@ -44,11 +44,11 @@ public abstract class DataClass {
             keyTypes.add('"' + name + "\" " + getDataType(field.getType()));
         }
 
-        String sql = "create table if not exists %s(%s, primary key(%s))"
+        String sql = "create table if not exists %s(%s%s)"
                 .formatted(
                         getTableName(),
                         String.join(", ", keyTypes),
-                        String.join(", ", primaryKeys)
+                        primaryKeys.isEmpty() ? "" : ", primary key(" + String.join(", ", primaryKeys) + ")"
                 );
         HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate(sql).execute());
     }

@@ -50,11 +50,13 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                 commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Du hast zu lange gebraucht!\nClaim-Modus beendet!", NamedTextColor.RED)));
                             }, 5, TimeUnit.MINUTES))
                     );
-                    commandSender.sendMessage(HardSMP.getPrefix().append(Component.text(
-                            "Claim-Modus erfolgreich gestartet!\n" +
-                                    "Wähle zwei Ecken mit " + Component.keybind("break") + " und " + Component.keybind("use") + "!",
-                            NamedTextColor.GREEN
-                    )));
+                    commandSender.sendMessage(HardSMP.getPrefix()
+                            .append(Component.text("Claim-Modus erfolgreich gestartet!\n" + "Wähle zwei Ecken mit ", NamedTextColor.GREEN))
+                            .append(Component.keybind("break"))
+                            .append(Component.text( " und ", NamedTextColor.GREEN))
+                            .append(Component.keybind("use"))
+                            .append(Component.text("!", NamedTextColor.GREEN))
+                    );
                 }
                 case "finish" -> {
                     ClaimInfo task = claimingPlayers.get(uuid);

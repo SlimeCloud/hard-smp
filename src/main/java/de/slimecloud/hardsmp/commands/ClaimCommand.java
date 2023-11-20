@@ -17,17 +17,21 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     public final Map<String, ClaimInfo> claimingPlayers = new HashMap<>();
-    public record ClaimInfo(ScheduledTask task, AtomicInteger x1, AtomicInteger z1, AtomicInteger x2, AtomicInteger z2) {
+    public static class ClaimInfo {
+        public final ScheduledTask task;
+        public Integer x1, z1, x2, z2;
+
         public ClaimInfo(ScheduledTask task) {
-            this(task, null, null, null, null);
+            this.task = task;
         }
     }
 
@@ -64,7 +68,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         if (task.x1 != null && task.x2 != null && task.z1 != null && task.z2 != null) {
                             claimingPlayers.remove(uuid);
                             task.task.cancel();
-                            new Claim(uuid, task.x1.get(), task.z1.get(), task.x2.get(), task.z2.get()).save();
+                            new Claim(uuid, task.x1, task.z1, task.x2, task.z2).save();
                             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text(
                                     "Der Bereich von (" + task.x1 + ", " + task.z1 + ") bis (" + task.x2 + ", " + task.z2 + ")\nwurde erfolgreich geclaimt!",
                                     NamedTextColor.GREEN
@@ -102,14 +106,14 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         if(event.getClickedBlock() == null) return;
 
         if (event.getAction().isLeftClick()) {
-            info.x1.set(event.getClickedBlock().getX());
-            info.z1.set(event.getClickedBlock().getZ());
+            info.x1 = event.getClickedBlock().getX();
+            info.z1 = event.getClickedBlock().getZ();
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(
                     Component.text("Erste Ecke: " + info.x1 + ", " + info.z1, NamedTextColor.GREEN)
             ));
         } else if (event.getAction().isRightClick()) {
-            info.x2.set(event.getClickedBlock().getX());
-            info.z2.set(event.getClickedBlock().getZ());
+            info.x2 = event.getClickedBlock().getX();
+            info.z2 = event.getClickedBlock().getZ();
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(
                     Component.text("Zweite Ecke: " + info.x2 + ", " + info.z2, NamedTextColor.GREEN)
             ));

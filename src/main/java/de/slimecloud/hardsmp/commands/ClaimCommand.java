@@ -1,5 +1,6 @@
 package de.slimecloud.hardsmp.commands;
 
+import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import kotlin.Pair;
 import net.kyori.adventure.text.Component;
@@ -9,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,9 +19,18 @@ import java.util.*;
 public class ClaimCommand implements CommandExecutor, TabCompleter {
 
     //private final List<Map.Entry<UUID, Pair<Location, Location>>> claimList;
+    private Component msg;
 
     public ClaimCommand() {
         Map<UUID, Pair<Location, Location>> pointMap = new HashMap<>();
+        ConfigurationSection section = HardSMP.getInstance().getConfig().getConfigurationSection("claims");
+        if (section == null) {
+            this.msg = Component.text("Es ist ein fehler aufgetreten.\nBitte melde dieses Problem dem support", NamedTextColor.RED);
+        } else {
+            for (String key : section.getKeys(false)) {
+
+            }
+        }
     }
 
     @Override

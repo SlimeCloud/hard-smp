@@ -5,18 +5,17 @@ import de.slimecloud.hardsmp.player.data.Claim;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityEnterBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 import java.util.Collections;
 import java.util.List;
@@ -106,6 +105,7 @@ public class ClaimProtectionHandler implements Listener {
         }
     }
 
+    //ToDo: Pistons in claims should work normally
     @EventHandler
     private void onPistonExtend(BlockPistonExtendEvent event) {
         List<Claim> claims = DataClass.loadAll(Claim::new, Collections.emptyMap());
@@ -122,24 +122,13 @@ public class ClaimProtectionHandler implements Listener {
         }
     }
 
+    //ToDo: Find a workaround for fireballs being thrown into a claim
     @EventHandler
-    private void onEntityEnterBlock(EntityEnterBlockEvent event) {
-        if (!(event.getEntityType() == EntityType.FIREBALL ||
-                event.getEntityType() == EntityType.DRAGON_FIREBALL ||
-                event.getEntityType() == EntityType.SMALL_FIREBALL ||
-                event.getEntityType() == EntityType.PRIMED_TNT ||
-                event.getEntityType().toString().contains("MINECART") ||
-                event.getEntityType().toString().contains("BOAT") ||
-                event.getEntityType() == EntityType.FALLING_BLOCK ||
-                event.getEntityType() == EntityType.ARMOR_STAND ||
-                event.getEntityType() == EntityType.SNOWMAN ||
-                event.getEntityType() == EntityType.WITHER_SKULL)) return;
-
+    private void onVehicleMove(VehicleMoveEvent event) {
         List<Claim> claims = DataClass.loadAll(Claim::new, Collections.emptyMap());
-        if (claims.stream().anyMatch(claim -> claim.contains(event.getBlock().getLocation()) && !claim.contains(event.getEntity().getLocation()))) {
-            event.getEntity().setVelocity(event.getEntity().getVelocity().multiply(-1));
+        if (claims.stream().anyMatch(claim -> claim.contains(event.getTo()) && !claim.contains(event.getFrom()))) {
+            event.getVehicle().setVelocity(event.getVehicle().getVelocity().multiply(-1));
         }
-
     }
 
 }

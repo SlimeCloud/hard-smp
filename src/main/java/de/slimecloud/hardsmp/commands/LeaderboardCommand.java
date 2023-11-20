@@ -13,7 +13,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class LeaderboardCommand implements CommandExecutor, EmptyTabCompleter {
 
@@ -50,20 +52,14 @@ public class LeaderboardCommand implements CommandExecutor, EmptyTabCompleter {
             return true;
         }
 
-        int iterator = 0;
         BoardStats stats = new BoardStats();
 
-        Map<UUID, Integer> contents = stats.getTopPlayers(page != maxPages ? page * playersPerPage : maxPlayers);
-        for (Map.Entry<UUID, Integer> c : contents.entrySet()) {
-            if (iterator++ <= (page-1) * playersPerPage) {
-                contents.remove(c.getKey());
-            } else {
-                break;
-            }
-        }
+        Set<Map.Entry<UUID, Integer>> contents = stats.getTopPlayers(page != maxPages ? page * playersPerPage : maxPlayers).entrySet().stream()
+                .skip((long) (page - 1) * playersPerPage)
+                .collect(Collectors.toSet());
 
         Component msg = Formatter.parseText("§a--- §bRangliste <Seite " + page + "von" + maxPages + "§a---");
-        for (Map.Entry<UUID, Integer> c : contents.entrySet()) {
+        for (Map.Entry<UUID, Integer> c : contents) {
             msg = msg.appendNewline();
             String color = switch (stats.get(c.getKey()).first()) {
                 case 1 -> "§6";

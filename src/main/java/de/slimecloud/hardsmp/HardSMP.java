@@ -6,6 +6,7 @@ import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
+import de.slimecloud.hardsmp.event.ClaimProtectionHandler;
 import de.slimecloud.hardsmp.event.DeathPointHandler;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
@@ -75,6 +76,7 @@ public final class HardSMP extends JavaPlugin {
         this.itemManager = new ItemManager();
 
         RulesCommand rules;
+        ClaimCommand claim = new ClaimCommand();
 
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
@@ -87,7 +89,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("bug", new BugCommand());
         registerCommand("feedback", new FeedbackCommand());
         registerCommand("leaderboard", new LeaderboardCommand());
-        registerCommand("claim", new ClaimCommand());
+        registerCommand("claim", claim);
 
 
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
@@ -101,6 +103,8 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new PointsListener());
         registerEvent(rules);
         registerEvent(new DeathPointHandler());
+        registerEvent(claim);
+        registerEvent(new ClaimProtectionHandler());
 
         //UI
         registerEvent(new ScoreboardManager(this));

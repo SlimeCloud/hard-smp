@@ -124,10 +124,10 @@ public abstract class DataClass {
     }
 
     private static String buildSQL(String tableName, Map<String, Object> keys) {
-        return "select * from %s where %s"
+        return "select * from %s%s"
                 .formatted(
                         tableName,
-                        keys.keySet().stream()
+                        keys.isEmpty() ? "" : " where " + keys.keySet().stream()
                                 .map(n -> '"' + n.toLowerCase() + "\" = :" + n)
                                 .collect(Collectors.joining(" and "))
                 );

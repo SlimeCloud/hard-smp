@@ -50,3 +50,6 @@ commands:
   leaderboard:
     usage: "§cUsage: /leaderboard <Page>"
     permission: hardsmp.command.leaderboard
+  claim:
+    usage: "§cUsage: /claim <start/cancel/finish>"
+    permission: hardsmp.command.claim

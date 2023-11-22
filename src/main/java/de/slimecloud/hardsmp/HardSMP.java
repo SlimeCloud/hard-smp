@@ -107,6 +107,7 @@ public final class HardSMP extends JavaPlugin {
         ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
         for (String format : formattings.getKeys(false)) {
             Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
+            getLogger().info("registered \"" + format + "\" as color code for " + formattings.getString(format));
         }
 
         AdvancementHandler.register(this, this::registerEvent);

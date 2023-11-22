@@ -36,9 +36,14 @@ rules:
 
 ui:
   custom-formatting:
+    #rank #1
     v: "#fcd217"
+    #rank #2
     w: "#bdbdbd"
+    #rank #3
     z: "#bf8970"
+    #better green (slime green)
+    ä: "#88D657"
 
   scoreboard:
     title: "\uE001"
@@ -61,7 +66,7 @@ ui:
     #coln = color name
     format: "%colr#%rank %prefix %coln%name: "
     color:
-      name_default: "§a"
+      name_default: "§ä"
       name_1: "§v"
       name_2: "§w"
       name_3: "§z"
@@ -79,7 +84,7 @@ discord:
   console-channel: xxx
 
 teamchat:
-  messageFormat: "§8[§aTeam§bChat§8] §c%player§7:"
+  messageFormat: "§8[§äTeam§bChat§8] §c%player§7:"
   messageColor: "§6"
 
 feedback:

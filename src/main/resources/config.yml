@@ -9,10 +9,20 @@ shop:
       item: "chest-key"
       amount: 1
       price:
+        required-points: 100
         item: "iron_ingot"
         amount: 2
         second-item: "gold_ingot"
         second-amount: 1
+    mending-Infinity-bow:
+      item: "mending-Infinity-bow"
+      amount: 1
+      price:
+        required-points: 3000
+        item: "bow"
+        amount: 1
+        second-item: "netherite_ingot"
+        second-amount: 3
 
 help:
   root: "§a----- §bHilfe §a----- \n\n§aNutze §b/help event §afür kommende Events \n§aNutze §b/help command §afür eine Command-Übersicht \n§aNutze §b/help support §afür Infos zum Support \n\n§a----- §bHilfe §a-----"
@@ -51,13 +61,19 @@ rules:
 
 ui:
   custom-formatting:
+    #rank #1
     v: "#fcd217"
+    #rank #2
     w: "#bdbdbd"
+    #rank #3
     z: "#bf8970"
+    #better green (slime green)
+    ä: "#88D657"
 
   scoreboard:
-    title: "§2Hard-SMP"
+    title: "\uE001"
     text:
+      #every format has to start with a § if the rank are no custom unicode
       default: "%rank. %name   §u%points"
       rank_1: "§l§6%rank. %name   §r§u%points"
       rank_2: "§l§i%rank. %name   §r§u%points"
@@ -75,7 +91,7 @@ ui:
     #coln = color name
     format: "%colr#%rank %prefix %coln%name: "
     color:
-      name_default: "§a"
+      name_default: "§ä"
       name_1: "§v"
       name_2: "§w"
       name_3: "§z"
@@ -90,7 +106,18 @@ verify:
 
 discord:
   token: xxx
+  console-channel: 123
+  netrunner-role: 123
 
 teamchat:
-  messageFormat: "§8[§aTeam§bChat§8] §c%player§7:"
+  messageFormat: "§8[§äTeam§bChat§8] §c%player§7:"
   messageColor: "§6"
+
+feedback:
+  link: "test"
+
+bugform:
+  link: "test"
+
+leaderboard:
+  playersPerPage: 10

@@ -6,6 +6,7 @@ import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
+import de.slimecloud.hardsmp.event.DeathPointHandler;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
@@ -13,12 +14,9 @@ import de.slimecloud.hardsmp.ui.Chat;
 import de.slimecloud.hardsmp.ui.Tablist;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
-import lombok.ConfigurationKeys;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import me.lucko.spark.api.Spark;
 import me.lucko.spark.api.SparkProvider;
-import net.dv8tion.jda.api.JDA;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -29,8 +27,8 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.ConfigurationOptions;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -81,11 +79,18 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
         registerCommand("formatting", new FormattingCommand());
+        registerCommand("verify", new VerifyCommand());
+        registerCommand("unverify", new UnverifyCommand());
         registerCommand("help", new HelpCommand());
         registerCommand("rules", rules = new RulesCommand());
         registerCommand("teamchat", new TeamChatCommand());
+        registerCommand("bug", new BugCommand());
+        registerCommand("feedback", new FeedbackCommand());
+        registerCommand("leaderboard", new LeaderboardCommand());
+
 
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
+        itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
 
         SlimeHandler.setupOffers(getConfig());
 
@@ -94,6 +99,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());
         registerEvent(rules);
+        registerEvent(new DeathPointHandler());
 
         //UI
         registerEvent(new ScoreboardManager(this));
@@ -103,6 +109,7 @@ public final class HardSMP extends JavaPlugin {
         ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
         for (String format : formattings.getKeys(false)) {
             Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
+            getLogger().info("registered \"" + format + "\" as color code for " + formattings.getString(format));
         }
 
         AdvancementHandler.register(this, this::registerEvent);
@@ -118,12 +125,13 @@ public final class HardSMP extends JavaPlugin {
     public void onDisable() {
         ScoreboardUI.getScoreboards().forEach(ScoreboardUI::delete);
 
-        this.discordBot.jdaInstance.shutdownNow();
+        this.discordBot.shutdown();
     }
 
     public static TextComponent getPrefix() {
         return Component.text("[", NamedTextColor.DARK_GRAY)
-                .append(Component.text("HardSMP", TextColor.color(0x55cfc4)))
+                .append(Component.text("Hard", TextColor.color(0x88D657)))
+                .append(Component.text("SMP", TextColor.color(0x55cfc4)))
                 .append(Component.text("] ", NamedTextColor.DARK_GRAY));
     }
 

@@ -2,14 +2,17 @@ package de.slimecloud.hardsmp.commands;
 
 import de.cyklon.spigotutils.serial.InventorySerializer;
 import de.cyklon.spigotutils.ui.Gui;
+import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
@@ -43,13 +46,13 @@ public class KeyChainCommand implements CommandExecutor, EmptyTabCompleter, List
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        open.remove(event.getPlayer().getUniqueId());
+        if (open.remove(event.getPlayer().getUniqueId())) saveInventory(event.getPlayer(), event.getInventory());
     }
 
     @EventHandler
-    public void onInventoryDrag(InventoryDragEvent event) {
+    public void onInventoryDrag(InventoryClickEvent event) {
         if (open.contains(event.getWhoClicked().getUniqueId())) {
-
+            if (!HardSMP.getInstance().getChestKey().isItem(event.getCurrentItem())) event.setCancelled(true);
         }
     }
 
@@ -70,7 +73,7 @@ public class KeyChainCommand implements CommandExecutor, EmptyTabCompleter, List
         return inv;
     }
 
-    private void saveInventory(Player player, Inventory inventory) {
+    private void saveInventory(HumanEntity player, Inventory inventory) {
         try {
             InventorySerializer.saveInv(getFile(player.getUniqueId()), inventory);
         } catch (IOException e) {

@@ -31,7 +31,7 @@ public abstract class CustomItem {
         ITEMS.add(this);
     }
 
-    protected boolean isItem(ItemStack stack) {
+    public boolean isItem(ItemStack stack) {
         return stack!=null && stack.getItemMeta().hasCustomModelData() && stack.getItemMeta().getCustomModelData() == customModelData && stack.getType()==material;
     }
 

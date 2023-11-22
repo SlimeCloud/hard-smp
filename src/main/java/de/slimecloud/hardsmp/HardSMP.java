@@ -56,6 +56,9 @@ public final class HardSMP extends JavaPlugin {
     @Getter
     private DiscordBot discordBot;
 
+    @Getter
+    private ChestKey chestKey;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -76,6 +79,7 @@ public final class HardSMP extends JavaPlugin {
         this.itemManager = new ItemManager();
 
         RulesCommand rules;
+        KeyChainCommand keyChain;
 
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
@@ -85,13 +89,15 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("help", new HelpCommand());
         registerCommand("rules", rules = new RulesCommand());
         registerCommand("teamchat", new TeamChatCommand());
+        registerCommand("keys", keyChain = new KeyChainCommand(this));
 
         //Events
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());
-        registerEvent(new ChestKey(this));
+        registerEvent(chestKey = new ChestKey(this));
         registerEvent(rules);
+        registerEvent(keyChain);
 
         //UI
         registerEvent(new ScoreboardManager(this));

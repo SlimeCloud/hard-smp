@@ -13,7 +13,7 @@ public class FormattingCommand implements CommandExecutor, EmptyTabCompleter {
     private final static Component FORMATTINGS;
 
     static {
-        final Component[] component = {Component.text("Diese Formattierungen kannst du im Chat verwenden:").color(TextColor.color(0x86D356)) .appendNewline()};
+        final Component[] component = {Component.text("Diese Formattierungen kannst du im Chat verwenden:§r").color(TextColor.color(0x86D356)) .appendNewline()};
         Formatter.getColorFormattings().forEach((k, v) -> {
             component[0] = component[0]
                     .append(Component.text("&" + k + " -> §r")

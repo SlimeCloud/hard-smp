@@ -18,7 +18,7 @@ public class BugCommand implements CommandExecutor, EmptyTabCompleter {
         if (section == null)
             this.msg = Component.text("Es ist ein fehler aufgetreten.\nBitte melde dieses Problem dem support").color(Formatter.getColorFormattings().get('4'));
         else {
-            Component msg = Formatter.parseText("§a----- §bBugformular §a-----");
+            Component msg = Formatter.parseText("§ä----- §bBugformular §ä-----");
             msg = msg.appendNewline();
             msg = msg.append(Formatter.parseText("§b" + section.getString("bugform.link")));
 

@@ -62,14 +62,31 @@ public class LeaderboardCommand implements CommandExecutor, EmptyTabCompleter {
         Component msg = Formatter.parseText("§a--- §bRangliste Seite " + page + " von " + maxPages + " §a---");
         for (Map.Entry<UUID, Integer> c : contents) {
             msg = msg.appendNewline();
-            String color = switch (stats.get(c.getKey()).first()) {
-                case 1 -> "§6";
-                case 2 -> "§i";
-                case 3 -> "§y";
-                default -> "§7";
-            };
-            msg = msg.append(Formatter.parseText(color + stats.get(c.getKey()).first()
-                    + ". " + color + Bukkit.getOfflinePlayer(c.getKey()).getName()
+
+
+
+            String rankSring = null;
+            int rank = stats.get(c.getKey()).first();
+
+            String color;
+            switch (stats.get(c.getKey()).first()) {
+                case 1 -> {
+                    color = "§6";
+                    rankSring = "§r\uE002 ";
+                }
+                case 2 -> {
+                    color = "§i";
+                    rankSring = "§r\uE003 ";
+                }
+                case 3 -> {
+                    color = "§y";
+                    rankSring = "§r\uE004 ";
+                }
+                default -> color = "§7";
+            }
+
+            msg = msg.append(Formatter.parseText((rank > 3 ? color + rank + "§8. " : rankSring)
+                    + color + Bukkit.getOfflinePlayer(c.getKey()).getName()
                     + "§8 - §a" + c.getValue()));
         }
 

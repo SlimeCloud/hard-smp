@@ -63,18 +63,24 @@ public class LeaderboardCommand implements CommandExecutor, EmptyTabCompleter {
 
 
 
-            String rankString = "§r\uE002 ";
+            String rankString = null;
             int rank = stats.get(c.getKey()).first();
 
             String color;
             switch (stats.get(c.getKey()).first()) {
-                case 1 -> color = "§6";
-                case 2 -> color = "§i";
-                case 3 -> color = "§y";
-                default -> {
-                    color = "§7";
-                    rankString = null;
+                case 1 -> {
+                    color = "§6";
+                    rankString = "§r\uE002 ";
                 }
+                case 2 -> {
+                    color = "§i";
+                    rankString = "§r\uE003 ";
+                }
+                case 3 -> {
+                    color = "§y";
+                    rankString = "§r\uE004 ";
+                }
+                default -> color = "§7";
             }
 
             msg = msg.append(Formatter.parseText((rank > 3 ? color + rank + "§8. " : rankString)

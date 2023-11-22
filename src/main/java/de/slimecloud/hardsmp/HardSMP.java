@@ -84,6 +84,9 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("help", new HelpCommand());
         registerCommand("rules", rules = new RulesCommand());
         registerCommand("teamchat", new TeamChatCommand());
+        registerCommand("bug", new BugCommand());
+        registerCommand("feedback", new FeedbackCommand());
+        registerCommand("leaderboard", new LeaderboardCommand());
 
 
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
@@ -106,6 +109,7 @@ public final class HardSMP extends JavaPlugin {
         ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
         for (String format : formattings.getKeys(false)) {
             Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
+            getLogger().info("registered \"" + format + "\" as color code for " + formattings.getString(format));
         }
 
         AdvancementHandler.register(this, this::registerEvent);
@@ -126,7 +130,8 @@ public final class HardSMP extends JavaPlugin {
 
     public static TextComponent getPrefix() {
         return Component.text("[", NamedTextColor.DARK_GRAY)
-                .append(Component.text("HardSMP", TextColor.color(0x55cfc4)))
+                .append(Component.text("Hard", TextColor.color(0x88D657)))
+                .append(Component.text("SMP", TextColor.color(0x55cfc4)))
                 .append(Component.text("] ", NamedTextColor.DARK_GRAY));
     }
 

@@ -14,9 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class LeaderboardCommand implements CommandExecutor, EmptyTabCompleter {
 
@@ -65,27 +63,21 @@ public class LeaderboardCommand implements CommandExecutor, EmptyTabCompleter {
 
 
 
-            String rankSring = null;
+            String rankString = "§r\uE002 ";
             int rank = stats.get(c.getKey()).first();
 
             String color;
             switch (stats.get(c.getKey()).first()) {
-                case 1 -> {
-                    color = "§6";
-                    rankSring = "§r\uE002 ";
+                case 1 -> color = "§6";
+                case 2 -> color = "§i";
+                case 3 -> color = "§y";
+                default -> {
+                    color = "§7";
+                    rankString = null;
                 }
-                case 2 -> {
-                    color = "§i";
-                    rankSring = "§r\uE003 ";
-                }
-                case 3 -> {
-                    color = "§y";
-                    rankSring = "§r\uE004 ";
-                }
-                default -> color = "§7";
             }
 
-            msg = msg.append(Formatter.parseText((rank > 3 ? color + rank + "§8. " : rankSring)
+            msg = msg.append(Formatter.parseText((rank > 3 ? color + rank + "§8. " : rankString)
                     + color + Bukkit.getOfflinePlayer(c.getKey()).getName()
                     + "§8 - §a" + c.getValue()));
         }

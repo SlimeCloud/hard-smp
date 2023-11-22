@@ -127,7 +127,8 @@ public final class HardSMP extends JavaPlugin {
 
     public static TextComponent getPrefix() {
         return Component.text("[", NamedTextColor.DARK_GRAY)
-                .append(Component.text("HardSMP", TextColor.color(0x55cfc4)))
+                .append(Component.text("Hard", TextColor.color(0x88D657)))
+                .append(Component.text("SMP", TextColor.color(0x55cfc4)))
                 .append(Component.text("] ", NamedTextColor.DARK_GRAY));
     }
 

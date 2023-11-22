@@ -58,7 +58,7 @@ public class LeaderboardCommand implements CommandExecutor, EmptyTabCompleter {
                 .skip((long) (page - 1) * playersPerPage)
                 .collect(Collectors.toSet());
 
-        Component msg = Formatter.parseText("§a--- §bRangliste <Seite " + page + "von" + maxPages + "§a---");
+        Component msg = Formatter.parseText("§a--- §bRangliste Seite " + page + " von " + maxPages + " §a---");
         for (Map.Entry<UUID, Integer> c : contents) {
             msg = msg.appendNewline();
             String color = switch (stats.get(c.getKey()).first()) {

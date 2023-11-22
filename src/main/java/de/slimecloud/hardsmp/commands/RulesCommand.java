@@ -36,16 +36,6 @@ public class RulesCommand implements CommandExecutor, EmptyTabCompleter, Listene
                 else {
                     msg = msg.append(Formatter.parseText("§b" + key + "§7:§ä"));
 
-            Component msg = Formatter.parseText("§ä----- §bRegeln §ä-----");
-
-            for (String key : section.getKeys(false)) {
-                ConfigurationSection s = section.getConfigurationSection(key);
-                msg = msg.appendNewline();
-
-                if (s == null) msg = msg.append(Formatter.parseText("§b" + key + "§7: §ä " + section.getString(key, "rule")));
-                else {
-                    msg = msg.append(Formatter.parseText("§b" + key + "§7:§ä"));
-
                     for (String sKey : s.getKeys(false)) {
                         msg = msg.appendNewline()
                                 .appendSpace()

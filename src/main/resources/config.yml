@@ -76,7 +76,8 @@ verify:
 
 discord:
   token: xxx
-  console-channel: xxx
+  console-channel: 123
+  netrunner-role: 123
 
 teamchat:
   messageFormat: "§8[§aTeam§bChat§8] §c%player§7:"

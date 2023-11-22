@@ -36,20 +36,19 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
                         msg = Component.text("Command info...");
                         break;
                     }
-                    msg = Formatter.parseText("§ä----- §bCommands §ä-----");
+                    msg = Formatter.parseText("§ä----- §öCommands §ä-----");
                     for (String key : section.getKeys(false)) {
                         msg = msg.appendNewline()
                                 .append(Component.text(key)
                                         .decorate(TextDecoration.BOLD)
                                         .clickEvent(ClickEvent.suggestCommand("/" + key))
-                                        .hoverEvent(HoverEvent.showText(Component.text("Klicke zum ausführen.")))
-                                        .color(TextColor.color(NamedTextColor.AQUA)))
+                                        .hoverEvent(HoverEvent.showText(Component.text("Klicke zum ausführen.").color(TextColor.color(0xF6ED82))))
+                                        .color(TextColor.color(0xF6ED82)))
                                 .append(Component.text(":", TextColor.color(NamedTextColor.GRAY)))
                                 .appendSpace()
-                                .append(Formatter.parseText("§ä" + section.getString(key, "...")))
-                                .appendNewline()
-                                .append(Formatter.parseText("§ä----- §bCommands §ä-----"));
+                                .append(Formatter.parseText("§ä" + section.getString(key, "...")));
                     }
+                    msg= msg.appendNewline().append(Formatter.parseText("§ä----- §öCommands §ä-----"));
                 }
             }
         }

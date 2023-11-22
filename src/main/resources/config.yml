@@ -25,16 +25,21 @@ shop:
         second-amount: 3
 
 help:
-  root: "§ä----- §bHilfe §ä----- \n\n§äNutze §b/help event §äfür kommende Events \n§äNutze §b/help command §äfür eine Command-Übersicht \n§äNutze §b/help support §äfür Infos zum Support \n\n§ä----- §bHilfe §ä-----"
+  root: "§ä----- §öHilfe §ä----- \n\n§äNutze §ö/help event §äfür kommende Events \n§äNutze §ö/help command §äfür eine Command-Übersicht \n§äNutze §ö/help support §äfür Infos zum Support \n\n§ä----- §öHilfe §ä-----"
   event-info: |-
-    Es wird an jedem Wochenende ein Event geben, in dem du zusätzliche Punkte bekommen kannst.
-    - §äEvent am 10.12§r: Replika
-    - §äEvent am 17.12§r: PvE Waves
-    - §äEvent am 23.12§r: Rätsel-Labyrinth
+    §ä----- §öEvents §ä-----
+    §äEs wird an jedem Wochenende ein Event geben, in dem du zusätzliche Punkte bekommen kannst.
+
+    §7- §äEvent am §ö10.12§r§8: §äReplika
+    §7- §äEvent am §ö17.12§r§8: §äPvE Waves
+    §7- §äEvent am §ö23.12§r§8: §äRätsel-Labyrinth
+    §ä----- §öEvents §ä-----
   support-info: |-
-    Wenn du support erhalten möchtest, kannst du dich jeder Zeit an das Server-Team melden.
-    Du kannst entweder im Minecraft-Chat mit einem Team-Mitglied Kontakt aufnehmen oder dich auf dem §2Slimecloud Discord§r an uns wenden.
-    Zusätzlich kannst du §b/bug§r und §b/feedback§r verwenden, um auf ein Formular weitergeleitet zu werden.
+    §ä----- §öSupport §ä-----
+    §äWenn du support erhalten möchtest, kannst du dich jeder Zeit an das Server-Team melden.
+    §äDu kannst entweder im Minecraft-Chat mit einem Team-Mitglied Kontakt aufnehmen oder dich auf dem §öSlimecloud Discord§ä an uns wenden.
+    §äZusätzlich kannst du §ö/bug§ä und §ö/feedback§ä verwenden, um auf ein jeweiliges Formular weitergeleitet zu werden.
+    §ä----- §öSupport §ä-----
   command-info:
     rules: "Zeigt die Regeln des Hard-SMP Events an"
     spawn: "Teleportiert dich zum Spawn-Dorf"
@@ -44,6 +49,21 @@ help:
     feedback: "Zeigt den Link zum Feedback-Formular"
     bug: "Zeigt den Link zum Bugreport-Formular"
     leaderboard: "Zeigt das aktuelle Punkte-Leaderboard an"
+
+rules:
+  Discord Regeln: "§äAuf dem Minecraft Server gelten die gleichen regeln wie auf dem Slimecloud Discord Server. Verwarnung in Minecraft führen auch zu Verwarnungen in Discord!"
+  Allgemeine Chatregeln:
+    1: "Keine Beleidigungen"
+    2: "Kein Mobbing"
+    3: "Kein Spammen"
+    4: "..."
+  Fairness: "Unfaires Spielen wie Griefing oder Hacking ist nicht erlaubt. Als Client-Modifikationen sind nur Optifine oder ähnliche (z.B. Sodium) zulässig!"
+  Lags: "Das bewusste verursachen von Server-Lags ist verboten! Redstone-Mechanismen sollten ausgeleuchtet und performant gebaut werden"
+  Teaming: "Teaming is grundsätzlich verboten, um das Event für alle Spieler fair zu halten. §l§cKURZE§r§ä Zweck-Allianzen und Tauschgeschäfte sind erlaubt"
+  Fehler: "Das aktive suchen und ausnutzen von Bugs ist verboten. Solltest du einen Fehler finden, melde ihn bitte mit /bug"
+  Unwissenheit: "Unwissenheit schützt nicht vor Strafe! Jeder Spieler ist für seinen Account verantwortlich!"
+  Team: "Das Team behält sich das Recht vor, die Regeln jederzeit anzupassen und unangemessenes Verhalten zu ahnden"
+
 
 rules:
   Discord Regeln: "Auf dem Minecraft Server gelten die gleichen regeln wie auf dem Slimecloud Discord Server. Verwarnung in Minecraft führen auch zu Verwarnungen in Discord!"
@@ -67,8 +87,10 @@ ui:
     w: "#bdbdbd"
     #rank #3
     z: "#bf8970"
-    #better green (slime green)
+    #better green (slime green) main color
     ä: "#88D657"
+    #contrast color
+    ö: "#F6ED82"#F7E55C
 
   scoreboard:
     title: "\uE001"
@@ -110,14 +132,14 @@ discord:
   netrunner-role: 123
 
 teamchat:
-  messageFormat: "§8[§äTeam§bChat§8] §c%player§7:"
+  messageFormat: "§8[§äTeam§öChat§8] §c%player§7:"
   messageColor: "§6"
 
 feedback:
-  link: "test"
+  link: "google.com"
 
 bugform:
-  link: "test"
+  link: "google.com"
 
 leaderboard:
   playersPerPage: 10

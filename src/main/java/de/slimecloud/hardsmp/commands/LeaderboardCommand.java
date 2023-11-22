@@ -57,7 +57,7 @@ public class LeaderboardCommand implements CommandExecutor, EmptyTabCompleter {
                 .skip((long) (page - 1) * playersPerPage)
                 .toList();
 
-        Component msg = Formatter.parseText("§ä--- §bRangliste Seite " + page + " von " + maxPages + " §ä---");
+        Component msg = Formatter.parseText("§ä--- §öRangliste Seite " + page + " von " + maxPages + " §ä---");
         for (Map.Entry<UUID, Integer> c : contents) {
             msg = msg.appendNewline();
 

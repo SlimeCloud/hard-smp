@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -54,9 +55,9 @@ public class LeaderboardCommand implements CommandExecutor, EmptyTabCompleter {
 
         BoardStats stats = new BoardStats();
 
-        Set<Map.Entry<UUID, Integer>> contents = stats.getTopPlayers(page != maxPages ? page * playersPerPage : maxPlayers).entrySet().stream()
+        List<Map.Entry<UUID, Integer>> contents = stats.getTopPlayers(page != maxPages ? page * playersPerPage : maxPlayers).entrySet().stream()
                 .skip((long) (page - 1) * playersPerPage)
-                .collect(Collectors.toSet());
+                .toList();
 
         Component msg = Formatter.parseText("§a--- §bRangliste Seite " + page + " von " + maxPages + " §a---");
         for (Map.Entry<UUID, Integer> c : contents) {

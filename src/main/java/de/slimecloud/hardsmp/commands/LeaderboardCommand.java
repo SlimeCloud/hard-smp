@@ -68,7 +68,7 @@ public class LeaderboardCommand implements CommandExecutor, EmptyTabCompleter {
                 default -> "§7";
             };
             msg = msg.append(Formatter.parseText(color + stats.get(c.getKey()).first()
-                    + ". " + color + Bukkit.getPlayer(c.getKey()).getName()
+                    + ". " + color + Bukkit.getOfflinePlayer(c.getKey()).getName()
                     + "§8 - §a" + c.getValue()));
         }
 

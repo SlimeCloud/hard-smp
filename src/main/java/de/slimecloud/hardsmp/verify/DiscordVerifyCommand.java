@@ -73,7 +73,7 @@ public class DiscordVerifyCommand {
                     Component.text("Erfolgreich Verifiziert!", TextColor.color(0x88d657)),
                     HardSMP.getPrefix()
                             .append(Component.text("Du wurdest erfolgreich", TextColor.color(0x88d657)))
-                            .append(Component.text(" Verifiziert", TextColor.color(0x55cfc4), TextDecoration.BOLD))
+                            .append(Component.text(" Verifiziert", TextColor.color(0xF6ED82), TextDecoration.BOLD))
                             .append(Component.text("!", TextColor.color(0x88d657))));
 
             Bukkit.getScheduler().runTask(HardSMP.getInstance(), () -> Bukkit.getPluginManager().callEvent(vevent));

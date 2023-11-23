@@ -9,22 +9,29 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class LeaderboardCommand implements CommandExecutor, TabCompleter {
+public class LeaderboardCommand implements CommandExecutor, EmptyTabCompleter {
+
+    int playersPerPage;
+
+    public LeaderboardCommand() {
+        ConfigurationSection section = HardSMP.getInstance().getConfig().getConfigurationSection("leaderboard");
+        if (section != null) {
+            playersPerPage = section.getInt("playersPerPage");
+        }
+    }
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+
         int page;
-        int playersPerPage = 10;
-        int maxPlayers = Bukkit.getOnlinePlayers().size();
-        int maxPages = maxPlayers % 10 == 0 ? maxPlayers / 10 : maxPlayers / 10 + 1;
+        int maxPlayers = Bukkit.getOfflinePlayers().length;
+        int maxPages = maxPlayers % playersPerPage == 0 ? maxPlayers / playersPerPage : maxPlayers / playersPerPage + 1;
 
         if (args.length == 0) {
             page = 1;
@@ -44,31 +51,41 @@ public class LeaderboardCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        int iterator = 0;
         BoardStats stats = new BoardStats();
 
-        Map<UUID, Integer> contents = stats.getTopPlayers(page != maxPages ? page * playersPerPage : maxPlayers);
-        for (Map.Entry<UUID, Integer> c : contents.entrySet()) {
-            if (iterator < (page-1) * playersPerPage) {
-                contents.remove(c.getKey());
-            } else {
-                break;
-            }
-            iterator++;
-        }
+        List<Map.Entry<UUID, Integer>> contents = stats.getTopPlayers(page != maxPages ? page * playersPerPage : maxPlayers).entrySet().stream()
+                .skip((long) (page - 1) * playersPerPage)
+                .toList();
 
-        Component msg = Formatter.parseText("§a--- §bRangliste <Seite " + page + "von" + maxPages + "§a---");
-        for (Map.Entry<UUID, Integer> c : contents.entrySet()) {
+        Component msg = Formatter.parseText("§ä--- §öRangliste Seite " + page + " von " + maxPages + " §ä---");
+        for (Map.Entry<UUID, Integer> c : contents) {
             msg = msg.appendNewline();
-            String color = switch (stats.get(c.getKey()).first()) {
-                case 1 -> "§6";
-                case 2 -> "§i";
-                case 3 -> "§y";
-                default -> "§7";
-            };
-            msg = msg.append(Formatter.parseText(color + stats.get(c.getKey()).first()
-                    + ". " + color + Bukkit.getPlayer(c.getKey()).getName()
-                    + "§8 - §a" + c.getValue()));
+
+
+
+            String rankString = null;
+            int rank = stats.get(c.getKey()).first();
+
+            String color;
+            switch (stats.get(c.getKey()).first()) {
+                case 1 -> {
+                    color = "§6";
+                    rankString = "§r\uE002 ";
+                }
+                case 2 -> {
+                    color = "§i";
+                    rankString = "§r\uE003 ";
+                }
+                case 3 -> {
+                    color = "§y";
+                    rankString = "§r\uE004 ";
+                }
+                default -> color = "§7";
+            }
+
+            msg = msg.append(Formatter.parseText((rank > 3 ? color + rank + "§8. " : rankString)
+                    + color + Bukkit.getOfflinePlayer(c.getKey()).getName()
+                    + "§8 - §ä" + c.getValue()));
         }
 
         commandSender.sendMessage(msg);
@@ -76,11 +93,4 @@ public class LeaderboardCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        List<String> list = new ArrayList<>();
-        list.add("<Seite>");
-        list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()));
-        return list;
-    }
 }

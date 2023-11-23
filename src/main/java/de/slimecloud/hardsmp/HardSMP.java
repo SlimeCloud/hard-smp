@@ -75,6 +75,12 @@ public final class HardSMP extends JavaPlugin {
 
         this.itemManager = new ItemManager();
 
+        ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
+        for (String format : formattings.getKeys(false)) {
+            Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
+            getLogger().info("registered \"" + format + "\" as color code for " + formattings.getString(format));
+        }
+
         RulesCommand rules;
         ClaimCommand claim = new ClaimCommand();
 
@@ -111,11 +117,6 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new Tablist(this));
         registerEvent(new Chat(getConfig()));
 
-        ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
-        for (String format : formattings.getKeys(false)) {
-            Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
-        }
-
         AdvancementHandler.register(this, this::registerEvent);
 
         try {
@@ -134,7 +135,8 @@ public final class HardSMP extends JavaPlugin {
 
     public static TextComponent getPrefix() {
         return Component.text("[", NamedTextColor.DARK_GRAY)
-                .append(Component.text("HardSMP", TextColor.color(0x55cfc4)))
+                .append(Component.text("Hard", TextColor.color(0x88D657)))
+                .append(Component.text("SMP", TextColor.color(0xF6ED82)))
                 .append(Component.text("] ", NamedTextColor.DARK_GRAY));
     }
 

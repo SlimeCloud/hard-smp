@@ -2,6 +2,7 @@ package de.slimecloud.hardsmp.commands;
 
 import de.cyklon.spigotutils.adventure.Formatter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,15 +13,20 @@ public class FormattingCommand implements CommandExecutor, EmptyTabCompleter {
     private final static Component FORMATTINGS;
 
     static {
-        final Component[] component = {Component.text("Diese Formattierungen kannst du im Chat verwenden:").appendNewline()};
+        final Component[] component = {Component.text("Diese Formattierungen kannst du im Chat verwenden:§r").color(TextColor.color(0x86D356)) .appendNewline()};
         Formatter.getColorFormattings().forEach((k, v) -> {
             component[0] = component[0]
-                    .append(Component.text("&" + k + " -> ")
+                    .append(Component.text("&" + k + " -> §r")
+                            .append(Formatter.parseText("§" + k + " Beispiel Text"))).appendNewline();
+        });
+        Formatter.getCustomFormattings().forEach((k, v) -> {
+            component[0] = component[0]
+                    .append(Component.text("&" + k + " -> §r")
                             .append(Formatter.parseText("§" + k + " Beispiel Text"))).appendNewline();
         });
         Formatter.getDecorationFormattings().forEach((k, v) -> {
             component[0] = component[0]
-                    .append(Component.text("&" + k + " -> ")
+                    .append(Component.text("&" + k + " -> §r")
                             .append(Formatter.parseText("§" + k + " Beispiel Text"))).appendNewline();
         });
         FORMATTINGS = component[0]

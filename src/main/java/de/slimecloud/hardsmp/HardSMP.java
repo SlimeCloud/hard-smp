@@ -6,9 +6,9 @@ import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
+import de.slimecloud.hardsmp.event.DeathPointHandler;
 import de.slimecloud.hardsmp.item.ChestKey;
 import de.slimecloud.hardsmp.item.CustomItem;
-import de.slimecloud.hardsmp.event.DeathPointHandler;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
@@ -125,11 +125,6 @@ public final class HardSMP extends JavaPlugin {
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
 
         SlimeHandler.setupOffers(getConfig());
-
-        ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
-        for (String format : formattings.getKeys(false)) {
-            Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
-        }
 
         AdvancementHandler.register(this, this::registerEvent);
 

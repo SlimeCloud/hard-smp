@@ -27,12 +27,16 @@ public abstract class CustomItem {
         this.material = material;
     }
 
+    public static Collection<CustomItem> getItems() {
+        return new ArrayList<>(ITEMS);
+    }
+
     protected final void add() {
         ITEMS.add(this);
     }
 
     public boolean isItem(ItemStack stack) {
-        return stack!=null && stack.getItemMeta().hasCustomModelData() && stack.getItemMeta().getCustomModelData() == customModelData && stack.getType()==material;
+        return stack != null && stack.getItemMeta().hasCustomModelData() && stack.getItemMeta().getCustomModelData() == customModelData && stack.getType() == material;
     }
 
     public ItemStack getItem() {
@@ -43,10 +47,6 @@ public abstract class CustomItem {
         builder.setAmount(amount);
         builder.setCustomModelData(customModelData);
         return builder.build();
-    }
-
-    public static Collection<CustomItem> getItems() {
-        return new ArrayList<>(ITEMS);
     }
 
 }

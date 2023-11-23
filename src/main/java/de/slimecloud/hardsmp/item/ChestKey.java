@@ -124,6 +124,7 @@ public class ChestKey extends CustomItem implements Listener {
 
     /**
      * checks whether the container is contained in LOCKABLE, whether it is a container and whether the container is bound to a key
+     *
      * @param block the block to be checked
      * @return true if the container is bound to a key. otherwise false
      */
@@ -147,6 +148,7 @@ public class ChestKey extends CustomItem implements Listener {
 
     /**
      * check with isContainerLocked before using this method
+     *
      * @param container the container from which the id is to be returned
      * @return the id of the container
      */
@@ -157,6 +159,7 @@ public class ChestKey extends CustomItem implements Listener {
 
     /**
      * returns the IDs of all containers that are bound to this key
+     *
      * @param key the key from which the bound containers are to be returned
      * @return the IDs of all containers that are bound to this key
      */
@@ -174,8 +177,9 @@ public class ChestKey extends CustomItem implements Listener {
 
     /**
      * bind a container to a key
+     *
      * @param block the container to be bound to the key
-     * @param key the key to which the container is to be bound
+     * @param key   the key to which the container is to be bound
      */
     public void bindKey(Block block, ItemStack key) {
         if (block.getState() instanceof Container) {
@@ -201,7 +205,7 @@ public class ChestKey extends CustomItem implements Listener {
     @SuppressWarnings("ConstantConditions")
     public void unbindKey(Block block, ItemStack key) {
         long id = unbindKey(block);
-        if (id!=-1) unbindKey(key, id);
+        if (id != -1) unbindKey(key, id);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -210,7 +214,7 @@ public class ChestKey extends CustomItem implements Listener {
         if (block.getState() instanceof Container) {
             Tuple<Boolean, Inventory, Inventory> isDoubleChest = isDoubleChest(block);
             List<Block> lockBlocks = new ArrayList<>();
-            if (isDoubleChest.first() && isDoubleChest.second().getLocation()!=null && isDoubleChest.third().getLocation()!=null) {
+            if (isDoubleChest.first() && isDoubleChest.second().getLocation() != null && isDoubleChest.third().getLocation() != null) {
                 lockBlocks.add(isDoubleChest.second().getLocation().getBlock());
                 lockBlocks.add(isDoubleChest.third().getLocation().getBlock());
             } else lockBlocks.add(block);

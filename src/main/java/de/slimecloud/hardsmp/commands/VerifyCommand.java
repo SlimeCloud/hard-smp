@@ -50,7 +50,7 @@ public class VerifyCommand implements CommandExecutor, TabCompleter {
 
             player.sendMessage(HardSMP.getPrefix()
                     .append(Component.text("Du wurdest erfolgreich", TextColor.color(0x88d657)))
-                    .append(Component.text(" Verifiziert", TextColor.color(0x55cfc4), TextDecoration.BOLD))
+                    .append(Component.text(" Verifiziert", TextColor.color(0xF6ED82), TextDecoration.BOLD))
                     .append(Component.text("!", TextColor.color(0x88d657))));
 
             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Erfolgreich verifiziert!", TextColor.color(0x88d657))));

@@ -8,6 +8,7 @@ import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ChestKey;
 import de.slimecloud.hardsmp.item.CustomItem;
+import de.slimecloud.hardsmp.event.DeathPointHandler;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
@@ -78,6 +79,12 @@ public final class HardSMP extends JavaPlugin {
 
         this.itemManager = new ItemManager();
 
+        ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
+        for (String format : formattings.getKeys(false)) {
+            Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
+            getLogger().info("registered \"" + format + "\" as color code for " + formattings.getString(format));
+        }
+
         RulesCommand rules;
         KeyChainCommand keyChain;
 
@@ -90,6 +97,15 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("rules", rules = new RulesCommand());
         registerCommand("teamchat", new TeamChatCommand());
         registerCommand("keys", keyChain = new KeyChainCommand(this));
+        registerCommand("bug", new BugCommand());
+        registerCommand("feedback", new FeedbackCommand());
+        registerCommand("leaderboard", new LeaderboardCommand());
+
+
+        itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
+        itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
+
+        SlimeHandler.setupOffers(getConfig());
 
         //Events
         registerEvent(new MinecraftVerificationListener());
@@ -98,12 +114,12 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(chestKey = new ChestKey(this));
         registerEvent(rules);
         registerEvent(keyChain);
+        registerEvent(new DeathPointHandler());
 
         //UI
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
         registerEvent(new Chat(getConfig()));
-
 
         CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
@@ -133,7 +149,8 @@ public final class HardSMP extends JavaPlugin {
 
     public static TextComponent getPrefix() {
         return Component.text("[", NamedTextColor.DARK_GRAY)
-                .append(Component.text("HardSMP", TextColor.color(0x55cfc4)))
+                .append(Component.text("Hard", TextColor.color(0x88D657)))
+                .append(Component.text("SMP", TextColor.color(0xF6ED82)))
                 .append(Component.text("] ", NamedTextColor.DARK_GRAY));
     }
 

@@ -1,0 +1,49 @@
+{
+    "providers": [
+        {
+            "chars": [
+                "\uE001"
+            ],
+            "file": "imgs/titlewithslime.png",
+            "ascent": 46,
+            "height": 76,
+            "type": "bitmap"
+        },
+        {
+            "chars": [
+                "\uE005"
+            ],
+            "file": "imgs/title.png",
+            "ascent": 38,
+            "height": 64,
+            "type": "bitmap"
+        },
+        {
+            "chars": [
+                "\uE002"
+            ],
+            "file": "imgs/first_place.png",
+            "ascent": 9,
+            "height": 9,
+            "type": "bitmap"
+        },
+        {
+            "chars": [
+                "\uE003"
+            ],
+            "file": "imgs/second_place.png",
+            "ascent": 9,
+            "height": 9,
+            "type": "bitmap"
+        },
+        {
+            "chars": [
+                "\uE004"
+            ],
+            "file": "imgs/third_place.png",
+            "ascent": 9,
+            "height": 9,
+            "type": "bitmap"
+        }
+    ]
+}

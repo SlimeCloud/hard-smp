@@ -101,12 +101,6 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("feedback", new FeedbackCommand());
         registerCommand("leaderboard", new LeaderboardCommand());
 
-
-        itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
-        itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
-
-        SlimeHandler.setupOffers(getConfig());
-
         //Events
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());

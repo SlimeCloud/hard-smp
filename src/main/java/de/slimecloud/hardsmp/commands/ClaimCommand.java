@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,9 +57,9 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     );
                     commandSender.sendMessage(HardSMP.getPrefix()
                             .append(Component.text("Claim-Modus erfolgreich gestartet!\n" + "Wähle zwei Ecken mit ", NamedTextColor.GREEN))
-                            .append(Component.keybind("break"))
+                            .append(Component.keybind("key.attack"))
                             .append(Component.text( " und ", NamedTextColor.GREEN))
-                            .append(Component.keybind("use"))
+                            .append(Component.keybind("key.use"))
                             .append(Component.text("!", NamedTextColor.GREEN))
                     );
                 }
@@ -90,10 +91,10 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     }
                 }
                 default ->
-                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Benutzung: /claim [start/finish]!", NamedTextColor.RED)));
+                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Benutzung: /claim [start/cancel/finish]!", NamedTextColor.RED)));
             }
         } else {
-            commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Benutzung: /claim [start/finish]!", NamedTextColor.RED)));
+            commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Benutzung: /claim [start/cancel/finish]!", NamedTextColor.RED)));
         }
 
         return true;
@@ -102,8 +103,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     private void onInteract(PlayerInteractEvent event) {
         ClaimInfo info = claimingPlayers.get(event.getPlayer().getUniqueId().toString());
-        if(info == null) return;
-        if(event.getClickedBlock() == null) return;
+        if (info == null) return;
+        if (event.getClickedBlock() == null) return;
 
         if (event.getAction().isLeftClick()) {
             info.x1 = event.getClickedBlock().getX();
@@ -118,6 +119,40 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     Component.text("Zweite Ecke: " + info.x2 + ", " + info.z2, NamedTextColor.GREEN)
             ));
         }
+
+        if (info.x1 != null && info.x2 != null && info.z1 != null && info.z2 != null) {
+            int blocks = (Math.abs(info.x1 - info.x2) + 1) * (Math.abs(info.z1 - info.z2) + 1);
+
+            event.getPlayer().sendActionBar(Component.text(blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt", NamedTextColor.GREEN));
+        }
+
+    }
+
+    @EventHandler
+    private void onPlayerMove(PlayerMoveEvent event) {
+        if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId().toString())) return;
+
+        ClaimInfo info = claimingPlayers.get(event.getPlayer().getUniqueId().toString());
+        int blocks;
+        int maxBlocks = 100;
+
+        if (info.x1 != null && info.x2 != null && info.z1 != null && info.z2 != null) {
+            blocks = (Math.abs(info.x1 - info.x2) + 1) * (Math.abs(info.z1 - info.z2) + 1);
+
+            event.getPlayer().sendActionBar(Component.text(blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt",
+                    blocks > maxBlocks ? NamedTextColor.RED : NamedTextColor.GREEN));
+        } else if ((info.x1 != null && info.z1 != null) || (info.x2 != null && info.z2 != null)) {
+            blocks = (int) (((info.x1 == null ?
+                    Math.abs(event.getPlayer().getTargetBlock(null, 5).getLocation().getX() - info.x2) + 1 :
+                    Math.abs(event.getPlayer().getTargetBlock(null, 5).getLocation().getX() - info.x1) + 1)) *
+                    (info.z1 == null ?
+                    Math.abs(event.getPlayer().getTargetBlock(null, 5).getLocation().getZ() - info.z2) + 1 :
+                    Math.abs(event.getPlayer().getTargetBlock(null, 5).getLocation().getZ() - info.z1) + 1));
+
+            event.getPlayer().sendActionBar(Component.text(blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt",
+                    blocks > maxBlocks ? NamedTextColor.RED : NamedTextColor.GREEN));
+        }
+
 
     }
 

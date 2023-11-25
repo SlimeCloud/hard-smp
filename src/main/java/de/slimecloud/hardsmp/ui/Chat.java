@@ -4,7 +4,9 @@ import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import me.leoko.advancedban.Universal;
 import me.leoko.advancedban.manager.PunishmentManager;
+import me.leoko.advancedban.manager.UUIDManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -51,7 +53,6 @@ public class Chat implements Listener {
         Player player = event.getPlayer();
 
         if (PunishmentManager.get().isMuted(player.getUniqueId().toString())) {
-            player.sendMessage(Component.text("Du bist gemutet und kannst daher keine Nachrichten schreiben!").color(NamedTextColor.RED));
             return;
         }
 

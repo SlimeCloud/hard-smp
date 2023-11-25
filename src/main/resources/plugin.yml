@@ -50,3 +50,6 @@ commands:
   leaderboard:
     usage: "§cUsage: /leaderboard <Page>"
     permission: hardsmp.command.leaderboard
+  discord:
+    usage: "§cUsage: /discord <if or name>"
+    permission: hardsmp.commands.discord

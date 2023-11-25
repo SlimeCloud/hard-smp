@@ -50,10 +50,10 @@ public class Chat implements Listener {
         event.setCancelled(true);
         Player player = event.getPlayer();
 
-		if(PunishmentManager.get().isMuted(player.getUniqueId().toString())) {
-			player.sendMessage(Component.text("Du bist gemutet und kannst daher keine Nachrichten schreiben!").color(NamedTextColor.RED));
-			return;
-		}
+        if (PunishmentManager.get().isMuted(player.getUniqueId().toString())) {
+            player.sendMessage(Component.text("Du bist gemutet und kannst daher keine Nachrichten schreiben!").color(NamedTextColor.RED));
+            return;
+        }
 
         User user = HardSMP.getInstance().getLuckPerms().getUserManager().getUser(player.getUniqueId());
         String prefix;

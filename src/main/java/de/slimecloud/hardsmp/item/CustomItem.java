@@ -32,7 +32,7 @@ public abstract class CustomItem {
     }
 
     public boolean isItem(ItemStack stack) {
-        return stack!=null && stack.getItemMeta().hasCustomModelData() && stack.getItemMeta().getCustomModelData() == customModelData && stack.getType()==material;
+        return stack!=null && stack.hasItemMeta() && stack.getItemMeta().hasCustomModelData() && stack.getItemMeta().getCustomModelData() == customModelData && stack.getType()==material;
     }
 
     public ItemStack getItem() {

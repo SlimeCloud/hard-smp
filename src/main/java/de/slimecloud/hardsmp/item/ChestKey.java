@@ -3,6 +3,7 @@ package de.slimecloud.hardsmp.item;
 import com.google.common.primitives.Longs;
 import de.cyklon.spigotutils.adventure.Formatter;
 import de.cyklon.spigotutils.persistence.PersistentDataHandler;
+import de.cyklon.spigotutils.server.BukkitServer;
 import de.cyklon.spigotutils.tuple.Tuple;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -14,6 +15,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -30,6 +32,7 @@ public class ChestKey extends CustomItem implements Listener {
     private final Plugin plugin;
     private final Set<Material> LOCKABLE;
     private final NamespacedKey idKey;
+    private final NamespacedKey idCracked;
 
     public ChestKey(Plugin plugin) {
         super("chest-key", Material.IRON_HOE, 0);
@@ -45,45 +48,58 @@ public class ChestKey extends CustomItem implements Listener {
             if (value.name().contains("SHULKER_BOX")) LOCKABLE.add(value);
         }
         this.idKey = new NamespacedKey(plugin, "lock-id");
+        this.idCracked = new NamespacedKey(plugin, "cracked");
         add();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && isItem(event.getItem())) event.setCancelled(true);
+        if (event.isCancelled()) return;
+        if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && isItem(event.getItem())) {
+            event.setCancelled(true);
+            return;
+        }
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if (event.getClickedBlock() != null) {
-                Block clickedBlock = event.getClickedBlock();
+            Block clickedBlock = event.getClickedBlock();
+            if (clickedBlock != null && LOCKABLE.contains(clickedBlock.getType())) {
                 ItemStack item = event.getItem();
                 Player player = event.getPlayer();
                 boolean flag = true;
+                boolean isCracked = isCracked(clickedBlock.getState());
                 if (isItem(item)) {
-                    if (LOCKABLE.contains(clickedBlock.getType()) && clickedBlock.getState() instanceof Container container) {
+                    if (clickedBlock.getState() instanceof Container container) {
                         if (isContainerLocked(container)) {
                             if (player.isSneaking() && Longs.asList(getIDS(item)).contains(getID(container))) {
-                                unbindKey(event.getClickedBlock(), item);
+                                unbindKey(clickedBlock, item);
+                                if (isCracked) unCrack(clickedBlock);
                                 event.getPlayer().sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.success.unlock", "§2Geöffnet")));
                                 flag = false;
                             }
                         } else {
                             if (player.isSneaking()) {
-                                bindKey(event.getClickedBlock(), item);
+                                bindKey(clickedBlock, item);
+                                if (isCracked) unCrack(clickedBlock);
                                 event.getPlayer().sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.success.lock", "§2Verschlossen")));
                                 flag = false;
                             }
                         }
                     } else flag = false;
                 }
-
                 if (flag) {
                     if (clickedBlock.getState() instanceof Container container && isContainerLocked(container)) {
-                        if (!playerHasKeyForContainer(player, getID(container))) {
-                            player.sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.no-key", "§cVerschlossen")));
-                            event.setCancelled(!event.getPlayer().isSneaking());
-                        }
+                        if (!(playerHasKeyForContainer(player, getID(container)) || isCracked)) {
+                            if (event.isBlockInHand()) {
+                                if (!event.getPlayer().isSneaking()) {
+                                    player.sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.no-key", "§cVerschlossen")));
+                                    event.setCancelled(true);
+                                }
+                            } else {
+                                player.sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.no-key", "§cVerschlossen")));
+                                event.setCancelled(true);
+                            }
+                        } else if (isCracked) unCrack(clickedBlock);
                     }
                 } else event.setCancelled(true);
-
             } else if (isItem(event.getItem())) event.setCancelled(true);
         }
     }
@@ -172,20 +188,26 @@ public class ChestKey extends CustomItem implements Listener {
         }
     }
 
+    private List<Block> getLockBlocks(Block block) {
+        List<Block> lockBlocks = new ArrayList<>();
+        if (block.getState() instanceof Container) {
+            Tuple<Boolean, Inventory, Inventory> isDoubleChest = isDoubleChest(block);
+            if (isDoubleChest.first() && isDoubleChest.second().getLocation() != null && isDoubleChest.third().getLocation() != null) {
+                lockBlocks.add(isDoubleChest.second().getLocation().getBlock());
+                lockBlocks.add(isDoubleChest.third().getLocation().getBlock());
+            } else lockBlocks.add(block);
+        }
+        return lockBlocks;
+    }
+
     /**
      * bind a container to a key
      * @param block the container to be bound to the key
      * @param key the key to which the container is to be bound
      */
     public void bindKey(Block block, ItemStack key) {
-        if (block.getState() instanceof Container) {
-            Tuple<Boolean, Inventory, Inventory> isDoubleChest = isDoubleChest(block);
-            List<Block> lockBlocks = new ArrayList<>();
-            if (isDoubleChest.first() && isDoubleChest.second().getLocation() != null && isDoubleChest.third().getLocation() != null) {
-                lockBlocks.add(isDoubleChest.second().getLocation().getBlock());
-                lockBlocks.add(isDoubleChest.third().getLocation().getBlock());
-            } else lockBlocks.add(block);
-
+        List<Block> lockBlocks = getLockBlocks(block);
+        if (!lockBlocks.isEmpty()) {
             long id = System.nanoTime();
             for (Block lockBlock : lockBlocks) {
                 bindIdToBlock(lockBlock, id);
@@ -207,14 +229,8 @@ public class ChestKey extends CustomItem implements Listener {
     @SuppressWarnings("ConstantConditions")
     public long unbindKey(Block block) {
         long id = -1;
-        if (block.getState() instanceof Container) {
-            Tuple<Boolean, Inventory, Inventory> isDoubleChest = isDoubleChest(block);
-            List<Block> lockBlocks = new ArrayList<>();
-            if (isDoubleChest.first() && isDoubleChest.second().getLocation()!=null && isDoubleChest.third().getLocation()!=null) {
-                lockBlocks.add(isDoubleChest.second().getLocation().getBlock());
-                lockBlocks.add(isDoubleChest.third().getLocation().getBlock());
-            } else lockBlocks.add(block);
-
+        List<Block> lockBlocks = getLockBlocks(block);
+        if (!lockBlocks.isEmpty()) {
             PersistentDataHandler data;
             for (Block lockBlock : lockBlocks) {
                 if (lockBlock.getState() instanceof Container blockContainer) {
@@ -241,6 +257,41 @@ public class ChestKey extends CustomItem implements Listener {
             if (isItem(item) && Longs.asList(getIDS(item)).contains(id)) return true;
         }
         return false;
+    }
+
+    public void crack(Block block) {
+        List<Block> lockBlocks = getLockBlocks(block);
+        if (!lockBlocks.isEmpty()) {
+            PersistentDataHandler data;
+            for (Block lockBlock : lockBlocks) {
+                if (lockBlock.getState() instanceof Container blockContainer) {
+                    data = PersistentDataHandler.get(blockContainer);
+                    if (!data.contains(idKey)) break;
+                    data.set(idCracked, BukkitServer.getCurrentTick());
+                }
+            }
+        }
+    }
+
+    public void unCrack(Block block) {
+        List<Block> lockBlocks = getLockBlocks(block);
+        if (!lockBlocks.isEmpty()) {
+            PersistentDataHandler data;
+            for (Block lockBlock : lockBlocks) {
+                if (lockBlock.getState() instanceof Container blockContainer) {
+                    data = PersistentDataHandler.get(blockContainer);
+                    Integer tick = data.getInt(idCracked);
+                    if (tick==null) continue;
+                    if (tick==BukkitServer.getCurrentTick()) break;
+                    data.remove(idCracked);
+                    blockContainer.update();
+                }
+            }
+        }
+    }
+
+    public boolean isCracked(BlockState block) {
+        return LOCKABLE.contains(block.getType()) && block instanceof Container container && PersistentDataHandler.get(container).contains(idCracked);
     }
 
 }

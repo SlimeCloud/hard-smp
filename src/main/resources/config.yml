@@ -27,9 +27,18 @@ shop:
 chest-key:
   lockable: ["CHEST", "TRAPPED_CHEST", "BARREL"]
   no-key: "§cVerschlossen"
+  lockpick:
+    #probability to crack a container in % per try
+    probability: 1.5
   success:
     lock: "§2Erfolgreich verschlossen"
     unlock: "§2Erfolgreich geöffnet"
+    crack: "§2Erfolgreich geknackt"
+    crack-msg: "
+      §2Erfolgreich geknackt!\n
+      §6Du kannst die Kiste jetzt einmal öffnen, oder Abbauen.
+      "
+
 
 help:
   root: "Das ist der help command"

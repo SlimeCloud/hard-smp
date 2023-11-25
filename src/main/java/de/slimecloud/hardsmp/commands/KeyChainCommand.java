@@ -3,6 +3,7 @@ package de.slimecloud.hardsmp.commands;
 import de.cyklon.spigotutils.serial.InventorySerializer;
 import de.cyklon.spigotutils.ui.Gui;
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.item.ChestKey;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -52,7 +53,8 @@ public class KeyChainCommand implements CommandExecutor, EmptyTabCompleter, List
     @EventHandler
     public void onInventoryDrag(InventoryClickEvent event) {
         if (open.contains(event.getWhoClicked().getUniqueId())) {
-            if (!HardSMP.getInstance().getChestKey().isItem(event.getCurrentItem())) event.setCancelled(true);
+            ChestKey chestKey = HardSMP.getInstance().getChestKey();
+            if (!(chestKey.isItem(event.getCurrentItem()) || chestKey.isItem(event.getCursor()))) event.setCancelled(true);
         }
     }
 

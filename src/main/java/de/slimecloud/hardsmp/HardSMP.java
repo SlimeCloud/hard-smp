@@ -9,6 +9,7 @@ import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ChestKey;
 import de.slimecloud.hardsmp.item.CustomItem;
 import de.slimecloud.hardsmp.item.ItemManager;
+import de.slimecloud.hardsmp.item.LockPick;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import de.slimecloud.hardsmp.ui.Chat;
@@ -95,7 +96,6 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());
-        registerEvent(chestKey = new ChestKey(this));
         registerEvent(rules);
         registerEvent(keyChain);
 
@@ -103,6 +103,10 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
         registerEvent(new Chat(getConfig()));
+
+        //Custom Items
+        registerEvent(chestKey = new ChestKey(this));
+        registerEvent(new LockPick(chestKey));
 
 
         CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));

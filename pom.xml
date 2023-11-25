@@ -105,6 +105,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Advanced Ban -->
+        <dependency>
+            <groupId>com.github.DevLeoko</groupId>
+            <artifactId>AdvancedBan</artifactId>
+            <version>v2.3.0</version>
+        </dependency>
+
         <!-- Log handling -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

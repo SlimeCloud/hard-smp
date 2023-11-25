@@ -5,6 +5,11 @@ database:
 
 shop:
   offers:
+    lock-pick:
+      item: "lock-pick"
+      amount: 1
+      price:
+        item: "iron_ingot"
     chest-key:
       item: "chest-key"
       amount: 1

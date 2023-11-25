@@ -6,6 +6,7 @@ import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
+import de.slimecloud.hardsmp.event.DeathPointHandler;
 import de.slimecloud.hardsmp.item.ChestKey;
 import de.slimecloud.hardsmp.item.CustomItem;
 import de.slimecloud.hardsmp.item.ItemManager;
@@ -79,6 +80,12 @@ public final class HardSMP extends JavaPlugin {
 
         this.itemManager = new ItemManager();
 
+        ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
+        for (String format : formattings.getKeys(false)) {
+            Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
+            getLogger().info("registered \"" + format + "\" as color code for " + formattings.getString(format));
+        }
+
         RulesCommand rules;
         KeyChainCommand keyChain;
 
@@ -91,6 +98,9 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("rules", rules = new RulesCommand());
         registerCommand("teamchat", new TeamChatCommand());
         registerCommand("keys", keyChain = new KeyChainCommand(this));
+        registerCommand("bug", new BugCommand());
+        registerCommand("feedback", new FeedbackCommand());
+        registerCommand("leaderboard", new LeaderboardCommand());
 
         //Events
         registerEvent(new MinecraftVerificationListener());
@@ -98,6 +108,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new PointsListener());
         registerEvent(rules);
         registerEvent(keyChain);
+        registerEvent(new DeathPointHandler());
 
         //UI
         registerEvent(new ScoreboardManager(this));
@@ -113,11 +124,6 @@ public final class HardSMP extends JavaPlugin {
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
 
         SlimeHandler.setupOffers(getConfig());
-
-        ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
-        for (String format : formattings.getKeys(false)) {
-            Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
-        }
 
         AdvancementHandler.register(this, this::registerEvent);
 
@@ -137,7 +143,8 @@ public final class HardSMP extends JavaPlugin {
 
     public static TextComponent getPrefix() {
         return Component.text("[", NamedTextColor.DARK_GRAY)
-                .append(Component.text("HardSMP", TextColor.color(0x55cfc4)))
+                .append(Component.text("Hard", TextColor.color(0x88D657)))
+                .append(Component.text("SMP", TextColor.color(0xF6ED82)))
                 .append(Component.text("] ", NamedTextColor.DARK_GRAY));
     }
 

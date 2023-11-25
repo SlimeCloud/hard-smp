@@ -20,6 +20,10 @@ permissions:
     default: true
   hardsmp.command.keys:
     default: true
+  hardsmp.command.feedback:
+    default: true
+  hardsmp.command.bug:
+    default: true
 
 commands:
   formatting:
@@ -46,3 +50,10 @@ commands:
   keys:
     usage: "§cUsage: /keys"
     permission: hardsmp.command.keys
+  feedback:
+    permission: hardsmp.command.feedback
+  bug:
+    permission: hardsmp.command.bug
+  leaderboard:
+    usage: "§cUsage: /leaderboard <Page>"
+    permission: hardsmp.command.leaderboard

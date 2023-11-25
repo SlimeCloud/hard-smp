@@ -52,7 +52,7 @@ public class Chat implements Listener {
         event.setCancelled(true);
         Player player = event.getPlayer();
 
-        if (PunishmentManager.get().isMuted(player.getUniqueId().toString())) {
+        if (PunishmentManager.get().isMuted(UUIDManager.get().getUUID(player.getName()))) {
             return;
         }
 

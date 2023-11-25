@@ -30,7 +30,7 @@ shop:
         second-amount: 3
 
 chest-key:
-  lockable: ["CHEST", "TRAPPED_CHEST", "BARREL"]
+  lockable: ["CHEST", "TRAPPED_CHEST", "BARREL", "SHULKER_BOX"]
   no-key: "§cVerschlossen"
   lockpick:
     #probability to crack a container in % per try
@@ -70,21 +70,6 @@ help:
     feedback: "Zeigt den Link zum Feedback-Formular"
     bug: "Zeigt den Link zum Bugreport-Formular"
     leaderboard: "Zeigt das aktuelle Punkte-Leaderboard an"
-
-rules:
-  Discord Regeln: "§äAuf dem Minecraft Server gelten die gleichen regeln wie auf dem Slimecloud Discord Server. Verwarnung in Minecraft führen auch zu Verwarnungen in Discord!"
-  Allgemeine Chatregeln:
-    1: "Keine Beleidigungen"
-    2: "Kein Mobbing"
-    3: "Kein Spammen"
-    4: "..."
-  Fairness: "Unfaires Spielen wie Griefing oder Hacking ist nicht erlaubt. Als Client-Modifikationen sind nur Optifine oder ähnliche (z.B. Sodium) zulässig!"
-  Lags: "Das bewusste verursachen von Server-Lags ist verboten! Redstone-Mechanismen sollten ausgeleuchtet und performant gebaut werden"
-  Teaming: "Teaming is grundsätzlich verboten, um das Event für alle Spieler fair zu halten. §l§cKURZE§r§ä Zweck-Allianzen und Tauschgeschäfte sind erlaubt"
-  Fehler: "Das aktive suchen und ausnutzen von Bugs ist verboten. Solltest du einen Fehler finden, melde ihn bitte mit /bug"
-  Unwissenheit: "Unwissenheit schützt nicht vor Strafe! Jeder Spieler ist für seinen Account verantwortlich!"
-  Team: "Das Team behält sich das Recht vor, die Regeln jederzeit anzupassen und unangemessenes Verhalten zu ahnden"
-
 
 rules:
   Discord Regeln: "Auf dem Minecraft Server gelten die gleichen regeln wie auf dem Slimecloud Discord Server. Verwarnung in Minecraft führen auch zu Verwarnungen in Discord!"

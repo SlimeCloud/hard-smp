@@ -30,7 +30,7 @@ shop:
         second-amount: 3
 
 chest-key:
-  lockable: ["CHEST", "TRAPPED_CHEST", "BARREL"]
+  lockable: ["CHEST", "TRAPPED_CHEST", "BARREL", "SHULKER_BOX"]
   no-key: "§cVerschlossen"
   lockpick:
     #probability to crack a container in % per try

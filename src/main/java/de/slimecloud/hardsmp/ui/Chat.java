@@ -4,6 +4,8 @@ import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import me.leoko.advancedban.manager.PunishmentManager;
+import me.leoko.advancedban.manager.UUIDManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.luckperms.api.model.user.User;
@@ -47,6 +49,11 @@ public class Chat implements Listener {
     public void onChat(AsyncChatEvent event) {
         event.setCancelled(true);
         Player player = event.getPlayer();
+
+        if (PunishmentManager.get().isMuted(UUIDManager.get().getUUID(player.getName()))) {
+            return;
+        }
+
         User user = HardSMP.getInstance().getLuckPerms().getUserManager().getUser(player.getUniqueId());
         String prefix;
         if (user == null) prefix = null;

@@ -8,18 +8,14 @@ import me.lucko.spark.api.Spark;
 import me.lucko.spark.api.statistic.StatisticWindow;
 import me.lucko.spark.api.statistic.types.DoubleStatistic;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitTask;
-
-import java.util.HexFormat;
 
 public class Tablist implements Listener {
 

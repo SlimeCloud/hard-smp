@@ -4,7 +4,6 @@ import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

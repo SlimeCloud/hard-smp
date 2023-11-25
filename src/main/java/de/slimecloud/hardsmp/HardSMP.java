@@ -6,7 +6,7 @@ import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
-import de.slimecloud.hardsmp.event.DeathPointHandler;
+import de.slimecloud.hardsmp.listener.DeathPointHandler;
 import de.slimecloud.hardsmp.item.ChestKey;
 import de.slimecloud.hardsmp.item.CustomItem;
 import de.slimecloud.hardsmp.item.ItemManager;
@@ -25,7 +25,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.luckperms.api.LuckPerms;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
@@ -33,7 +32,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class HardSMP extends JavaPlugin {

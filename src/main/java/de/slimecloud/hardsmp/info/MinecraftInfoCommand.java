@@ -7,6 +7,7 @@ import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.player.PlayerController;
 import de.slimecloud.hardsmp.verify.Verification;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -73,8 +74,8 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
 		if(args.length != 1) return Collections.emptyList();
 
 		try {
-			return cache.get(args[0], () -> HardSMP.getInstance().getDiscordBot().jdaInstance.getUsers().stream()
-					.map(User::getEffectiveName)
+			return cache.get(args[0], () -> HardSMP.getInstance().getDiscordBot().jdaInstance.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembers().stream()
+					.map(Member::getEffectiveName)
 					.filter(u -> u.startsWith(args[0]))
 					.toList()
 			);

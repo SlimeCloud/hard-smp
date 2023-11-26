@@ -43,3 +43,9 @@ commands:
     aliases: ["ec"]
     usage: "§cUsage: /enderchest <Player>"
     permission: hardsmp.command.enderchest
+  invsee:
+    usage: "§cUsage: /invsee exit/from <Player>"
+    permission: hardsmp.command.invsee
+  hatitem:
+    usage: "§cUsage: /hatitem <Player>"
+    permission: hardsmp.command.hatitem

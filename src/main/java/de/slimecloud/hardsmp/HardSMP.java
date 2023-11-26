@@ -85,6 +85,8 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("rules", rules = new RulesCommand());
         registerCommand("teamchat", new TeamChatCommand());
         registerCommand("enderchest", new EnderchestCommand());
+        registerCommand("invsee", new InvseeCommand());
+        registerCommand("hatitem", new HatItemCommand());
 
 
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());

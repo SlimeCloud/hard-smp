@@ -8,6 +8,7 @@ import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.event.DeathPointHandler;
 import de.slimecloud.hardsmp.item.ItemManager;
+import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import de.slimecloud.hardsmp.ui.Chat;
@@ -106,6 +107,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new PointsListener());
         registerEvent(rules);
         registerEvent(new DeathPointHandler());
+        registerEvent(new PunishmentListener(getInstance()));
 
         //UI
         registerEvent(new ScoreboardManager(this));

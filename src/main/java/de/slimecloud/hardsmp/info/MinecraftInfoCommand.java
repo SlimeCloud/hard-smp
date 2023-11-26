@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -59,11 +60,10 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
 
 		OfflinePlayer player = Bukkit.getOfflinePlayer(verification.getMinecraftID());
 
-		sender.sendMessage(
-				Formatter.parseText("§äInformationen zu §l§ö" + user.getEffectiveName() + "§r")
-						.append(Formatter.parseText("§äMinecraft Name: §ö" + player.getName()))
-						.append(Formatter.parseText("§äDiscord Name: §ö" + user.getEffectiveName()))
-						.append(Formatter.parseText("§äPunkte: §ö: " + PlayerController.getPlayer(player).getActualPoints()))
+		sender.sendMessage(Component.text("Informationen zu ").color(TextColor.color(0x88D657)).append(Component.text(user.getEffectiveName()).color(TextColor.color(0xF6ED82))).appendNewline()
+				.append(Component.text("Minecraft Name: ").color(TextColor.color(0x88D657)).append(Component.text(player.getName()).color(TextColor.color(0xF6ED82)))).appendNewline()
+				.append(Component.text("Discord Name: ").color(TextColor.color(0x88D657)).append(Component.text(user.getEffectiveName()).color(TextColor.color(0xF6ED82)))).appendNewline()
+				.append(Component.text("Punkte: ").color(TextColor.color(0x88D657)).append(Component.text(PlayerController.getPlayer(player).getActualPoints()).color(TextColor.color(0xF6ED82)))).appendNewline()
 		);
 
 		return true;

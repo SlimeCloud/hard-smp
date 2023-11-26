@@ -70,7 +70,7 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
 
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		if(args.length == 0) return Collections.emptyList();
+		if(args.length != 1) return Collections.emptyList();
 
 		try {
 			return cache.get(args[0], () -> HardSMP.getInstance().getDiscordBot().jdaInstance.getUsers().stream()

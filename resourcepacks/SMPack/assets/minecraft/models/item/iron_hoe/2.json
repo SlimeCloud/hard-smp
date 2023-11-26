@@ -1,7 +1,7 @@
 {
 	"parent": "item/handheld",
 	"textures": {
-		"layer0": "item/iron_hoe/0"
+		"layer0": "item/iron_hoe/2"
 	},
 	"display": {
 		"thirdperson_righthand": {

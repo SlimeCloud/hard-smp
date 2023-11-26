@@ -107,7 +107,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new PointsListener());
         registerEvent(rules);
         registerEvent(new DeathPointHandler());
-        registerEvent(new PunishmentListener(getInstance()));
+        registerEvent(new PunishmentListener(this));
 
         //UI
         registerEvent(new ScoreboardManager(this));

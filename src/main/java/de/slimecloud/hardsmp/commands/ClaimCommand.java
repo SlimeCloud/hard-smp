@@ -11,10 +11,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.ShulkerBullet;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +31,7 @@ import java.util.stream.Stream;
 public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     public final Map<String, ClaimInfo> claimingPlayers = new HashMap<>();
+
     public static class ClaimInfo {
         public final ScheduledTask task;
         public Integer x1, z1, x2, z2;
@@ -70,6 +75,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             claimingPlayers.remove(uuid);
                             task.task.cancel();
                             new Claim(uuid, task.x1, task.z1, task.x2, task.z2).save();
+
+                            for(ShulkerBullet s : ((Player) commandSender).getWorld().getEntitiesByClass(ShulkerBullet.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + uuid) || sb.getScoreboardTags().contains("marker2" + uuid)).toList()) {
+                                s.remove();
+                            }
+
                             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text(
                                     "Der Bereich von (" + task.x1 + ", " + task.z1 + ") bis (" + task.x2 + ", " + task.z2 + ")\nwurde erfolgreich geclaimt!",
                                     NamedTextColor.GREEN
@@ -85,6 +95,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     ClaimInfo task = claimingPlayers.remove(uuid);
                     if (task != null) {
                         task.task.cancel();
+
+                        for(ShulkerBullet s : ((Player) commandSender).getWorld().getEntitiesByClass(ShulkerBullet.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + uuid) || sb.getScoreboardTags().contains("marker2" + uuid)).toList()) {
+                            s.remove();
+                        }
+
                         commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Claim-Modus erfolgreich beendet!", NamedTextColor.GREEN)));
                     } else {
                         commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Du bist nicht im Claim-Modus!", NamedTextColor.RED)));
@@ -103,6 +118,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     private void onInteract(PlayerInteractEvent event) {
         ClaimInfo info = claimingPlayers.get(event.getPlayer().getUniqueId().toString());
+        ShulkerBullet mark;
         if (info == null) return;
         if (event.getClickedBlock() == null) return;
 
@@ -112,13 +128,32 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(
                     Component.text("Erste Ecke: " + info.x1 + ", " + info.z1, NamedTextColor.GREEN)
             ));
+
+            for(ShulkerBullet s : event.getPlayer().getWorld().getEntitiesByClass(ShulkerBullet.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + event.getPlayer().getUniqueId())).toList()) {
+                s.remove();
+            }
+
+            mark = event.getPlayer().getWorld().spawn(event.getClickedBlock().getLocation().add(new Vector(0.5, 0.5, 0.5)), ShulkerBullet.class);
+            mark.addScoreboardTag("marker1" + event.getPlayer().getUniqueId());
         } else if (event.getAction().isRightClick()) {
             info.x2 = event.getClickedBlock().getX();
             info.z2 = event.getClickedBlock().getZ();
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(
                     Component.text("Zweite Ecke: " + info.x2 + ", " + info.z2, NamedTextColor.GREEN)
             ));
-        }
+
+            for(ShulkerBullet s : event.getPlayer().getWorld().getEntitiesByClass(ShulkerBullet.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker2" + event.getPlayer().getUniqueId())).toList()) {
+                s.remove();
+            }
+
+            mark = event.getPlayer().getWorld().spawn(event.getClickedBlock().getLocation().add(new Vector(0.5, 0.5, 0.5)), ShulkerBullet.class);
+            mark.addScoreboardTag("marker2" + event.getPlayer().getUniqueId());
+        } else return;
+
+        mark.setInvulnerable(true);
+        mark.setGlowing(true);
+        mark.setGravity(false);
+        mark.spawnAt(event.getClickedBlock().getLocation().add(new Vector(0.5, 0.5, 0.5)));
 
         if (info.x1 != null && info.x2 != null && info.z1 != null && info.z2 != null) {
             int blocks = (Math.abs(info.x1 - info.x2) + 1) * (Math.abs(info.z1 - info.z2) + 1);
@@ -153,7 +188,20 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     blocks > maxBlocks ? NamedTextColor.RED : NamedTextColor.GREEN));
         }
 
+    }
 
+    @EventHandler
+    private void onBreak(BlockBreakEvent event) {
+        if (claimingPlayers.containsKey(event.getPlayer().getUniqueId().toString())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    private void onPlace(BlockPlaceEvent event) {
+        if (claimingPlayers.containsKey(event.getPlayer().getUniqueId().toString())) {
+            event.setCancelled(true);
+        }
     }
 
     @Override

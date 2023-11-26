@@ -1,8 +1,10 @@
 package de.slimecloud.hardsmp.info;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.slimecloud.hardsmp.HardSMP;
-import de.slimecloud.hardsmp.commands.EmptyTabCompleter;
 import de.slimecloud.hardsmp.verify.Verification;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -11,9 +13,20 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class MinecraftInfoCommand implements CommandExecutor, EmptyTabCompleter {
+import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
+	private final Cache<String, List<String>> cache = CacheBuilder.newBuilder()
+			.expireAfterWrite(Duration.ofMinutes(10))
+			.build();
+
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 		if(args.length == 0) return false;
@@ -45,5 +58,20 @@ public class MinecraftInfoCommand implements CommandExecutor, EmptyTabCompleter 
 		//TODO send message
 
 		return true;
+	}
+
+	@Override
+	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+		if(args.length == 0) return Collections.emptyList();
+
+		try {
+			return cache.get(args[0], () -> HardSMP.getInstance().getDiscordBot().jdaInstance.getUsers().stream()
+					.map(User::getEffectiveName)
+					.filter(u -> u.startsWith(args[0]))
+					.toList()
+			);
+		} catch(ExecutionException e) {
+			return Collections.emptyList();
+		}
 	}
 }

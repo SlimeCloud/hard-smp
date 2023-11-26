@@ -25,61 +25,64 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
-	private final Cache<String, List<String>> cache = CacheBuilder.newBuilder()
-			.expireAfterWrite(Duration.ofMinutes(10))
-			.build();
+    private final Cache<String, List<String>> cache = CacheBuilder.newBuilder()
+            .expireAfterWrite(Duration.ofMinutes(10))
+            .build();
 
-	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		if(args.length == 0) return false;
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (args.length == 0) return false;
 
-		JDA jda = HardSMP.getInstance().getDiscordBot().jdaInstance;
-		User user = null;
+        JDA jda = HardSMP.getInstance().getDiscordBot().jdaInstance;
+        User user = null;
 
-		try {
-			user = jda.getUserById(args[0]);
-		} catch(NumberFormatException ignored) {}
+        try {
+            user = jda.getUserById(args[0]);
+        } catch (NumberFormatException ignored) {
+        }
 
-		try {
-			if(user == null) user = jda.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembersByEffectiveName(args[0], true).get(0).getUser();
-		} catch(NullPointerException | IndexOutOfBoundsException ignored) {}
+        try {
+            if (user == null)
+                user = jda.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembersByEffectiveName(args[0], true).get(0).getUser();
+        } catch (NullPointerException | IndexOutOfBoundsException ignored) {
+        }
 
-		if(user == null) {
-			sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
-			return true;
-		}
+        if (user == null) {
+            sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
+            return true;
+        }
 
-		Verification verification = Verification.load(user);
+        Verification verification = Verification.load(user);
 
-		if(!verification.isVerified()) {
-			sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
-			return true;
-		}
+        if (!verification.isVerified()) {
+            sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
+            return true;
+        }
 
-		OfflinePlayer player = Bukkit.getOfflinePlayer(verification.getMinecraftID());
+        OfflinePlayer player = Bukkit.getOfflinePlayer(verification.getMinecraftID());
 
-		sender.sendMessage(
-				Formatter.parseText("§äInformationen zu §l§ö" + user.getEffectiveName() + "§r")
-						.append(Formatter.parseText("§äMinecraft Name: §ö" + player.getName()))
-						.append(Formatter.parseText("§äDiscord Name: §ö" + user.getEffectiveName()))
-						.append(Formatter.parseText("§äPunkte: §ö: " + PlayerController.getPlayer(player).getActualPoints()))
-		);
+        sender.sendMessage(
+                Formatter.parseText("§äInformationen zu §l§ö" + user.getEffectiveName() + "§r")
+                        .append(Formatter.parseText("§äMinecraft Name: §ö" + player.getName()))
+                        .append(Formatter.parseText("§äDiscord Name: §ö" + user.getEffectiveName()))
+                        .append(Formatter.parseText("§äPunkte: §ö: " + PlayerController.getPlayer(player).getActualPoints()))
+        );
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		if(args.length == 0) return Collections.emptyList();
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (args.length == 0) return Collections.emptyList();
 
-		try {
-			return cache.get(args[0], () -> HardSMP.getInstance().getDiscordBot().jdaInstance.getUsers().stream()
-					.map(User::getEffectiveName)
-					.filter(u -> u.startsWith(args[0]))
-					.toList()
-			);
-		} catch(ExecutionException e) {
-			return Collections.emptyList();
-		}
-	}
+        try {
+            return cache.get(args[0], () -> HardSMP.getInstance().getDiscordBot().jdaInstance.getUsers().stream()
+                    .map(User::getEffectiveName)
+                    .filter(u -> u.startsWith(args[0]))
+                    .toList()
+            );
+        } catch (ExecutionException e) {
+            return Collections.emptyList();
+        }
+    }
 }

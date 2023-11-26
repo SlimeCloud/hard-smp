@@ -2,10 +2,10 @@ package de.slimecloud.hardsmp.info;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.player.PlayerController;
 import de.slimecloud.hardsmp.verify.Verification;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -18,13 +18,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.UUID;
 
 public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
 	private final Cache<String, List<String>> cache = CacheBuilder.newBuilder()
@@ -33,32 +34,67 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		if(args.length == 0) return false;
+		if(args.length != 2) return false;
 
 		JDA jda = HardSMP.getInstance().getDiscordBot().jdaInstance;
+
 		User user = null;
+		OfflinePlayer player = null;
 
-		try {
-			user = jda.getUserById(args[0]);
-		} catch(NumberFormatException ignored) {}
+		switch(args[0]) {
+			case "discord" -> {
+				try {
+					user = jda.getUserById(args[1]);
+				} catch(NumberFormatException ignored) {
+				}
 
-		try {
-			if(user == null) user = jda.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembersByEffectiveName(args[0], true).get(0).getUser();
-		} catch(NullPointerException | IndexOutOfBoundsException ignored) {}
+				try {
+					if(user == null) user = jda.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembersByEffectiveName(args[0], true).get(1).getUser();
+				} catch(NullPointerException | IndexOutOfBoundsException ignored) {
+				}
 
-		if(user == null) {
-			sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
-			return true;
+				if(user == null) {
+					sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
+					return true;
+				}
+
+				Verification verification = Verification.load(user);
+
+				if(!verification.isVerified()) {
+					sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
+					return true;
+				}
+
+				player = Bukkit.getOfflinePlayer(verification.getMinecraftID());
+			}
+
+			case "minecraft" -> {
+				try {
+					player = Bukkit.getOfflinePlayer(UUID.fromString(args[1]));
+				} catch(IllegalArgumentException ignored) {
+				}
+
+				if(player == null) player = Bukkit.getOfflinePlayer(args[1]);
+
+				Verification verification = Verification.load(player.getUniqueId().toString());
+
+				if(!verification.isVerified()) {
+					sender.sendMessage(Component.text("Spieler nicht gefunden!").color(NamedTextColor.RED));
+					return true;
+				}
+
+				user = jda.retrieveUserById(verification.getDiscordID()).complete();
+			}
+
+			default -> {
+				return false;
+			}
 		}
 
-		Verification verification = Verification.load(user);
-
-		if(!verification.isVerified()) {
-			sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
+		if(player.getName() == null) {
+			sender.sendMessage(Component.text("Spieler nicht gefunden!").color(NamedTextColor.RED));
 			return true;
 		}
-
-		OfflinePlayer player = Bukkit.getOfflinePlayer(verification.getMinecraftID());
 
 		sender.sendMessage(Component.text("Informationen zu ").color(TextColor.color(0x88D657)).append(Component.text(user.getEffectiveName()).color(TextColor.color(0xF6ED82))).appendNewline()
 				.append(Component.text("Minecraft Name: ").color(TextColor.color(0x88D657)).append(Component.text(player.getName()).color(TextColor.color(0xF6ED82)))).appendNewline()
@@ -70,17 +106,33 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
 	}
 
 	@Override
+	@SneakyThrows
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		if(args.length != 1) return Collections.emptyList();
-
-		try {
-			return cache.get(args[0], () -> HardSMP.getInstance().getDiscordBot().jdaInstance.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembers().stream()
-					.map(Member::getEffectiveName)
-					.filter(u -> u.startsWith(args[0]))
-					.toList()
-			);
-		} catch(ExecutionException e) {
-			return Collections.emptyList();
+		if(args.length == 1) {
+			return List.of("discord", "minecraft").stream()
+					.filter(s -> s.startsWith(args[0]))
+					.toList();
 		}
+
+		else if(args.length == 2) {
+			switch(args[0]) {
+				case "discord" -> {
+					return cache.get(args[0], () -> HardSMP.getInstance().getDiscordBot().jdaInstance.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembers().stream()
+							.map(Member::getEffectiveName)
+							.filter(u -> u.startsWith(args[1]))
+							.toList()
+					);
+				}
+
+				case "minecraft" -> {
+					return Bukkit.getOnlinePlayers().stream()
+							.map(Player::getName)
+							.filter(p -> p.startsWith(args[1]))
+							.toList();
+				}
+			}
+		}
+
+		return Collections.emptyList();
 	}
 }

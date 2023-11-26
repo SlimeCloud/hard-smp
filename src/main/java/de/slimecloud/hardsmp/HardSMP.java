@@ -59,6 +59,9 @@ public final class HardSMP extends JavaPlugin {
     @Getter
     private ChestKey chestKey;
 
+    @Getter
+    private LockPick lockPick;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -115,7 +118,7 @@ public final class HardSMP extends JavaPlugin {
 
         //Custom Items
         registerEvent(chestKey = new ChestKey(this));
-        registerEvent(new LockPick(chestKey));
+        registerEvent(lockPick = new LockPick(chestKey));
 
 
         CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));

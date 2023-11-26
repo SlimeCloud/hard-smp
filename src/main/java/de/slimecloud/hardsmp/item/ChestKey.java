@@ -5,6 +5,7 @@ import de.cyklon.spigotutils.adventure.Formatter;
 import de.cyklon.spigotutils.persistence.PersistentDataHandler;
 import de.cyklon.spigotutils.server.BukkitServer;
 import de.cyklon.spigotutils.tuple.Tuple;
+import de.slimecloud.hardsmp.HardSMP;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -29,12 +30,12 @@ import java.util.*;
 @Getter
 public class ChestKey extends CustomItem implements Listener {
 
-    private final Plugin plugin;
+    private final HardSMP plugin;
     private final Set<Material> LOCKABLE;
     private final NamespacedKey idKey;
     private final NamespacedKey idCracked;
 
-    public ChestKey(Plugin plugin) {
+    public ChestKey(HardSMP plugin) {
         super("chest-key", Material.IRON_HOE, 0);
         builder.setDisplayName("Schlüssel")
                 .setUnbreakable(true)
@@ -52,8 +53,11 @@ public class ChestKey extends CustomItem implements Listener {
         add();
     }
 
+    private int lastCall = -1;
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        System.out.println("interact");
+        if (lastCall == BukkitServer.getCurrentTick()) return;
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && isItem(event.getItem())) {
             event.setCancelled(true);
             return;
@@ -61,6 +65,7 @@ public class ChestKey extends CustomItem implements Listener {
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             Block clickedBlock = event.getClickedBlock();
             if (clickedBlock != null && LOCKABLE.contains(clickedBlock.getType())) {
+                lastCall = BukkitServer.getCurrentTick();
                 ItemStack item = event.getItem();
                 Player player = event.getPlayer();
                 boolean flag = true;
@@ -88,7 +93,7 @@ public class ChestKey extends CustomItem implements Listener {
                     if (clickedBlock.getState() instanceof Container container && isContainerLocked(container)) {
                         if (!(playerHasKeyForContainer(player, getID(container)) || isCracked)) {
                             if (event.isBlockInHand()) {
-                                if (!event.getPlayer().isSneaking()) {
+                                if (!player.isSneaking()) {
                                     player.sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.no-key", "§cVerschlossen")));
                                     event.setCancelled(true);
                                 }
@@ -96,7 +101,19 @@ public class ChestKey extends CustomItem implements Listener {
                                 player.sendActionBar(Formatter.parseText(plugin.getConfig().getString("chest-key.no-key", "§cVerschlossen")));
                                 event.setCancelled(true);
                             }
-                        } else if (isCracked) unCrack(clickedBlock);
+                        } else if (isCracked) {
+                            System.out.println(item.getType());
+                            System.out.println(item.hasItemMeta());
+                            System.out.println(item.getItemMeta().hasCustomModelData());
+                            System.out.println(item.getItemMeta().getCustomModelData());
+                            System.out.println(plugin.getLockPick().isItem(item));
+                            System.out.println(player.isSneaking());
+                            if (plugin.getLockPick().isItem(item) && player.isSneaking()) event.setCancelled(true);
+                            else {
+                                unCrack(clickedBlock);
+                                System.out.println("uncrack");
+                            }
+                        }
                     }
                 } else event.setCancelled(true);
 
@@ -272,6 +289,7 @@ public class ChestKey extends CustomItem implements Listener {
                     data = PersistentDataHandler.get(blockContainer);
                     if (!data.contains(idKey)) break;
                     data.set(idCracked, BukkitServer.getCurrentTick());
+                    blockContainer.update();
                 }
             }
         }

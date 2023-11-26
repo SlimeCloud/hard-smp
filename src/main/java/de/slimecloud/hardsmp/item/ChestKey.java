@@ -54,9 +54,8 @@ public class ChestKey extends CustomItem implements Listener {
     }
 
     private int lastCall = -1;
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        System.out.println("interact");
         if (lastCall == BukkitServer.getCurrentTick()) return;
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && isItem(event.getItem())) {
             event.setCancelled(true);
@@ -102,17 +101,8 @@ public class ChestKey extends CustomItem implements Listener {
                                 event.setCancelled(true);
                             }
                         } else if (isCracked) {
-                            System.out.println(item.getType());
-                            System.out.println(item.hasItemMeta());
-                            System.out.println(item.getItemMeta().hasCustomModelData());
-                            System.out.println(item.getItemMeta().getCustomModelData());
-                            System.out.println(plugin.getLockPick().isItem(item));
-                            System.out.println(player.isSneaking());
                             if (plugin.getLockPick().isItem(item) && player.isSneaking()) event.setCancelled(true);
-                            else {
-                                unCrack(clickedBlock);
-                                System.out.println("uncrack");
-                            }
+                            else unCrack(clickedBlock);
                         }
                     }
                 } else event.setCancelled(true);

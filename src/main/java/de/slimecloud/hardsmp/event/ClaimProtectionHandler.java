@@ -97,19 +97,22 @@ public class ClaimProtectionHandler implements Listener {
         event.blockList().removeIf(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation())));
     }
 
-    @EventHandler
+    /*@EventHandler
     private void onFlow(BlockFromToEvent event) {
         List<Claim> claims = DataClass.loadAll(Claim::new, Collections.emptyMap());
         if (claims.stream().anyMatch(claim -> claim.contains(event.getToBlock().getLocation()))) {
             event.setCancelled(true);
         }
-    }
+    }*/
 
-    //ToDo: Pistons in claims should work normally
     @EventHandler
     private void onPistonExtend(BlockPistonExtendEvent event) {
         List<Claim> claims = DataClass.loadAll(Claim::new, Collections.emptyMap());
-        if (event.getBlocks().stream().anyMatch(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation().add(event.getDirection().getDirection()))))) {
+        List<Claim> first = claims.stream().filter(claim -> claim.contains(event.getBlock().getLocation())).toList();
+
+        if (!first.isEmpty() && !event.getBlocks().stream().allMatch(block -> first.get(0).contains(block.getLocation().add(event.getDirection().getDirection())))) {
+            event.setCancelled(true);
+        } else if (first.isEmpty() && event.getBlocks().stream().anyMatch(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation().add(event.getDirection().getDirection()))))) {
             event.setCancelled(true);
         }
     }
@@ -117,7 +120,11 @@ public class ClaimProtectionHandler implements Listener {
     @EventHandler
     private void onPistonRetract(BlockPistonRetractEvent event) {
         List<Claim> claims = DataClass.loadAll(Claim::new, Collections.emptyMap());
-        if (event.getBlocks().stream().anyMatch(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation())))) {
+        List<Claim> first = claims.stream().filter(claim -> claim.contains(event.getBlock().getLocation())).toList();
+
+        if (!first.isEmpty() && !event.getBlocks().stream().allMatch(block -> first.get(0).contains(block.getLocation().add(event.getDirection().getDirection())))) {
+            event.setCancelled(true);
+        } else if (first.isEmpty() && event.getBlocks().stream().anyMatch(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation().add(event.getDirection().getDirection()))))) {
             event.setCancelled(true);
         }
     }

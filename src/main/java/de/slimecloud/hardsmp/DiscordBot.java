@@ -61,12 +61,12 @@ public class DiscordBot extends ListenerAdapter {
                         e -> () -> e,
                         e -> () -> e,
                         cmdMan -> {
-							cmdMan.registerCommand(DiscordInfoCommand.class);
-							cmdMan.registerCommand(DiscordInfoCommand.UserInfoCommand.class);
+                            cmdMan.registerCommand(DiscordInfoCommand.class);
+                            cmdMan.registerCommand(DiscordInfoCommand.UserInfoCommand.class);
 
                             cmdMan.registerCommand(DiscordVerifyCommand.class);
 
-	                        cmdMan.updateCommands();
+                            cmdMan.updateCommands();
                         }
                 ).build();
     }

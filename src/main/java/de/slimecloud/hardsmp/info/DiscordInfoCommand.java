@@ -7,6 +7,7 @@ import de.mineking.discordutils.commands.option.Option;
 import de.slimecloud.hardsmp.player.PlayerController;
 import de.slimecloud.hardsmp.verify.Verification;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -20,7 +21,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.UUID;
 
-@ApplicationCommand(name = "minecraft", defer = true)
+@ApplicationCommand(name = "info", defer = true)
 public class DiscordInfoCommand {
     @ApplicationCommand(name = "Event Informationen", type = Command.Type.USER, defer = true)
     public static class UserInfoCommand {
@@ -37,41 +38,59 @@ public class DiscordInfoCommand {
         }
     }
 
-    @Autocomplete("minecraft-name")
-    public void handleAutocomplete(CommandAutoCompleteInteractionEvent event) {
-        event.replyChoices(Arrays.stream(Bukkit.getOfflinePlayers())
-                .filter(p -> p.getName().startsWith(event.getFocusedOption().getValue()))
-                .limit(OptionData.MAX_CHOICES)
-                .map(p -> new Command.Choice(p.getName(), p.getUniqueId().toString()))
-                .toList()
-        ).queue();
-    }
+	@ApplicationCommand(name = "discord")
+	public static class DiscordCommand {
+		@ApplicationCommandMethod
+		public void performCommand(SlashCommandInteractionEvent event, @Option Member member) {
+			Verification verification = Verification.load(member);
 
-    @ApplicationCommandMethod
-    public void performCommand(SlashCommandInteractionEvent event, @Option(name = "minecraft-name", description = "Der Name des Spielers im Minecraft") String minecraftName) {
-        OfflinePlayer player = null;
+			if (!verification.isVerified()) {
+				event.getHook().editOriginal("Der Spieler gesuchte Spieler ist nicht verifiziert!").queue();
+				return;
+			}
 
-        try {
-            player = Bukkit.getOfflinePlayer(UUID.fromString(minecraftName));
-        } catch (IllegalArgumentException ignored) {
-        }
+			event.getHook().editOriginalEmbeds(buildInfo(Bukkit.getOfflinePlayer(verification.getMinecraftID()), verification)).queue();
+		}
+	}
 
-        if (player == null) player = Bukkit.getOfflinePlayer(minecraftName);
+	@ApplicationCommand(name = "minecraft")
+	public static class MinecraftCommand {
+		@Autocomplete("name")
+		public void handleAutocomplete(CommandAutoCompleteInteractionEvent event) {
+			event.replyChoices(Arrays.stream(Bukkit.getOfflinePlayers())
+					.filter(p -> p.getName().startsWith(event.getFocusedOption().getValue()))
+					.limit(OptionData.MAX_CHOICES)
+					.map(p -> new Command.Choice(p.getName(), p.getUniqueId().toString()))
+					.toList()
+			).queue();
+		}
 
-        if (player.getName() == null) {
-            event.getHook().editOriginal("Spieler nicht gefunden!").queue();
-            return;
-        }
+		@ApplicationCommandMethod
+		public void performCommand(SlashCommandInteractionEvent event, @Option(name = "name", description = "Der Name des Spielers im Minecraft") String minecraftName) {
+			OfflinePlayer player = null;
 
-        Verification verification = Verification.load(player.getUniqueId().toString());
+			try {
+				player = Bukkit.getOfflinePlayer(UUID.fromString(minecraftName));
+			} catch(IllegalArgumentException ignored) {
+			}
 
-        if (!verification.isVerified()) {
-            event.getHook().editOriginal("Der Spieler gesuchte Spieler ist nicht verifiziert!").queue();
-            return;
-        }
+			if(player == null) player = Bukkit.getOfflinePlayer(minecraftName);
 
-        event.getHook().editOriginalEmbeds(buildInfo(player, verification)).queue();
-    }
+			if(player.getName() == null) {
+				event.getHook().editOriginal("Spieler nicht gefunden!").queue();
+				return;
+			}
+
+			Verification verification = Verification.load(player.getUniqueId().toString());
+
+			if(!verification.isVerified()) {
+				event.getHook().editOriginal("Der Spieler gesuchte Spieler ist nicht verifiziert!").queue();
+				return;
+			}
+
+			event.getHook().editOriginalEmbeds(buildInfo(player, verification)).queue();
+		}
+	}
 
     public static MessageEmbed buildInfo(OfflinePlayer player, Verification verification) {
         return new EmbedBuilder()

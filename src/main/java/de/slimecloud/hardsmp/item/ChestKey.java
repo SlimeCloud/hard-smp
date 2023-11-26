@@ -19,8 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.*;
@@ -36,10 +35,10 @@ public class ChestKey extends CustomItem implements Listener {
     private final NamespacedKey idCracked;
     private final Component unlockMsg;
     private final Component lockMsg;
-    private final Component lockedMsg;
+    private final Component noKeyMsg;
 
     public ChestKey(HardSMP plugin) {
-        super("chest-key", Material.IRON_HOE, 0);
+        super("chest-key", Material.IRON_HOE, 2);
         builder.setDisplayName("Schlüssel")
                 .setUnbreakable(true)
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
@@ -55,7 +54,7 @@ public class ChestKey extends CustomItem implements Listener {
         this.idCracked = new NamespacedKey(plugin, "cracked");
         this.unlockMsg = Formatter.parseText(plugin.getConfig().getString("chest-key.success.unlock", "§2Geöffnet"));
         this.lockMsg = Formatter.parseText(plugin.getConfig().getString("chest-key.success.lock", "§2Verschlossen"));
-        this.lockedMsg = Formatter.parseText(plugin.getConfig().getString("chest-key.no-key", "§cVerschlossen"));
+        this.noKeyMsg = Formatter.parseText(plugin.getConfig().getString("chest-key.no-key", "§cVerschlossen"));
         add();
     }
 
@@ -99,11 +98,11 @@ public class ChestKey extends CustomItem implements Listener {
                         if (!(playerHasKeyForContainer(player, getID(container)) || isCracked)) {
                             if (event.isBlockInHand()) {
                                 if (!player.isSneaking()) {
-                                    player.sendActionBar(lockedMsg);
+                                    player.sendActionBar(noKeyMsg);
                                     event.setCancelled(true);
                                 }
                             } else {
-                                player.sendActionBar(lockedMsg);
+                                player.sendActionBar(noKeyMsg);
                                 event.setCancelled(true);
                             }
                         } else if (isCracked) {
@@ -114,6 +113,33 @@ public class ChestKey extends CustomItem implements Listener {
                 } else event.setCancelled(true);
 
             } else if (isItem(event.getItem())) event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        if (!(block.getState() instanceof Container container)) return;
+        Player player = event.getPlayer();
+        if (isContainerLocked(container) && !(playerHasKeyForContainer(player, getID(container)) || isCracked(container))) {
+            player.sendActionBar(noKeyMsg);
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onExplode(BlockExplodeEvent event) {
+        List<Block> blocks = event.blockList();
+        for (int i = 0; i < blocks.size(); i++) {
+            if (blocks.get(i) instanceof Container container && isContainerLocked(container) && !isCracked(container)) blocks.remove(i);
+        }
+    }
+
+    @EventHandler
+    public void onPiston(BlockPistonExtendEvent event) {
+        List<Block> blocks = event.getBlocks();
+        for (Block block : blocks) {
+            if (block instanceof Container container && isContainerLocked(container) && !isCracked(container)) event.setCancelled(true);
         }
     }
 

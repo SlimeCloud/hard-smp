@@ -24,7 +24,7 @@ public class PunishmentListener implements Listener {
 
     public PunishmentListener(HardSMP plugin) {
         this.plugin = plugin;
-        this.channelID = plugin.getConfig().getLong("discord.mod-log-channel", 123);
+        this.channelID = plugin.getConfig().getLong("discord.mod-log-channel");
     }
 
     @EventHandler

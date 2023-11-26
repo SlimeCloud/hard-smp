@@ -2,10 +2,12 @@ package de.slimecloud.hardsmp.info;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.player.PlayerController;
 import de.slimecloud.hardsmp.verify.Verification;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -31,14 +33,15 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 		if(args.length == 0) return false;
 
-		UserSnowflake user = null;
+		JDA jda = HardSMP.getInstance().getDiscordBot().jdaInstance;
+		User user = null;
 
 		try {
-			user = UserSnowflake.fromId(args[0]);
+			user = jda.getUserById(args[0]);
 		} catch(NumberFormatException ignored) {}
 
 		try {
-			if(user == null) user = HardSMP.getInstance().getDiscordBot().jdaInstance.getGuildById(0).getMembersByEffectiveName(args[0], true).get(0);
+			if(user == null) user = jda.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembersByEffectiveName(args[0], true).get(0).getUser();
 		} catch(NullPointerException | IndexOutOfBoundsException ignored) {}
 
 		if(user == null) {
@@ -55,7 +58,12 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
 
 		OfflinePlayer player = Bukkit.getOfflinePlayer(verification.getMinecraftID());
 
-		//TODO send message
+		sender.sendMessage(
+				Formatter.parseText("§äInformationen zu §l§ö" + user.getEffectiveName() + "§r")
+						.append(Formatter.parseText("§äMinecraft Name: §ö" + player.getName()))
+						.append(Formatter.parseText("§äDiscord Name: §ö" + user.getEffectiveName()))
+						.append(Formatter.parseText("§äPunkte: §ö: " + PlayerController.getPlayer(player).getActualPoints()))
+		);
 
 		return true;
 	}

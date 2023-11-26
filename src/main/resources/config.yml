@@ -130,6 +130,7 @@ discord:
   token: xxx
   console-channel: 123
   netrunner-role: 123
+  guild: 123
 
 teamchat:
   messageFormat: "§8[§äTeam§öChat§8] §c%player§7:"

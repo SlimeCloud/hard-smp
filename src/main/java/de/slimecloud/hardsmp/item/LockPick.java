@@ -1,6 +1,7 @@
 package de.slimecloud.hardsmp.item;
 
 import de.cyklon.spigotutils.adventure.Formatter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -21,12 +22,18 @@ public class LockPick extends CustomItem implements Listener {
 	private final ChestKey chestKey;
 	private final double probability;
 
+	private final Component crackMsg;
+	private final Component crackLongMsg;
+
+
 	public LockPick(ChestKey chestKey) {
 		super("lock-pick", Material.IRON_HOE, 1);
 		builder.setDisplayName("Dietrich")
 				.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		this.chestKey = chestKey;
 		this.probability = chestKey.getPlugin().getConfig().getDouble("chest-key.lockpick.probability", 2);
+		this.crackMsg = Formatter.parseText(chestKey.getPlugin().getConfig().getString("chest-key.success.crack", "§2Geknackt"));
+		this.crackLongMsg = Formatter.parseText(chestKey.getPlugin().getConfig().getString("chest-key.success.crack-msg", "§2Gecknackt"));
 		add();
 	}
 
@@ -58,8 +65,8 @@ public class LockPick extends CustomItem implements Listener {
 	private void tryCrack(Player player, Block block, ItemStack lockpick) {
 		if (random()) {
 			chestKey.crack(block);
-			player.sendActionBar(Formatter.parseText(chestKey.getPlugin().getConfig().getString("chest-key.success.crack", "§2Geknackt")));
-			player.sendMessage(Formatter.parseText(chestKey.getPlugin().getConfig().getString("chest-key.success.crack-msg", "§2Gecknackt")));
+			player.sendActionBar(crackMsg);
+			player.sendMessage(crackLongMsg);
 			player.getWorld().playSound(block.getLocation(), Sound.ITEM_SHIELD_BREAK, 100, 1.2f);
 		} else player.getWorld().playSound(block.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 100, 1.6f);
 		PlayerInventory inv = player.getInventory();

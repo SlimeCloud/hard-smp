@@ -51,5 +51,5 @@ commands:
     usage: "§cUsage: /leaderboard <Page>"
     permission: hardsmp.command.leaderboard
   discord:
-    usage: "§cUsage: /discord <if or name>"
+    usage: "§cUsage: /discord <id or name>"
     permission: hardsmp.commands.discord

@@ -45,7 +45,7 @@ public class DiscordInfoCommand {
 			Verification verification = Verification.load(member);
 
 			if (!verification.isVerified()) {
-				event.getHook().editOriginal("Der Spieler gesuchte Spieler ist nicht verifiziert!").queue();
+				event.getHook().editOriginal("Der gesuchte Spieler ist nicht verifiziert!").queue();
 				return;
 			}
 
@@ -84,7 +84,7 @@ public class DiscordInfoCommand {
 			Verification verification = Verification.load(player.getUniqueId().toString());
 
 			if(!verification.isVerified()) {
-				event.getHook().editOriginal("Der Spieler gesuchte Spieler ist nicht verifiziert!").queue();
+				event.getHook().editOriginal("Der gesuchte Spieler ist nicht verifiziert!").queue();
 				return;
 			}
 

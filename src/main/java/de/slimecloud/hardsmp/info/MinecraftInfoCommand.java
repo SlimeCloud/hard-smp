@@ -25,7 +25,7 @@ import java.util.*;
 public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length != 2) return false;
+        if (args.length < 2) return false;
 
         JDA jda = HardSMP.getInstance().getDiscordBot().jdaInstance;
 
@@ -35,7 +35,8 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
         switch (args[0]) {
             case "discord" -> {
                 try {
-                    user = jda.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembersByEffectiveName(args[1], true).get(0).getUser();
+                    var name = String.join(" ", args).split(" ", 2)[1];
+                    user = jda.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembersByEffectiveName(name, true).get(0).getUser();
                 } catch (NullPointerException | IndexOutOfBoundsException ignored) {
                     sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
                     return true;

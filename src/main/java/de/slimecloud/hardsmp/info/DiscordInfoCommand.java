@@ -39,63 +39,63 @@ public class DiscordInfoCommand {
         }
     }
 
-	@ApplicationCommand(name = "discord", description = "Sucht nach einen Spieler über Discord", defer = true)
-	public static class DiscordCommand {
-		@ApplicationCommandMethod
-		public void performCommand(SlashCommandInteractionEvent event, @Option(description = "Das Server-Mitglied") Member member) {
-			Verification verification = Verification.load(member);
+    @ApplicationCommand(name = "discord", description = "Sucht nach einen Spieler über Discord", defer = true)
+    public static class DiscordCommand {
+        @ApplicationCommandMethod
+        public void performCommand(SlashCommandInteractionEvent event, @Option(description = "Das Server-Mitglied") Member member) {
+            Verification verification = Verification.load(member);
 
-			if (!verification.isVerified()) {
-				event.getHook().editOriginal("Der gesuchte Spieler ist nicht verifiziert!").queue();
-				return;
-			}
+            if (!verification.isVerified()) {
+                event.getHook().editOriginal("Der gesuchte Spieler ist nicht verifiziert!").queue();
+                return;
+            }
 
-			event.getHook().editOriginalEmbeds(buildInfo(Bukkit.getOfflinePlayer(UUID.fromString(verification.getMinecraftID())), verification)).queue();
-		}
-	}
+            event.getHook().editOriginalEmbeds(buildInfo(Bukkit.getOfflinePlayer(UUID.fromString(verification.getMinecraftID())), verification)).queue();
+        }
+    }
 
-	@ApplicationCommand(name = "minecraft", description = "Sucht nach einem Spieler über Minecraft", defer = true)
-	public static class MinecraftCommand {
-		@Autocomplete("name")
-		public void handleAutocomplete(CommandAutoCompleteInteractionEvent event) {
-			event.replyChoices(Arrays.stream(Bukkit.getOfflinePlayers())
-					.filter(p -> p.getName() != null)
-					.filter(p -> p.getName().startsWith(event.getFocusedOption().getValue()))
-					.limit(OptionData.MAX_CHOICES)
-					.map(p -> new Command.Choice(p.getName(), p.getName()))
-					.toList()
-			).queue();
-		}
+    @ApplicationCommand(name = "minecraft", description = "Sucht nach einem Spieler über Minecraft", defer = true)
+    public static class MinecraftCommand {
+        @Autocomplete("name")
+        public void handleAutocomplete(CommandAutoCompleteInteractionEvent event) {
+            event.replyChoices(Arrays.stream(Bukkit.getOfflinePlayers())
+                    .filter(p -> p.getName() != null)
+                    .filter(p -> p.getName().startsWith(event.getFocusedOption().getValue()))
+                    .limit(OptionData.MAX_CHOICES)
+                    .map(p -> new Command.Choice(p.getName(), p.getName()))
+                    .toList()
+            ).queue();
+        }
 
-		@ApplicationCommandMethod
-		public void performCommand(SlashCommandInteractionEvent event, @Option(name = "name", description = "Der Name des Spielers im Minecraft") String minecraftName) {
-			OfflinePlayer player = Bukkit.getOfflinePlayer(minecraftName);
+        @ApplicationCommandMethod
+        public void performCommand(SlashCommandInteractionEvent event, @Option(name = "name", description = "Der Name des Spielers im Minecraft") String minecraftName) {
+            OfflinePlayer player = Bukkit.getOfflinePlayer(minecraftName);
 
-			if(player.getName() == null) {
-				event.getHook().editOriginal("Spieler nicht gefunden!").queue();
-				return;
-			}
+            if (player.getName() == null) {
+                event.getHook().editOriginal("Spieler nicht gefunden!").queue();
+                return;
+            }
 
-			Verification verification = Verification.load(player.getUniqueId().toString());
+            Verification verification = Verification.load(player.getUniqueId().toString());
 
-			if(!verification.isVerified()) {
-				event.getHook().editOriginal("Der gesuchte Spieler ist nicht verifiziert!").queue();
-				return;
-			}
+            if (!verification.isVerified()) {
+                event.getHook().editOriginal("Der gesuchte Spieler ist nicht verifiziert!").queue();
+                return;
+            }
 
-			event.getHook().editOriginalEmbeds(buildInfo(player, verification)).queue();
-		}
-	}
+            event.getHook().editOriginalEmbeds(buildInfo(player, verification)).queue();
+        }
+    }
 
-	private final static Color color = Color.decode("#569d3c");
+    private final static Color color = Color.decode("#569d3c");
 
     public static MessageEmbed buildInfo(OfflinePlayer player, Verification verification) {
-		var user = HardSMP.getInstance().getDiscordBot().jdaInstance.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).retrieveMemberById(verification.getDiscordID()).complete();
+        var user = HardSMP.getInstance().getDiscordBot().jdaInstance.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).retrieveMemberById(verification.getDiscordID()).complete();
 
         return new EmbedBuilder()
                 .setColor(color)
-				.setAuthor(user.getEffectiveName(), null, user.getEffectiveAvatarUrl())
-				.setThumbnail("https://mc-heads.net/avatar/" + verification.getMinecraftID())
+                .setAuthor(user.getEffectiveName(), null, user.getEffectiveAvatarUrl())
+                .setThumbnail("https://mc-heads.net/avatar/" + verification.getMinecraftID())
                 .addField("Minecraft Name", player.getName(), true)
                 .addField("Minecraft UUID", player.getUniqueId().toString(), true)
                 .addField("Punkte", "" + (int) PlayerController.getPlayer(player).getActualPoints(), true)

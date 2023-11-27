@@ -24,10 +24,10 @@ public class Verification extends DataClass {
                 .orElseGet(() -> new Verification(minecraftID));
     }
 
-	public static Verification load(UserSnowflake user) {
-		return DataClass.load(() -> new Verification(null), Map.of("discordID", user.getIdLong()))
-				.orElseGet(() -> new Verification(null));
-	}
+    public static Verification load(UserSnowflake user) {
+        return DataClass.load(() -> new Verification(null), Map.of("discordID", user.getIdLong()))
+                .orElseGet(() -> new Verification(null));
+    }
 
     public Verification setDiscordId(long id) {
         verified = true;

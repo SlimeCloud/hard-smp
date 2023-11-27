@@ -23,95 +23,93 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
-	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		if(args.length != 2) return false;
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (args.length != 2) return false;
 
-		JDA jda = HardSMP.getInstance().getDiscordBot().jdaInstance;
+        JDA jda = HardSMP.getInstance().getDiscordBot().jdaInstance;
 
-		User user;
-		OfflinePlayer player;
+        User user;
+        OfflinePlayer player;
 
-		switch(args[0]) {
-			case "discord" -> {
-				try {
-					user = jda.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembersByEffectiveName(args[1], true).get(0).getUser();
-				} catch(NullPointerException | IndexOutOfBoundsException ignored) {
-					sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
-					return true;
-				}
+        switch (args[0]) {
+            case "discord" -> {
+                try {
+                    user = jda.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembersByEffectiveName(args[1], true).get(0).getUser();
+                } catch (NullPointerException | IndexOutOfBoundsException ignored) {
+                    sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
+                    return true;
+                }
 
-				Verification verification = Verification.load(user);
+                Verification verification = Verification.load(user);
 
-				if(!verification.isVerified()) {
-					sender.sendMessage(Component.text("Nutzer nicht gefunden oder nicht verifiziert!").color(NamedTextColor.RED));
-					return true;
-				}
+                if (!verification.isVerified()) {
+                    sender.sendMessage(Component.text("Nutzer nicht gefunden oder nicht verifiziert!").color(NamedTextColor.RED));
+                    return true;
+                }
 
-				player = Bukkit.getOfflinePlayer(UUID.fromString(verification.getMinecraftID()));
-			}
+                player = Bukkit.getOfflinePlayer(UUID.fromString(verification.getMinecraftID()));
+            }
 
-			case "minecraft" -> {
-				player = Bukkit.getOfflinePlayer(args[1]);
+            case "minecraft" -> {
+                player = Bukkit.getOfflinePlayer(args[1]);
 
-				Verification verification = Verification.load(player.getUniqueId().toString());
+                Verification verification = Verification.load(player.getUniqueId().toString());
 
-				if(!verification.isVerified()) {
-					sender.sendMessage(Component.text("Spieler nicht gefunden oder nicht verifiziert!").color(NamedTextColor.RED));
-					return true;
-				}
+                if (!verification.isVerified()) {
+                    sender.sendMessage(Component.text("Spieler nicht gefunden oder nicht verifiziert!").color(NamedTextColor.RED));
+                    return true;
+                }
 
-				user = jda.retrieveUserById(verification.getDiscordID()).complete();
-			}
+                user = jda.retrieveUserById(verification.getDiscordID()).complete();
+            }
 
-			default -> {
-				return false;
-			}
-		}
+            default -> {
+                return false;
+            }
+        }
 
-		if(player.getName() == null) {
-			sender.sendMessage(Component.text("Spieler nicht gefunden!").color(NamedTextColor.RED));
-			return true;
-		}
+        if (player.getName() == null) {
+            sender.sendMessage(Component.text("Spieler nicht gefunden!").color(NamedTextColor.RED));
+            return true;
+        }
 
-		sender.sendMessage(Component.text("---- Informationen zu ").color(TextColor.color(0x88D657)).append(Component.text(user.getEffectiveName()).color(TextColor.color(0xF6ED82)).decorate(TextDecoration.BOLD)).decoration(TextDecoration.BOLD, false).append(Component.text(" ----")).appendNewline()
-				.append(Component.text("Minecraft Name: ").color(TextColor.color(0x88D657)).append(Component.text(player.getName()).color(TextColor.color(0xF6ED82)))).appendNewline()
-				.append(Component.text("Minecraft UUID: ").color(TextColor.color(0x88D657)).append(Component.text(player.getUniqueId().toString()).color(TextColor.color(0xF6ED82)))).appendNewline()
-				.append(Component.text("Discord Name: ").color(TextColor.color(0x88D657)).append(Component.text(user.getEffectiveName()).color(TextColor.color(0xF6ED82)))).appendNewline()
-				.append(Component.text("Punkte: ").color(TextColor.color(0x88D657)).append(Component.text((int) PlayerController.getPlayer(player).getActualPoints()).color(TextColor.color(0xF6ED82)))).appendNewline()
-		);
+        sender.sendMessage(Component.text("---- Informationen zu ").color(TextColor.color(0x88D657)).append(Component.text(user.getEffectiveName()).color(TextColor.color(0xF6ED82)).decorate(TextDecoration.BOLD)).decoration(TextDecoration.BOLD, false).append(Component.text(" ----")).appendNewline()
+                .append(Component.text("Minecraft Name: ").color(TextColor.color(0x88D657)).append(Component.text(player.getName()).color(TextColor.color(0xF6ED82)))).appendNewline()
+                .append(Component.text("Minecraft UUID: ").color(TextColor.color(0x88D657)).append(Component.text(player.getUniqueId().toString()).color(TextColor.color(0xF6ED82)))).appendNewline()
+                .append(Component.text("Discord Name: ").color(TextColor.color(0x88D657)).append(Component.text(user.getEffectiveName()).color(TextColor.color(0xF6ED82)))).appendNewline()
+                .append(Component.text("Punkte: ").color(TextColor.color(0x88D657)).append(Component.text((int) PlayerController.getPlayer(player).getActualPoints()).color(TextColor.color(0xF6ED82)))).appendNewline()
+        );
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	@SneakyThrows
-	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		if(args.length == 1) {
-			return List.of("discord", "minecraft").stream()
-					.filter(s -> s.startsWith(args[0]))
-					.toList();
-		}
+    @Override
+    @SneakyThrows
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (args.length == 1) {
+            return List.of("discord", "minecraft").stream()
+                    .filter(s -> s.startsWith(args[0]))
+                    .toList();
+        } else if (args.length == 2) {
+            switch (args[0]) {
+                case "discord" -> {
+                    return HardSMP.getInstance().getDiscordBot().jdaInstance.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembers().stream()
+                            .map(Member::getEffectiveName)
+                            .filter(u -> u.contains(args[1]))
+                            .toList();
+                }
 
-		else if(args.length == 2) {
-			switch(args[0]) {
-				case "discord" -> {
-					return HardSMP.getInstance().getDiscordBot().jdaInstance.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembers().stream()
-							.map(Member::getEffectiveName)
-							.filter(u -> u.contains(args[1]))
-							.toList();
-				}
+                case "minecraft" -> {
+                    return Arrays.stream(Bukkit.getOfflinePlayers())
+                            .map(OfflinePlayer::getName)
+                            .filter(Objects::nonNull)
+                            .filter(p -> p.contains(args[1]))
+                            .toList();
+                }
+            }
+        }
 
-				case "minecraft" -> {
-					return Arrays.stream(Bukkit.getOfflinePlayers())
-							.map(OfflinePlayer::getName)
-							.filter(Objects::nonNull)
-							.filter(p -> p.contains(args[1]))
-							.toList();
-				}
-			}
-		}
-
-		return Collections.emptyList();
-	}
+        return Collections.emptyList();
+    }
 }

@@ -26,7 +26,7 @@ public class ClaimProtectionHandler implements Listener {
         return DataClass.loadAll(
                 Claim::new,
                 Collections.emptyMap()
-        ).stream().anyMatch(claim -> claim.contains(loc) && !claim.uuid.equals(player.getUniqueId().toString()));
+        ).stream().anyMatch(claim -> claim.contains(loc) && !claim.getUuid().equals(player.getUniqueId().toString()));
     }
 
     @EventHandler

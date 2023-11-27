@@ -2,8 +2,7 @@ package de.slimecloud.hardsmp.player.data;
 
 import de.slimecloud.hardsmp.database.DataClass;
 import de.slimecloud.hardsmp.database.Table;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.bukkit.Location;
 
 import java.util.List;
@@ -13,10 +12,12 @@ import java.util.UUID;
 @Table(name = "claims")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Claim extends DataClass {
 
-    public String uuid;
-    public int x1, z1, x2, z2;
+    private String uuid;
+    private int x1, z1, x2, z2;
 
     public static List<Claim> load(UUID uuid) {
         return loadAll(Claim::new, Map.of("uuid", uuid.toString()));

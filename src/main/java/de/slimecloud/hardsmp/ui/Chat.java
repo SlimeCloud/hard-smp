@@ -64,15 +64,13 @@ public class Chat implements Listener {
         String nameColor = this.nameColor.getOrDefault(Integer.valueOf(rank), this.nameColor.get(-1));
         String rankColor = this.rankColor.getOrDefault(Integer.valueOf(rank), this.rankColor.get(-1));
 
+        rank = switch (rank) {
+            case "1" -> "\uE002";
+            case "2" -> "\uE002";
+            case "3" -> "\uE004";
+            default -> "";
+        };
 
-        switch (rank) {
-            case "1":
-                rank = "\uE002";
-            case "2":
-                rank = "\uE003";
-            case "3":
-                rank = "\uE004";
-        }
         String formattedFormat = this.format
                 .replace("%colr", rankColor)
                 .replace("%coln", nameColor)

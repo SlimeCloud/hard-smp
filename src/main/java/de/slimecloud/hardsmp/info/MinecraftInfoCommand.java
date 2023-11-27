@@ -44,7 +44,7 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
 				Verification verification = Verification.load(user);
 
 				if(!verification.isVerified()) {
-					sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));
+					sender.sendMessage(Component.text("Nutzer nicht gefunden oder nicht verifiziert!").color(NamedTextColor.RED));
 					return true;
 				}
 
@@ -57,7 +57,7 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
 				Verification verification = Verification.load(player.getUniqueId().toString());
 
 				if(!verification.isVerified()) {
-					sender.sendMessage(Component.text("Spieler nicht gefunden!").color(NamedTextColor.RED));
+					sender.sendMessage(Component.text("Spieler nicht gefunden oder nicht verifiziert!").color(NamedTextColor.RED));
 					return true;
 				}
 

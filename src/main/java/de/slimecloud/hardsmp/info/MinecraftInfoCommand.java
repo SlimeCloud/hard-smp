@@ -99,7 +99,7 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
 		sender.sendMessage(Component.text("Informationen zu ").color(TextColor.color(0x88D657)).append(Component.text(user.getEffectiveName()).color(TextColor.color(0xF6ED82))).appendNewline()
 				.append(Component.text("Minecraft Name: ").color(TextColor.color(0x88D657)).append(Component.text(player.getName()).color(TextColor.color(0xF6ED82)))).appendNewline()
 				.append(Component.text("Discord Name: ").color(TextColor.color(0x88D657)).append(Component.text(user.getEffectiveName()).color(TextColor.color(0xF6ED82)))).appendNewline()
-				.append(Component.text("Punkte: ").color(TextColor.color(0x88D657)).append(Component.text(PlayerController.getPlayer(player).getActualPoints()).color(TextColor.color(0xF6ED82)))).appendNewline()
+				.append(Component.text("Punkte: ").color(TextColor.color(0x88D657)).append(Component.text((int) PlayerController.getPlayer(player).getActualPoints()).color(TextColor.color(0xF6ED82)))).appendNewline()
 		);
 
 		return true;

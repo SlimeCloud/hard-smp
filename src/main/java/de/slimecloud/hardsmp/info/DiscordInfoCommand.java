@@ -99,7 +99,7 @@ public class DiscordInfoCommand {
                 .addField("Minecraft Name", player.getName(), true)
                 .addField("Minecraft UUID", player.getUniqueId().toString(), true)
                 .addField("Discord Name", "<@" + verification.getDiscordID() + ">", true)
-                .addField("Punkte", "" + PlayerController.getPlayer(player).getActualPoints(), false)
+                .addField("Punkte", "" + (int) PlayerController.getPlayer(player).getActualPoints(), false)
                 .build();
     }
 }

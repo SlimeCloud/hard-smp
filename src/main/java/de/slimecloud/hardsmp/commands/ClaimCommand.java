@@ -19,6 +19,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +34,26 @@ import java.util.stream.Stream;
 public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     public final Map<UUID, ClaimInfo> claimingPlayers = new HashMap<>();
+
+    private final Team firstTeam;
+    private final Team secondTeam;
+
+    public ClaimCommand() {
+        Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
+
+        Team firstTeam = board.getTeam("claimselection1");
+        if (firstTeam == null) firstTeam = board.registerNewTeam("claimselection1");
+
+        Team secondTeam = board.getTeam("claimselection2");
+        if(secondTeam == null) secondTeam = board.registerNewTeam("claimselection2");
+
+        firstTeam.color(NamedTextColor.BLUE);
+        secondTeam.color(NamedTextColor.RED);
+
+        this.firstTeam = firstTeam;
+        this.secondTeam = secondTeam;
+    }
+
 
     public static class ClaimInfo {
         public final ScheduledTask task;
@@ -121,26 +143,30 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
             info.x1 = event.getClickedBlock().getX();
             info.z1 = event.getClickedBlock().getZ();
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(
-                    Component.text("Erste Ecke: " + info.x1 + ", " + info.z1, NamedTextColor.GREEN)
+                    Component.text("§9Erste §aEcke: " + info.x1 + ", " + info.z1)
             ));
 
             event.getPlayer().getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + event.getPlayer().getUniqueId())).forEach(Entity::remove);
 
             mark = event.getPlayer().getWorld().spawn(event.getClickedBlock().getLocation(), Shulker.class);
             mark.addScoreboardTag("marker1" + event.getPlayer().getUniqueId());
+
+            firstTeam.addEntity(mark);
         } else if (event.getAction().isRightClick()) {
             if (info.x2 != null && info.z2 != null && event.getClickedBlock().getLocation().getX() == info.x2 && event.getClickedBlock().getLocation().getZ() == info.z2) return;
 
             info.x2 = event.getClickedBlock().getX();
             info.z2 = event.getClickedBlock().getZ();
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(
-                    Component.text("Zweite Ecke: " + info.x2 + ", " + info.z2, NamedTextColor.GREEN)
+                    Component.text("§cZweite §aEcke: " + info.x2 + ", " + info.z2, NamedTextColor.GREEN)
             ));
 
             event.getPlayer().getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker2" + event.getPlayer().getUniqueId())).forEach(Entity::remove);
 
             mark = event.getPlayer().getWorld().spawn(event.getClickedBlock().getLocation(), Shulker.class);
             mark.addScoreboardTag("marker2" + event.getPlayer().getUniqueId());
+
+            secondTeam.addEntity(mark);
         } else return;
 
         mark.setInvisible(true);

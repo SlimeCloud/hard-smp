@@ -4,6 +4,7 @@ import de.mineking.discordutils.commands.ApplicationCommand;
 import de.mineking.discordutils.commands.ApplicationCommandMethod;
 import de.mineking.discordutils.commands.option.Autocomplete;
 import de.mineking.discordutils.commands.option.Option;
+import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.player.PlayerController;
 import de.slimecloud.hardsmp.verify.Verification;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -34,7 +35,7 @@ public class DiscordInfoCommand {
                 return;
             }
 
-            event.getHook().editOriginalEmbeds(buildInfo(Bukkit.getOfflinePlayer(verification.getMinecraftID()), verification)).queue();
+            event.getHook().editOriginalEmbeds(buildInfo(Bukkit.getOfflinePlayer(UUID.fromString(verification.getMinecraftID())), verification)).queue();
         }
     }
 
@@ -49,7 +50,7 @@ public class DiscordInfoCommand {
 				return;
 			}
 
-			event.getHook().editOriginalEmbeds(buildInfo(Bukkit.getOfflinePlayer(verification.getMinecraftID()), verification)).queue();
+			event.getHook().editOriginalEmbeds(buildInfo(Bukkit.getOfflinePlayer(UUID.fromString(verification.getMinecraftID())), verification)).queue();
 		}
 	}
 
@@ -58,23 +59,17 @@ public class DiscordInfoCommand {
 		@Autocomplete("name")
 		public void handleAutocomplete(CommandAutoCompleteInteractionEvent event) {
 			event.replyChoices(Arrays.stream(Bukkit.getOfflinePlayers())
+					.filter(p -> p.getName() != null)
 					.filter(p -> p.getName().startsWith(event.getFocusedOption().getValue()))
 					.limit(OptionData.MAX_CHOICES)
-					.map(p -> new Command.Choice(p.getName(), p.getUniqueId().toString()))
+					.map(p -> new Command.Choice(p.getName(), p.getName()))
 					.toList()
 			).queue();
 		}
 
 		@ApplicationCommandMethod
 		public void performCommand(SlashCommandInteractionEvent event, @Option(name = "name", description = "Der Name des Spielers im Minecraft") String minecraftName) {
-			OfflinePlayer player = null;
-
-			try {
-				player = Bukkit.getOfflinePlayer(UUID.fromString(minecraftName));
-			} catch(IllegalArgumentException ignored) {
-			}
-
-			if(player == null) player = Bukkit.getOfflinePlayer(minecraftName);
+			OfflinePlayer player = Bukkit.getOfflinePlayer(minecraftName);
 
 			if(player.getName() == null) {
 				event.getHook().editOriginal("Spieler nicht gefunden!").queue();
@@ -92,9 +87,11 @@ public class DiscordInfoCommand {
 		}
 	}
 
+	private final static Color color = Color.decode(HardSMP.getInstance().getConfig().getString("ui.custom-formatting.ä"));
+
     public static MessageEmbed buildInfo(OfflinePlayer player, Verification verification) {
         return new EmbedBuilder()
-                .setColor(Color.GREEN)
+                .setColor(color)
                 .setTitle("Informationen zu **" + player.getName() + "**")
                 .addField("Minecraft Name", player.getName(), true)
                 .addField("Minecraft UUID", player.getUniqueId().toString(), true)

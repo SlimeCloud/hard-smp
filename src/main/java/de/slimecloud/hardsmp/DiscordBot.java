@@ -1,7 +1,7 @@
 package de.slimecloud.hardsmp;
 
 import de.mineking.discordutils.DiscordUtils;
-import de.mineking.discordutils.commands.context.ContextBase;
+import de.slimecloud.hardsmp.info.DiscordInfoCommand;
 import de.slimecloud.hardsmp.verify.DiscordVerifyCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -56,16 +56,18 @@ public class DiscordBot extends ListenerAdapter {
     }
 
     private DiscordUtils<DiscordBot> setupDiscordUtils() {
-        return new DiscordUtils<>(jdaInstance, this)
+        return DiscordUtils.create(jdaInstance, this)
                 .useCommandManager(
-                        e -> new ContextBase<>(e) {
-                        },
-                        e -> new ContextBase<>(e) {
-                        },
+                        e -> () -> e,
+                        e -> () -> e,
                         cmdMan -> {
-                            cmdMan.updateCommands();
+                            cmdMan.registerCommand(DiscordInfoCommand.class);
+                            cmdMan.registerCommand(DiscordInfoCommand.UserInfoCommand.class);
+
                             cmdMan.registerCommand(DiscordVerifyCommand.class);
+
+                            cmdMan.updateCommands();
                         }
-                );
+                ).build();
     }
 }

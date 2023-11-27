@@ -87,16 +87,18 @@ public class DiscordInfoCommand {
 		}
 	}
 
-	private final static Color color = Color.decode(HardSMP.getInstance().getConfig().getString("ui.custom-formatting.ä"));
+	private final static Color color = Color.decode("#569d3c");
 
     public static MessageEmbed buildInfo(OfflinePlayer player, Verification verification) {
+		var user = HardSMP.getInstance().getDiscordBot().jdaInstance.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).retrieveMemberById(verification.getDiscordID()).complete();
+
         return new EmbedBuilder()
                 .setColor(color)
-                .setTitle("Informationen zu **" + player.getName() + "**")
+				.setAuthor(user.getEffectiveName(), null, user.getEffectiveAvatarUrl())
+				.setThumbnail("https://mc-heads.net/avatar/" + verification.getMinecraftID())
                 .addField("Minecraft Name", player.getName(), true)
                 .addField("Minecraft UUID", player.getUniqueId().toString(), true)
-                .addField("Discord Name", "<@" + verification.getDiscordID() + ">", true)
-                .addField("Punkte", "" + (int) PlayerController.getPlayer(player).getActualPoints(), false)
+                .addField("Punkte", "" + (int) PlayerController.getPlayer(player).getActualPoints(), true)
                 .build();
     }
 }

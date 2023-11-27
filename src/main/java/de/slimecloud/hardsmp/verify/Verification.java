@@ -15,6 +15,8 @@ import java.util.Map;
 public class Verification extends DataClass {
     @Key
     private final String minecraftID;
+
+    @Getter
     private long discordID;
 
     private boolean verified = false;

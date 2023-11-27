@@ -124,7 +124,7 @@
         <dependency>
             <groupId>com.github.MineKingBot</groupId>
             <artifactId>DiscordUtils</artifactId>
-            <version>25c6a59</version>
+            <version>4db7b8d</version>
         </dependency>
 
         <!-- Lombok -->

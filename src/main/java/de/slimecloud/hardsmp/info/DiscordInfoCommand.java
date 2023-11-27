@@ -21,7 +21,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.UUID;
 
-@ApplicationCommand(name = "info", defer = true)
+@ApplicationCommand(name = "info", description = "Zeigt informationen zu einem HardSMP-Spieler an", defer = true)
 public class DiscordInfoCommand {
     @ApplicationCommand(name = "Event Informationen", type = Command.Type.USER, defer = true)
     public static class UserInfoCommand {
@@ -38,10 +38,10 @@ public class DiscordInfoCommand {
         }
     }
 
-	@ApplicationCommand(name = "discord")
+	@ApplicationCommand(name = "discord", description = "Sucht nach einen Spieler über Discord")
 	public static class DiscordCommand {
 		@ApplicationCommandMethod
-		public void performCommand(SlashCommandInteractionEvent event, @Option Member member) {
+		public void performCommand(SlashCommandInteractionEvent event, @Option(description = "Das Server-Mitglied") Member member) {
 			Verification verification = Verification.load(member);
 
 			if (!verification.isVerified()) {
@@ -53,7 +53,7 @@ public class DiscordInfoCommand {
 		}
 	}
 
-	@ApplicationCommand(name = "minecraft")
+	@ApplicationCommand(name = "minecraft", description = "Sucht nach einem Spieler über Minecraft")
 	public static class MinecraftCommand {
 		@Autocomplete("name")
 		public void handleAutocomplete(CommandAutoCompleteInteractionEvent event) {

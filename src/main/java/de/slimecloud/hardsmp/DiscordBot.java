@@ -6,11 +6,13 @@ import de.slimecloud.hardsmp.verify.DiscordVerifyCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
@@ -18,7 +20,7 @@ public class DiscordBot extends ListenerAdapter {
     public final DiscordUtils<DiscordBot> discordUtils;
     public final JDA jdaInstance;
 
-    private final DiscordAppender consoleMirror;
+    private DiscordAppender consoleMirror;
 
     public DiscordBot() {
         jdaInstance = JDABuilder.createDefault(HardSMP.getInstance().getConfig().getString("discord.token"))
@@ -32,7 +34,10 @@ public class DiscordBot extends ListenerAdapter {
                 .build();
 
         discordUtils = setupDiscordUtils();
+    }
 
+    @Override
+    public void onReady(@NotNull ReadyEvent event) {
         if (HardSMP.getInstance().getConfig().contains("discord.console-channel")) {
             ((Logger) LogManager.getRootLogger()).addAppender(consoleMirror = new DiscordAppender(
                     "discord",

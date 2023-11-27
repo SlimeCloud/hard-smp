@@ -50,6 +50,6 @@ commands:
   leaderboard:
     usage: "§cUsage: /leaderboard <Page>"
     permission: hardsmp.command.leaderboard
-  discord:
-    usage: "§cUsage: /discord <id or name>"
+  info:
+    usage: "§cUsage: /info discord/minecraft <id or name>"
     permission: hardsmp.commands.discord

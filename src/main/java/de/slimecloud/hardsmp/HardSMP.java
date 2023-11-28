@@ -16,6 +16,7 @@ import de.slimecloud.hardsmp.ui.Chat;
 import de.slimecloud.hardsmp.ui.Tablist;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
+import de.slimecloud.hardsmp.verify.OnJoinVerifyListener;
 import lombok.Getter;
 import me.lucko.spark.api.Spark;
 import me.lucko.spark.api.SparkProvider;
@@ -111,6 +112,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(rules);
         registerEvent(new DeathPointHandler());
         registerEvent(new PunishmentListener(this));
+        registerEvent(new OnJoinVerifyListener(this));
 
         //UI
         registerEvent(new ScoreboardManager(this));

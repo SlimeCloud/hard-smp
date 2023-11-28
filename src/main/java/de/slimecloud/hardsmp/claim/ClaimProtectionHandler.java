@@ -2,7 +2,6 @@ package de.slimecloud.hardsmp.claim;
 
 import de.slimecloud.hardsmp.database.DataClass;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,7 +31,7 @@ public class ClaimProtectionHandler implements Listener {
     private void onBreak(BlockBreakEvent event) {
         if (isClaimed(event.getBlock().getLocation(), event.getPlayer())) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Component.text("Du kannst hier nicht abbauen!", NamedTextColor.RED));
+            event.getPlayer().sendMessage(Component.text("§cDu kannst hier nicht abbauen!"));
         }
     }
 
@@ -40,7 +39,7 @@ public class ClaimProtectionHandler implements Listener {
     private void onPlace(BlockPlaceEvent event) {
         if (isClaimed(event.getBlock().getLocation(), event.getPlayer())) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Component.text("Du kannst hier nicht bauen!", NamedTextColor.RED));
+            event.getPlayer().sendMessage(Component.text("§cDu kannst hier nicht bauen!"));
         }
     }
 
@@ -48,7 +47,7 @@ public class ClaimProtectionHandler implements Listener {
     private void onEntityPlace(EntityPlaceEvent event) {
         if (event.getPlayer() != null && isClaimed(event.getEntity().getLocation(), event.getPlayer())) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Component.text("Du kannst das hier nicht benutzen!", NamedTextColor.RED));
+            event.getPlayer().sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));
         }
     }
 
@@ -56,7 +55,7 @@ public class ClaimProtectionHandler implements Listener {
     private void onEntityDamage(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player player && isClaimed(event.getEntity().getLocation(), player)) {
             event.setCancelled(true);
-            player.sendMessage(Component.text("Du kannst das hier nicht boxen!", NamedTextColor.RED));
+            player.sendMessage(Component.text("§cDu kannst das hier nicht boxen!"));
         }
     }
 
@@ -64,7 +63,7 @@ public class ClaimProtectionHandler implements Listener {
     private void onBucketEmpty(PlayerBucketEmptyEvent event) {
         if (isClaimed(event.getBlock().getLocation(), event.getPlayer())) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Component.text("Du kannst das hier nicht benutzen!", NamedTextColor.RED));
+            event.getPlayer().sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));
         }
     }
 
@@ -72,7 +71,7 @@ public class ClaimProtectionHandler implements Listener {
     private void onBucketFill(PlayerBucketFillEvent event) {
         if (isClaimed(event.getBlock().getLocation(), event.getPlayer())) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Component.text("Du kannst das hier nicht benutzen!", NamedTextColor.RED));
+            event.getPlayer().sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));
         }
     }
 
@@ -80,7 +79,7 @@ public class ClaimProtectionHandler implements Listener {
     private void onButtonPress(PlayerInteractEvent event) {
         if (event.getAction().isRightClick() && event.getClickedBlock() != null && event.getClickedBlock().getBlockData().getMaterial().toString().contains("BUTTON") && isClaimed(event.getClickedBlock().getLocation(), event.getPlayer())) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Component.text("Du kannst das hier nicht benutzen!", NamedTextColor.RED));
+            event.getPlayer().sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));
         }
     }
 

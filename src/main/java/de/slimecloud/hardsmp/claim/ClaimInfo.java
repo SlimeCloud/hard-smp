@@ -3,7 +3,6 @@ package de.slimecloud.hardsmp.claim;
 import de.slimecloud.hardsmp.HardSMP;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -20,7 +19,7 @@ public class ClaimInfo {
     public ClaimInfo(Player player) {
         this.task = Bukkit.getAsyncScheduler().runDelayed(HardSMP.getInstance(), x -> {
             ClaimCommand.claimingPlayers.remove(player.getUniqueId());
-            player.sendMessage(HardSMP.getPrefix().append(Component.text("Du hast zu lange gebraucht!\nClaim-Modus beendet!", NamedTextColor.RED)));
+            player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast zu lange gebraucht!\nClaim-Modus beendet!")));
         }, 5, TimeUnit.MINUTES);
 
         this.particles = Bukkit.getAsyncScheduler().runAtFixedRate(HardSMP.getInstance(), x -> {
@@ -33,7 +32,6 @@ public class ClaimInfo {
             if (loc2 != null)
                 player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc2.getX() + 0.5, loc2.getY() + 0.5, loc2.getZ() + 0.5), 1000, 0.0, 100.0, 0.0, 1.0, secondCorner);
 
-            //ToDo: The Particles are showing a bit too far
             Particle.DustOptions extraCorner = new Particle.DustOptions(Color.WHITE, 1.0F);
             if (loc1 != null && loc2 != null) {
                 player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc1.getX(), loc1.getY(), loc2.getZ()).add(new Vector(0.5, 0.5, 0.5)), 1000, 0.0, 100.0, 0.0, 1.0, extraCorner);

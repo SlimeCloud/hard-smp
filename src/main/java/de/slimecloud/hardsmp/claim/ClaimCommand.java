@@ -62,28 +62,28 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
             switch (args[0].toLowerCase()) {
                 case "start" -> {
                     if (claimingPlayers.containsKey(uuid)) {
-                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Du bist schon im Claim-Modus!", NamedTextColor.RED)));
+                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist schon im Claim-Modus!")));
                         return true;
                     }
                     claimingPlayers.put(uuid, new ClaimInfo(player)
                     );
                     commandSender.sendMessage(HardSMP.getPrefix()
-                            .append(Component.text("Claim-Modus erfolgreich gestartet!\n" + "Wähle zwei Ecken mit ", NamedTextColor.GREEN))
+                            .append(Component.text("§aClaim-Modus erfolgreich gestartet!\n" + "Wähle zwei Ecken mit "))
                             .append(Component.keybind("key.attack"))
-                            .append(Component.text( " und ", NamedTextColor.GREEN))
+                            .append(Component.text( "§a und "))
                             .append(Component.keybind("key.use"))
-                            .append(Component.text("!", NamedTextColor.GREEN))
+                            .append(Component.text("§a!"))
                     );
                 }
                 case "finish" -> {
                     ClaimInfo task = claimingPlayers.get(uuid);
                     if (task != null) {
                         if (task.loc1 != null && task.loc2 != null) {
-                            if(Claim.loadAll(Claim::new, Collections.emptyMap()).stream()
+                            if (Claim.loadAll(Claim::new, Collections.emptyMap()).stream()
                                     .filter(c -> !c.getUuid().equals(player.getUniqueId().toString()))
                                     .anyMatch(c -> c.contains(task.loc1) || c.contains(task.loc2) || c.contains(new Location(player.getWorld(), task.loc1.getX(), 0, task.loc2.getZ())) || c.contains(new Location(player.getWorld(), task.loc2.getX(), 0, task.loc1.getZ())))
                             ) {
-                                player.sendMessage(Component.text("Dein Gebiet überschneidet sich einem anderen Claim! Bitte Suche dir ein anders Grundstück!").color(NamedTextColor.RED));
+                                player.sendMessage(Component.text("§cDein Gebiet überschneidet sich mit einem anderen Claim!\nBitte suche dir ein anderes Grundstück!"));
                                 return true;
                             }
 
@@ -94,11 +94,10 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             player.getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + uuid) || sb.getScoreboardTags().contains("marker2" + uuid)).forEach(Entity::remove);
 
                             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text(
-                                    "Der Bereich von (" + (int) task.loc1.getX() + ", " + (int) task.loc1.getZ() + ") bis (" + (int) task.loc2.getX() + ", " + task.loc2.getZ() + ")\nwurde erfolgreich geclaimt!",
-                                    NamedTextColor.GREEN
+                                    "§aDer Bereich von (" + (int) task.loc1.getX() + ", " + (int) task.loc1.getZ() + ") bis (" + (int) task.loc2.getX() + ", " + task.loc2.getZ() + ")\nwurde erfolgreich geclaimt!"
                             )));
-                        } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Du hast nicht alle Ecken gesetzt!", NamedTextColor.RED)));
-                    } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Du bist nicht im Claim-Modus!", NamedTextColor.RED)));
+                        } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast nicht alle Ecken gesetzt!")));
+                    } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist nicht im Claim-Modus!")));
                 }
                 case "cancel" -> {
                     ClaimInfo task = claimingPlayers.remove(uuid);
@@ -107,20 +106,20 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
                         player.getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + uuid) || sb.getScoreboardTags().contains("marker2" + uuid)).forEach(Entity::remove);
 
-                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Claim-Modus erfolgreich beendet!", NamedTextColor.GREEN)));
-                    } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Du bist nicht im Claim-Modus!", NamedTextColor.RED)));
+                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§aClaim-Modus erfolgreich beendet!")));
+                    } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist nicht im Claim-Modus!")));
                 }
                 default ->
-                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Benutzung: /claim [start/cancel/finish]!", NamedTextColor.RED)));
+                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish]!")));
             }
-        } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Benutzung: /claim [start/cancel/finish]!", NamedTextColor.RED)));
+        } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish]!")));
 
         return true;
     }
 
     @EventHandler
     private void onInteract(PlayerInteractEvent event) {
-        if(event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getHand() != EquipmentSlot.HAND) return;
 
         ClaimInfo info = claimingPlayers.get(event.getPlayer().getUniqueId());
 
@@ -136,9 +135,9 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
             var old = info.loc1;
             info.loc1 = event.getClickedBlock().getLocation();
 
-            if(getBlocks(event.getPlayer()) > maxBlocks) {
+            if (getBlocks(event.getPlayer()) > maxBlocks) {
                 info.loc1 = old;
-                event.getPlayer().sendMessage(Component.text("Ungültige Auswahl").color(NamedTextColor.RED));
+                event.getPlayer().sendMessage(Component.text("§cUngültige Auswahl"));
                 return;
             }
 
@@ -160,14 +159,14 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
             var old = info.loc2;
             info.loc2 = event.getClickedBlock().getLocation();
 
-            if(getBlocks(event.getPlayer()) > maxBlocks) {
+            if (getBlocks(event.getPlayer()) > maxBlocks) {
                 info.loc2 = old;
-                event.getPlayer().sendMessage(Component.text("Ungültige Auswahl").color(NamedTextColor.RED));
+                event.getPlayer().sendMessage(Component.text("§cUngültige Auswahl!"));
                 return;
             }
 
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(
-                    Component.text("§cZweite §aEcke: " + info.loc2.getX() + ", " + info.loc2.getZ(), NamedTextColor.GREEN)
+                    Component.text("§cZweite §aEcke: " + info.loc2.getX() + ", " + info.loc2.getZ())
             ));
 
             event.getPlayer().getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker2" + event.getPlayer().getUniqueId())).forEach(Entity::remove);
@@ -191,7 +190,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         if (info.loc1 != null && info.loc2 != null) {
             int blocks = (int) ((Math.abs(info.loc1.getX() - info.loc2.getX()) + 1) * (Math.abs(info.loc1.getZ() - info.loc2.getZ()) + 1));
 
-            event.getPlayer().sendActionBar(Component.text(blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt", NamedTextColor.GREEN));
+            event.getPlayer().sendActionBar(Component.text( "§a" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
         }
 
     }
@@ -205,7 +204,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         int blocks = getBlocks(event.getPlayer());
         if(blocks == 0) return;
 
-        event.getPlayer().sendActionBar(Component.text(blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt", blocks > maxBlocks ? NamedTextColor.RED : NamedTextColor.GREEN));
+        event.getPlayer().sendActionBar(Component.text(blocks > maxBlocks ? "§c" : "§a" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
     }
 
     private int getBlocks(Player player) {

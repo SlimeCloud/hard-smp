@@ -4,7 +4,6 @@ import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -81,7 +80,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         if (task.loc1 != null && task.loc2 != null) {
                             if (Claim.loadAll(Claim::new, Collections.emptyMap()).stream()
                                     .filter(c -> !c.getUuid().equals(player.getUniqueId().toString()))
-                                    .anyMatch(c -> c.contains(task.loc1) || c.contains(task.loc2) || c.contains(new Location(player.getWorld(), task.loc1.getX(), 0, task.loc2.getZ())) || c.contains(new Location(player.getWorld(), task.loc2.getX(), 0, task.loc1.getZ())))
+                                    .anyMatch(c -> c.overlaps(task.loc1, task.loc2))
                             ) {
                                 player.sendMessage(Component.text("§cDein Gebiet überschneidet sich mit einem anderen Claim!\nBitte suche dir ein anderes Grundstück!"));
                                 return true;
@@ -137,7 +136,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
             if (getBlocks(event.getPlayer()) > maxBlocks) {
                 info.loc1 = old;
-                event.getPlayer().sendMessage(Component.text("§cUngültige Auswahl"));
+                event.getPlayer().sendMessage(Component.text("§Die Fläche ist zu groß!"));
                 return;
             }
 
@@ -161,7 +160,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
             if (getBlocks(event.getPlayer()) > maxBlocks) {
                 info.loc2 = old;
-                event.getPlayer().sendMessage(Component.text("§cUngültige Auswahl!"));
+                event.getPlayer().sendMessage(Component.text("§Die Fläche ist zu groß!"));
                 return;
             }
 

@@ -130,3 +130,6 @@ bugform:
 
 leaderboard:
   playersPerPage: 10
+
+claim:
+  maxblocks: 200

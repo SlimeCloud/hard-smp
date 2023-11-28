@@ -169,13 +169,14 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     }
 
+    public final int maxBlocks = HardSMP.getInstance().getConfig().getInt("claim.maxblocks");
+
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event) {
         if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) return;
 
         ClaimInfo info = claimingPlayers.get(event.getPlayer().getUniqueId());
         int blocks;
-        int maxBlocks = 100;
 
         if (info.loc1 != null && info.loc2 != null) {
             blocks = (int) ((Math.abs(info.loc1.getX() - info.loc2.getX()) + 1) * (Math.abs(info.loc1.getZ() - info.loc2.getZ()) + 1));

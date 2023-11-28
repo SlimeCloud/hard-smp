@@ -122,6 +122,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
         if (event.getAction().isLeftClick()) {
             if (info.loc1 != null && event.getClickedBlock().getLocation().getX() == info.loc1.getX() && event.getClickedBlock().getLocation().getZ() == info.loc1.getZ()) return;
+            if (info.loc2 != null && event.getClickedBlock().getLocation().getX() == info.loc2.getX() && event.getClickedBlock().getLocation().getZ() == info.loc2.getZ()) return;
 
             info.loc1 = event.getClickedBlock().getLocation();
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(
@@ -137,6 +138,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
         } else if (event.getAction().isRightClick()) {
             if (info.loc2 != null && event.getClickedBlock().getLocation().getX() == info.loc2.getX() && event.getClickedBlock().getLocation().getZ() == info.loc2.getZ()) return;
+            if (info.loc1 != null && event.getClickedBlock().getLocation().getX() == info.loc1.getX() && event.getClickedBlock().getLocation().getZ() == info.loc1.getZ()) return;
 
             info.loc2 = event.getClickedBlock().getLocation();
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(

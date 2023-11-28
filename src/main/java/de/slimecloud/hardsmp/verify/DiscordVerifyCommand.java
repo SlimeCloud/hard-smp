@@ -5,7 +5,6 @@ import de.mineking.discordutils.commands.ApplicationCommandMethod;
 import de.mineking.discordutils.commands.option.Option;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.event.PlayerVerifyEvent;
-import me.leoko.advancedban.manager.TimeManager;
 import me.leoko.advancedban.manager.UUIDManager;
 import me.leoko.advancedban.utils.Punishment;
 import me.leoko.advancedban.utils.PunishmentType;
@@ -25,6 +24,7 @@ import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.time.Instant;
+
 
 @ApplicationCommand(name = "verify", description = "Verifier deinen Minecraft Account")
 public class DiscordVerifyCommand {
@@ -69,6 +69,10 @@ public class DiscordVerifyCommand {
                 return;
             }
 
+
+
+            Integer id = plugin.getDatabase().handle(handle -> handle.createQuery("select count(*) from verification where discordid = :id").bind("id", event.getMember().getId()).mapTo(int.class)).one();
+            System.out.println(id);
             HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(uuid, (User user) -> {
                 user.data().clear(NodeType.INHERITANCE::matches);
                 Node node = InheritanceNode.builder(group).build();

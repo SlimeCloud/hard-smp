@@ -7,7 +7,9 @@ import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.NodeType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,6 +38,13 @@ public class MinecraftVerificationListener implements Listener {
         Verification verification = Verification.load(event.getPlayer().getUniqueId().toString());
         if (verification.isVerified()) return;
 
+        Group group = HardSMP.getInstance().getLuckPerms().getGroupManager().getGroup("verified");
+
+        if (group != null) HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(
+                event.getPlayer().getUniqueId(),
+                (User user) -> user.data().clear(NodeType.INHERITANCE::matches)
+        );
+
         String code;
 
         do {
@@ -60,8 +69,8 @@ public class MinecraftVerificationListener implements Listener {
 
     @EventHandler()
     private void onMove(PlayerMoveEvent event) {
-        Verification verification = Verification.load(event.getPlayer().getUniqueId().toString());
-        if (verification.isVerified()) return;
+        User user = HardSMP.getInstance().getLuckPerms().getPlayerAdapter(Player.class).getUser(event.getPlayer());
+        if (!user.getPrimaryGroup().equals("default")) return;
 
         event.setCancelled(true);
 

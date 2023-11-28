@@ -12,17 +12,15 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class OnJoinVerifyListener implements Listener {
 
     private final HardSMP plugin;
-    private final Boolean isPreVerify;
 
     public OnJoinVerifyListener(HardSMP plugin) {
         this.plugin = plugin;
-        this.isPreVerify = plugin.getConfig().getBoolean("verify.pre-verify", false);
     }
 
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Verification verification = Verification.load(player.getUniqueId().toString());
-        if (isPreVerify && verification.isVerified() && !player.hasPermission("hardsmp.verify.bypass")) Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyJoinKick", "AutoVerify", PunishmentType.KICK, 0L, null, false);
+        if (verification.isVerified() && !player.hasPermission("hardsmp.verify.bypass")) Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyJoinKick", "AutoVerify", PunishmentType.KICK, 0L, null, false);
     }
 }

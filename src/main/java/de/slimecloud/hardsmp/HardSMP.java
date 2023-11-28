@@ -112,7 +112,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(rules);
         registerEvent(new DeathPointHandler());
         registerEvent(new PunishmentListener(this));
-        registerEvent(new OnJoinVerifyListener(this));
+        if (getConfig().getBoolean("verify.pre-verify")) registerEvent(new OnJoinVerifyListener(this));
 
         //UI
         registerEvent(new ScoreboardManager(this));

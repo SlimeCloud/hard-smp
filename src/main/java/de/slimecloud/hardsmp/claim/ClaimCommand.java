@@ -64,6 +64,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist schon im Claim-Modus!")));
                         return true;
                     }
+                    if (ClaimRights.load(uuid).getClaimCount() <= Claim.loadAll(Claim::new, Collections.emptyMap()).stream().filter(c -> c.getUuid().equals(uuid.toString())).count()) {
+                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast schon zu viele Claims!")));
+                        return true;
+                    }
+
                     claimingPlayers.put(uuid, new ClaimInfo(player)
                     );
                     commandSender.sendMessage(HardSMP.getPrefix()
@@ -163,6 +168,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                 event.getPlayer().sendMessage(Component.text("§cDie Fläche ist zu groß!"));
                 return;
             }
+            if (getBlocks(event.getPlayer()) > ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize()) {
+                info.loc2 = old;
+                event.getPlayer().sendMessage(Component.text("§cDu kannst nicht so viele Blöcke claimen!\nKaufe dir mehr Blöcke im §äShop§c!"));
+                return;
+            }
 
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(
                     Component.text("§cZweite §aEcke: " + info.loc2.getX() + ", " + info.loc2.getZ())
@@ -203,7 +213,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         int blocks = getBlocks(event.getPlayer());
         if (blocks == 0) return;
 
-        event.getPlayer().sendActionBar(Component.text(blocks > maxBlocks ? "§c" : "§a" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
+        event.getPlayer().sendActionBar(Component.text(blocks > maxBlocks || blocks > ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize() ? "§c" : "§a" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
     }
 
     private int getBlocks(Player player) {

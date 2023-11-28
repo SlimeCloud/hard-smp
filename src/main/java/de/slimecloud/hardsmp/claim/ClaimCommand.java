@@ -17,6 +17,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
@@ -113,6 +114,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     @EventHandler
     private void onInteract(PlayerInteractEvent event) {
+        if(event.getHand() != EquipmentSlot.HAND) return;
+
         ClaimInfo info = claimingPlayers.get(event.getPlayer().getUniqueId());
 
         if (info == null) return;

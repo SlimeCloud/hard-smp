@@ -53,3 +53,6 @@ commands:
   claim:
     usage: "§cUsage: /claim <start/cancel/finish>"
     permission: hardsmp.command.claim
+  info:
+    usage: "§cUsage: /info discord/minecraft <id or name>"
+    permission: hardsmp.commands.discord

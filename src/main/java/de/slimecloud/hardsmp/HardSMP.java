@@ -8,7 +8,9 @@ import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.event.ClaimProtectionHandler;
 import de.slimecloud.hardsmp.event.DeathPointHandler;
+import de.slimecloud.hardsmp.info.MinecraftInfoCommand;
 import de.slimecloud.hardsmp.item.ItemManager;
+import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import de.slimecloud.hardsmp.ui.Chat;
@@ -82,7 +84,6 @@ public final class HardSMP extends JavaPlugin {
         }
 
         RulesCommand rules;
-        ClaimCommand claim = new ClaimCommand();
 
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
@@ -96,6 +97,8 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("feedback", new FeedbackCommand());
         registerCommand("leaderboard", new LeaderboardCommand());
         registerCommand("claim", claim);
+
+        registerCommand("info", new MinecraftInfoCommand());
 
 
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
@@ -111,6 +114,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new DeathPointHandler());
         registerEvent(claim);
         registerEvent(new ClaimProtectionHandler());
+        registerEvent(new PunishmentListener(this));
 
         //UI
         registerEvent(new ScoreboardManager(this));

@@ -53,7 +53,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        if (!(commandSender instanceof Player player)) return true;
+        if (!(commandSender instanceof Player player)) return false;
 
         if (args.length == 1) {
             UUID uuid = ((Player) commandSender).getUniqueId();
@@ -160,7 +160,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
             if (getBlocks(event.getPlayer()) > maxBlocks) {
                 info.loc2 = old;
-                event.getPlayer().sendMessage(Component.text("§Die Fläche ist zu groß!"));
+                event.getPlayer().sendMessage(Component.text("§cDie Fläche ist zu groß!"));
                 return;
             }
 
@@ -201,7 +201,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) return;
 
         int blocks = getBlocks(event.getPlayer());
-        if(blocks == 0) return;
+        if (blocks == 0) return;
 
         event.getPlayer().sendActionBar(Component.text(blocks > maxBlocks ? "§c" : "§a" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
     }

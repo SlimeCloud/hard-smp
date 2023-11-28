@@ -124,7 +124,15 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
             if (info.loc1 != null && event.getClickedBlock().getLocation().getX() == info.loc1.getX() && event.getClickedBlock().getLocation().getZ() == info.loc1.getZ()) return;
             if (info.loc2 != null && event.getClickedBlock().getLocation().getX() == info.loc2.getX() && event.getClickedBlock().getLocation().getZ() == info.loc2.getZ()) return;
 
+            var old = info.loc1;
             info.loc1 = event.getClickedBlock().getLocation();
+
+            if(getBlocks(event.getPlayer()) > maxBlocks) {
+                info.loc1 = old;
+                event.getPlayer().sendMessage(Component.text("Ungültige Auswahl").color(NamedTextColor.RED));
+                return;
+            }
+
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(
                     Component.text("§9Erste §aEcke: " + info.loc1.getX() + ", " + info.loc1.getZ())
             ));
@@ -140,7 +148,15 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
             if (info.loc2 != null && event.getClickedBlock().getLocation().getX() == info.loc2.getX() && event.getClickedBlock().getLocation().getZ() == info.loc2.getZ()) return;
             if (info.loc1 != null && event.getClickedBlock().getLocation().getX() == info.loc1.getX() && event.getClickedBlock().getLocation().getZ() == info.loc1.getZ()) return;
 
+            var old = info.loc2;
             info.loc2 = event.getClickedBlock().getLocation();
+
+            if(getBlocks(event.getPlayer()) > maxBlocks) {
+                info.loc2 = old;
+                event.getPlayer().sendMessage(Component.text("Ungültige Auswahl").color(NamedTextColor.RED));
+                return;
+            }
+
             event.getPlayer().sendMessage(HardSMP.getPrefix().append(
                     Component.text("§cZweite §aEcke: " + info.loc2.getX() + ", " + info.loc2.getZ(), NamedTextColor.GREEN)
             ));
@@ -177,26 +193,25 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     private void onPlayerMove(PlayerMoveEvent event) {
         if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) return;
 
-        ClaimInfo info = claimingPlayers.get(event.getPlayer().getUniqueId());
-        int blocks;
+        int blocks = getBlocks(event.getPlayer());
+        if(blocks == 0) return;
+
+        event.getPlayer().sendActionBar(Component.text(blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt", blocks > maxBlocks ? NamedTextColor.RED : NamedTextColor.GREEN));
+    }
+
+    private int getBlocks(Player player) {
+        ClaimInfo info = claimingPlayers.get(player.getUniqueId());
 
         if (info.loc1 != null && info.loc2 != null) {
-            blocks = (int) ((Math.abs(info.loc1.getX() - info.loc2.getX()) + 1) * (Math.abs(info.loc1.getZ() - info.loc2.getZ()) + 1));
-
-            event.getPlayer().sendActionBar(Component.text(blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt",
-                    blocks > maxBlocks ? NamedTextColor.RED : NamedTextColor.GREEN));
+            return (int) ((Math.abs(info.loc1.getX() - info.loc2.getX()) + 1) * (Math.abs(info.loc1.getZ() - info.loc2.getZ()) + 1));
         } else if (info.loc1 != null || info.loc2 != null) {
-            blocks = (int) (((info.loc1 == null ?
-                    Math.abs(event.getPlayer().getTargetBlock(null, 5).getLocation().getX() - info.loc2.getX()) + 1 :
-                    Math.abs(event.getPlayer().getTargetBlock(null, 5).getLocation().getX() - info.loc1.getX()) + 1)) *
+            return (int) (((info.loc1 == null ?
+                    Math.abs(player.getTargetBlock(null, 5).getLocation().getX() - info.loc2.getX()) + 1 :
+                    Math.abs(player.getTargetBlock(null, 5).getLocation().getX() - info.loc1.getX()) + 1)) *
                     (info.loc1 == null ?
-                    Math.abs(event.getPlayer().getTargetBlock(null, 5).getLocation().getZ() - info.loc2.getZ()) + 1 :
-                    Math.abs(event.getPlayer().getTargetBlock(null, 5).getLocation().getZ() - info.loc1.getZ()) + 1));
-
-            event.getPlayer().sendActionBar(Component.text(blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt",
-                    blocks > maxBlocks ? NamedTextColor.RED : NamedTextColor.GREEN));
-        }
-
+                            Math.abs(player.getTargetBlock(null, 5).getLocation().getZ() - info.loc2.getZ()) + 1 :
+                            Math.abs(player.getTargetBlock(null, 5).getLocation().getZ() - info.loc1.getZ()) + 1));
+        } else return 0;
     }
 
     @EventHandler

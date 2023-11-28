@@ -12,7 +12,9 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.Node;
 import net.luckperms.api.node.NodeType;
+import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,10 +50,11 @@ public class MinecraftVerificationListener implements Listener {
 
         Group group = HardSMP.getInstance().getLuckPerms().getGroupManager().getGroup("verified");
 
-        if (group != null) HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(
-                event.getPlayer().getUniqueId(),
-                (User user) -> user.data().clear(NodeType.INHERITANCE::matches)
-        );
+        if (group != null) HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(player.getUniqueId(), (User user) -> {
+            user.data().clear(NodeType.INHERITANCE::matches);
+            Node node = InheritanceNode.builder(group).build();
+            user.data().remove(node);
+        });
 
         String code;
 

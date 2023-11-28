@@ -76,7 +76,7 @@ public class Chat implements Listener {
 
         rank = switch (rank) {
             case "1" -> "\uE002";
-            case "2" -> "\uE002";
+            case "2" -> "\uE003";
             case "3" -> "\uE004";
             default -> "";
         };

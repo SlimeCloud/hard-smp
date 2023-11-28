@@ -5,6 +5,10 @@ import de.mineking.discordutils.commands.ApplicationCommandMethod;
 import de.mineking.discordutils.commands.option.Option;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.event.PlayerVerifyEvent;
+import me.leoko.advancedban.manager.TimeManager;
+import me.leoko.advancedban.manager.UUIDManager;
+import me.leoko.advancedban.utils.Punishment;
+import me.leoko.advancedban.utils.PunishmentType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.kyori.adventure.text.Component;
@@ -24,6 +28,14 @@ import java.time.Instant;
 
 @ApplicationCommand(name = "verify", description = "Verifier deinen Minecraft Account")
 public class DiscordVerifyCommand {
+    private final HardSMP plugin;
+    private final Boolean isPreVerify;
+
+    public DiscordVerifyCommand() {
+        this.plugin = HardSMP.getInstance();
+        this.isPreVerify = plugin.getConfig().getBoolean("verify.pre-verify", false);
+    }
+
     @ApplicationCommandMethod
     public void performCommand(SlashCommandInteractionEvent event,
                                @Option(description = "Gebe den Code ein der dir im Minecraft Chat angezeigt wird") String code
@@ -90,6 +102,8 @@ public class DiscordVerifyCommand {
                             .setTimestamp(Instant.now())
                             .build()
             ).setEphemeral(true).queue();
+
+            if (isPreVerify) Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyKick", "AutoVerify", PunishmentType.KICK, 0L, null, false);
         });
     }
 }

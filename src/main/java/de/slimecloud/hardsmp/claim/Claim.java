@@ -1,4 +1,4 @@
-package de.slimecloud.hardsmp.player.data;
+package de.slimecloud.hardsmp.claim;
 
 import de.slimecloud.hardsmp.database.DataClass;
 import de.slimecloud.hardsmp.database.Table;

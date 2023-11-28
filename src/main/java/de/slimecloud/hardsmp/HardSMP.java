@@ -4,9 +4,10 @@ import de.cyklon.spigotutils.adventure.Formatter;
 import de.cyklon.spigotutils.item.ItemBuilder;
 import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
+import de.slimecloud.hardsmp.claim.ClaimCommand;
 import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
-import de.slimecloud.hardsmp.event.ClaimProtectionHandler;
+import de.slimecloud.hardsmp.claim.ClaimProtectionHandler;
 import de.slimecloud.hardsmp.event.DeathPointHandler;
 import de.slimecloud.hardsmp.info.MinecraftInfoCommand;
 import de.slimecloud.hardsmp.item.ItemManager;
@@ -83,7 +84,8 @@ public final class HardSMP extends JavaPlugin {
             getLogger().info("registered \"" + format + "\" as color code for " + formattings.getString(format));
         }
 
-        RulesCommand rules;
+        ClaimCommand claim = new ClaimCommand();
+        RulesCommand rules = new RulesCommand();
 
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
@@ -91,7 +93,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("verify", new VerifyCommand());
         registerCommand("unverify", new UnverifyCommand());
         registerCommand("help", new HelpCommand());
-        registerCommand("rules", rules = new RulesCommand());
+        registerCommand("rules", rules);
         registerCommand("teamchat", new TeamChatCommand());
         registerCommand("bug", new BugCommand());
         registerCommand("feedback", new FeedbackCommand());

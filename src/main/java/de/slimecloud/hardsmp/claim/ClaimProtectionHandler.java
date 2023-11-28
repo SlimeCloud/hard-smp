@@ -1,7 +1,6 @@
-package de.slimecloud.hardsmp.event;
+package de.slimecloud.hardsmp.claim;
 
 import de.slimecloud.hardsmp.database.DataClass;
-import de.slimecloud.hardsmp.player.data.Claim;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;

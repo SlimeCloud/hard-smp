@@ -33,8 +33,8 @@ public class MinecraftVerificationListener implements Listener {
 
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {
-        User user = HardSMP.getInstance().getLuckPerms().getPlayerAdapter(Player.class).getUser(event.getPlayer());
-        if (!user.getPrimaryGroup().equals("default")) return;
+        Verification verification = Verification.load(event.getPlayer().getUniqueId().toString());
+        if (verification.isVerified()) return;
 
         String code;
 
@@ -60,8 +60,8 @@ public class MinecraftVerificationListener implements Listener {
 
     @EventHandler()
     private void onMove(PlayerMoveEvent event) {
-        User user = HardSMP.getInstance().getLuckPerms().getPlayerAdapter(Player.class).getUser(event.getPlayer());
-        if (!user.getPrimaryGroup().equals("default")) return;
+        Verification verification = Verification.load(event.getPlayer().getUniqueId().toString());
+        if (verification.isVerified()) return;
 
         event.setCancelled(true);
 

@@ -4,6 +4,7 @@ import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,10 +24,7 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
@@ -81,6 +79,14 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     ClaimInfo task = claimingPlayers.get(uuid);
                     if (task != null) {
                         if (task.loc1 != null && task.loc2 != null) {
+                            if(Claim.loadAll(Claim::new, Collections.emptyMap()).stream()
+                                    .filter(c -> !c.getUuid().equals(player.getUniqueId().toString()))
+                                    .anyMatch(c -> c.contains(task.loc1) || c.contains(task.loc2) || c.contains(new Location(player.getWorld(), task.loc1.getX(), 0, task.loc2.getZ())) || c.contains(new Location(player.getWorld(), task.loc2.getX(), 0, task.loc1.getZ())))
+                            ) {
+                                player.sendMessage(Component.text("Dein Gebiet überschneidet sich einem anderen Claim! Bitte Suche dir ein anders Grundstück!").color(NamedTextColor.RED));
+                                return true;
+                            }
+
                             claimingPlayers.remove(uuid);
                             task.stopTasks();
                             new Claim(uuid.toString(), (int) task.loc1.getX(), (int) task.loc1.getZ(), (int) task.loc2.getX(), (int) task.loc2.getZ()).save();

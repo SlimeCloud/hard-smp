@@ -56,7 +56,8 @@ public class Chat implements Listener {
 
         if (PunishmentManager.get().isMuted(UUIDManager.get().getUUID(player.getName()))) {
             return;
-        } else if (!Verification.load(player.getUniqueId().toString()).isVerified() && !player.hasPermission("hardsmp.verify.bypass")) {
+        } else if (!Verification.load(player.getUniqueId().toString()).isVerified()) {
+            if (player.hasPermission("hardsmp.verify.bypass")) return;
             player.sendMessage(HardSMP.getPrefix().append(Component.text("Bitte verifiziere dich bevor du schreiben kannst!", NamedTextColor.RED))
                     .append(Component.newline()
                     .append(Component.newline().append(HardSMP.getPrefix()).append(Component.text("Bei Problemen, öffne bitte ein Ticket im Discord", TextColor.color(0x88D657))))));
@@ -75,7 +76,7 @@ public class Chat implements Listener {
 
         rank = switch (rank) {
             case "1" -> "\uE002";
-            case "2" -> "\uE002";
+            case "2" -> "\uE003";
             case "3" -> "\uE004";
             default -> "";
         };

@@ -39,10 +39,10 @@ public class ClaimInfo {
                 player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc1.getX(), loc1.getY(), loc2.getZ()).add(new Vector(0.5, 0.5, 0.5)), 1000, 0.0, 100.0, 0.0, 1.0, extraCorner);
                 player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc2.getX(), loc1.getY(), loc1.getZ()).add(new Vector(0.5, 0.5, 0.5)), 1000, 0.0, 100.0, 0.0, 1.0, extraCorner);
 
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (loc1.getX() + loc2.getX()) / 2, (loc1.getY() + loc2.getY()) / 2 + 1, loc1.getZ()).add(new Vector(0.5, 0.5, 0.5)), (int) Math.abs(loc1.getX() - loc2.getX()) * 5, Math.abs(loc1.getX() - loc2.getX()) / 2, 0.0, 0.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (loc1.getX() + loc2.getX()) / 2, (loc1.getY() + loc2.getY()) / 2 + 1, loc2.getZ()).add(new Vector(0.5, 0.5, 0.5)), (int) Math.abs(loc1.getX() - loc2.getX()) * 5, Math.abs(loc1.getX() - loc2.getX()) / 2, 0.0, 0.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc1.getX(), (loc1.getY() + loc2.getY()) / 2 + 1, (loc1.getZ() + loc2.getZ()) / 2).add(new Vector(0.5, 0.5, 0.5)), (int) Math.abs(loc1.getZ() - loc2.getZ()) * 5, 0.0, 0.0, Math.abs(loc1.getZ() - loc2.getZ()) / 2, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc2.getX(), (loc1.getY() + loc2.getY()) / 2 + 1, (loc1.getZ() + loc2.getZ()) / 2).add(new Vector(0.5, 0.5, 0.5)), (int) Math.abs(loc1.getZ() - loc2.getZ()) * 5, 0.0, 0.0, Math.abs(loc1.getZ() - loc2.getZ()) / 2, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (loc1.getX() + loc2.getX()) / 2, (loc1.getY() + loc2.getY()) / 2 + 1, loc1.getZ()).add(new Vector(0.5, 0.5, 0.5)), (int) Math.abs(loc1.getX() - loc2.getX()) * 5, Math.abs(loc1.getX() - loc2.getX()) / 4, 0.0, 0.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (loc1.getX() + loc2.getX()) / 2, (loc1.getY() + loc2.getY()) / 2 + 1, loc2.getZ()).add(new Vector(0.5, 0.5, 0.5)), (int) Math.abs(loc1.getX() - loc2.getX()) * 5, Math.abs(loc1.getX() - loc2.getX()) / 4, 0.0, 0.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc1.getX(), (loc1.getY() + loc2.getY()) / 2 + 1, (loc1.getZ() + loc2.getZ()) / 2).add(new Vector(0.5, 0.5, 0.5)), (int) Math.abs(loc1.getZ() - loc2.getZ()) * 5, 0.0, 0.0, Math.abs(loc1.getZ() - loc2.getZ()) / 4, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc2.getX(), (loc1.getY() + loc2.getY()) / 2 + 1, (loc1.getZ() + loc2.getZ()) / 2).add(new Vector(0.5, 0.5, 0.5)), (int) Math.abs(loc1.getZ() - loc2.getZ()) * 5, 0.0, 0.0, Math.abs(loc1.getZ() - loc2.getZ()) / 4, extraCorner);
             }
 
 

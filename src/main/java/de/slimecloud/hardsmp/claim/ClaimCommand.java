@@ -136,7 +136,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
             if (getBlocks(event.getPlayer()) > maxBlocks) {
                 info.loc1 = old;
-                event.getPlayer().sendMessage(Component.text("§Die Fläche ist zu groß!"));
+                event.getPlayer().sendMessage(Component.text("§cDie Fläche ist zu groß!"));
                 return;
             }
 
@@ -216,8 +216,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     Math.abs(player.getTargetBlock(null, 5).getLocation().getX() - info.loc2.getX()) + 1 :
                     Math.abs(player.getTargetBlock(null, 5).getLocation().getX() - info.loc1.getX()) + 1)) *
                     (info.loc1 == null ?
-                            Math.abs(player.getTargetBlock(null, 5).getLocation().getZ() - info.loc2.getZ()) + 1 :
-                            Math.abs(player.getTargetBlock(null, 5).getLocation().getZ() - info.loc1.getZ()) + 1));
+                    Math.abs(player.getTargetBlock(null, 5).getLocation().getZ() - info.loc2.getZ()) + 1 :
+                    Math.abs(player.getTargetBlock(null, 5).getLocation().getZ() - info.loc1.getZ()) + 1));
         } else return 0;
     }
 

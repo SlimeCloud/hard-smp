@@ -44,7 +44,7 @@ public class MinecraftVerificationListener implements Listener {
         Verification verification = Verification.load(player.getUniqueId().toString());
         if (verification.isVerified()) {
             if (player.hasPermission("hardsmp.verify.bypass")) return;
-            Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyJoinKick", "AutoVerify", PunishmentType.KICK, 0L, null, false);
+            Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyJoinKick", "AutoVerify", PunishmentType.KICK, 0L, null, true);
             return;
         }
 

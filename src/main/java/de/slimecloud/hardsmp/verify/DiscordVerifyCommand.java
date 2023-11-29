@@ -130,7 +130,7 @@ public class DiscordVerifyCommand {
                             .build()
             ).setEphemeral(true).queue();
 
-            if (isPreVerify || !player.hasPermission("hardsmp.verify.bypass")) Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyKick", "AutoVerify", PunishmentType.KICK, 0L, null, false);
+            if (isPreVerify || !player.hasPermission("hardsmp.verify.bypass")) Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyKick", "AutoVerify", PunishmentType.KICK, 0L, null, true);
         });
     }
 }

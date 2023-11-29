@@ -37,4 +37,9 @@ public class Verification extends DataClass {
 
         return this;
     }
+    public Verification setVerified(Boolean value) {
+        verified = value;
+
+        return this;
+    }
 }

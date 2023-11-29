@@ -41,7 +41,7 @@ public abstract class DataClass {
             String name = field.getName().toLowerCase();
             if (field.isAnnotationPresent(Key.class)) primaryKeys.add('"' + name + '"');
 
-            keyTypes.add('"' + name + "\" " + getDataType(field.getType()));
+            keyTypes.add('"' + name + "\" " + getDataType(field));
         }
 
         String sql = "create table if not exists %s(%s%s)"
@@ -53,7 +53,15 @@ public abstract class DataClass {
         HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate(sql).execute());
     }
 
-    private @Nullable String getDataType(@NotNull Class<?> clazz) {
+    private @Nullable String getDataType(@NotNull Field field) {
+        Class<?> clazz = field.getType();
+
+        if(field.isAnnotationPresent(Autoincrement.class)) {
+            if (clazz.isAssignableFrom(int.class) || clazz.equals(Integer.class)) return "serial";
+            if (clazz.isAssignableFrom(long.class) || clazz.equals(Long.class)) return "bigserial";
+            throw new IllegalStateException("Autoincrement can only be applied to int and long");
+        }
+
         if (clazz.isEnum() || clazz.isAssignableFrom(EnumSet.class)) return "int";
         if (clazz.equals(byte.class) || clazz.equals(Byte.class) || clazz.equals(short.class) || clazz.equals(Short.class))
             return "smallint";

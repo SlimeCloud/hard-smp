@@ -42,7 +42,8 @@ public class ChestKey extends CustomItem implements Listener {
     public ChestKey(HardSMP plugin) {
         super("chest-key", Material.IRON_HOE, 2);
         builder.setDisplayName(ChatColor.RESET + "§öSchlüssel")
-                .setLore(Formatter.parseText("§äMit diesem Schlüssel kannst du mit §öSHIFT + RECHTSKLICK §äKisten/Shulker absperren."), Component.text("Achte darauf den Schlüssel immer bei dir zu tragen wenn du deine Kisten wieder öffnen willst."))
+                .setLore(Formatter.parseText("§äMit diesem Schlüssel kannst du mit §öSHIFT + RECHTSKLICK §äKisten/Shulker absperren."),
+                        Formatter.parseText("§äAchte darauf den Schlüssel immer bei dir zu tragen wenn du deine Kisten wieder öffnen willst."))
                 .setUnbreakable(true)
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
 

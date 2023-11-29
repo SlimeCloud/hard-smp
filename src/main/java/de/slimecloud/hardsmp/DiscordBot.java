@@ -1,7 +1,7 @@
 package de.slimecloud.hardsmp;
 
 import de.mineking.discordutils.DiscordUtils;
-import de.slimecloud.hardsmp.info.DiscordInfoCommand;
+import de.slimecloud.hardsmp.commands.info.DiscordInfoCommand;
 import de.slimecloud.hardsmp.verify.DiscordVerifyCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;

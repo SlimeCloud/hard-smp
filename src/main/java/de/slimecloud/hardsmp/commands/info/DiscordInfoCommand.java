@@ -1,4 +1,4 @@
-package de.slimecloud.hardsmp.info;
+package de.slimecloud.hardsmp.commands.info;
 
 import de.mineking.discordutils.commands.ApplicationCommand;
 import de.mineking.discordutils.commands.ApplicationCommandMethod;

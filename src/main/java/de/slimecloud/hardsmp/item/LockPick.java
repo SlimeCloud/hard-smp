@@ -1,7 +1,9 @@
 package de.slimecloud.hardsmp.item;
 
 import de.cyklon.spigotutils.adventure.Formatter;
+import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -28,12 +30,12 @@ public class LockPick extends CustomItem implements Listener {
 
 	public LockPick(ChestKey chestKey) {
 		super("lock-pick", Material.IRON_HOE, 1);
-		builder.setDisplayName("Dietrich")
+		builder.setDisplayName(ChatColor.RESET + "Dietrich")
 				.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		this.chestKey = chestKey;
 		this.probability = chestKey.getPlugin().getConfig().getDouble("chest-key.lockpick.probability", 2);
 		this.crackMsg = Formatter.parseText(chestKey.getPlugin().getConfig().getString("chest-key.success.crack", "§2Geknackt"));
-		this.crackLongMsg = Formatter.parseText(chestKey.getPlugin().getConfig().getString("chest-key.success.crack-msg", "§2Gecknackt"));
+		this.crackLongMsg = HardSMP.getPrefix().append(Formatter.parseText(chestKey.getPlugin().getConfig().getString("chest-key.success.crack-msg", "§2Gecknackt")));
 		add();
 	}
 

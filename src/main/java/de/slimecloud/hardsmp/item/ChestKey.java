@@ -9,6 +9,7 @@ import de.slimecloud.hardsmp.HardSMP;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -27,6 +28,8 @@ import org.bukkit.inventory.*;
 
 import java.util.*;
 
+import static net.kyori.adventure.text.format.TextColor.color;
+
 @Getter
 public class ChestKey extends CustomItem implements Listener {
 
@@ -40,7 +43,7 @@ public class ChestKey extends CustomItem implements Listener {
 
     public ChestKey(HardSMP plugin) {
         super("chest-key", Material.IRON_HOE, 2);
-        builder.setDisplayName("Schlüssel")
+        builder.setDisplayName(ChatColor.RESET + "Schlüssel")
                 .setUnbreakable(true)
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
 

@@ -6,7 +6,7 @@
 
     <groupId>de.slimecloud</groupId>
     <artifactId>hard-smp</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>hard-smp</name>

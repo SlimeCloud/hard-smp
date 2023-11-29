@@ -4,6 +4,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.slimecloud.hardsmp.HardSMP;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import me.leoko.advancedban.manager.UUIDManager;
+import me.leoko.advancedban.utils.Punishment;
+import me.leoko.advancedban.utils.PunishmentType;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -33,8 +36,13 @@ public class MinecraftVerificationListener implements Listener {
 
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {
-        User user = HardSMP.getInstance().getLuckPerms().getPlayerAdapter(Player.class).getUser(event.getPlayer());
-        if (!user.getPrimaryGroup().equals("default")) return;
+        Player player = event.getPlayer();
+        Verification verification = Verification.load(player.getUniqueId().toString());
+        if (verification.isVerified()) {
+            if (player.hasPermission("hardsmp.verify.bypass")) return;
+            Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyJoinKick", "AutoVerify", PunishmentType.KICK, 0L, null, false);
+            return;
+        }
 
         String code;
 
@@ -60,8 +68,8 @@ public class MinecraftVerificationListener implements Listener {
 
     @EventHandler()
     private void onMove(PlayerMoveEvent event) {
-        User user = HardSMP.getInstance().getLuckPerms().getPlayerAdapter(Player.class).getUser(event.getPlayer());
-        if (!user.getPrimaryGroup().equals("default")) return;
+        Verification verification = Verification.load(event.getPlayer().getUniqueId().toString());
+        if (verification.isVerified() || event.getPlayer().hasPermission("hardsmp.verify.bypass")) return;
 
         event.setCancelled(true);
 

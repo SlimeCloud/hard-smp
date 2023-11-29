@@ -71,8 +71,31 @@ public class DiscordVerifyCommand {
 
 
 
-            Integer id = plugin.getDatabase().handle(handle -> handle.createQuery("select count(*) from verification where discordid = :id").bind("id", event.getMember().getId()).mapTo(int.class)).one();
-            System.out.println(id);
+            Integer idCount = plugin.getDatabase().handle(handle -> handle.createQuery("select count(*) from verification where discordid = :id").bind("id", event.getUser().getIdLong()).mapTo(int.class).one());
+
+            if (idCount == 1) {
+                event.replyEmbeds(
+                        new EmbedBuilder()
+                                .setTitle("❌ Account konnte nicht Verifiziert werden")
+                                .setDescription("Der User " + event.getMember().getAsMention() + " ist bereits verifiziert und mit einem Minecraft Account verbunden\n" +
+                                        "Sollte dies ein Fehler sein wende dich via Ticket an ein Teammitglied!")
+                                .setColor(Color.decode("#569d3c"))
+                                .setTimestamp(Instant.now())
+                                .build()
+                ).setEphemeral(true).queue();
+                return;
+            } else if (idCount >= 2) {
+                event.replyEmbeds(
+                        new EmbedBuilder()
+                                .setTitle("❌ Account konnte nicht Verifiziert werden")
+                                .setDescription("Dein Discord Acc wurde zu oft zur verifikation genutzt. Bitte wende dich via Ticket an ein Teammitglied!")
+                                .setColor(Color.decode("#569d3c"))
+                                .setTimestamp(Instant.now())
+                                .build()
+                ).setEphemeral(true).queue();
+                return;
+            }
+
             HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(uuid, (User user) -> {
                 user.data().clear(NodeType.INHERITANCE::matches);
                 Node node = InheritanceNode.builder(group).build();

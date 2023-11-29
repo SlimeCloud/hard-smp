@@ -12,9 +12,13 @@ website: https://discord.gg/slimecloud
 
 
 permissions:
+  hardsmp.command.formatting:
+    default: true
   hardsmp.command.help:
     default: true
   hardsmp.command.rules:
+    default: true
+  hardsmp.command.keys:
     default: true
   hardsmp.command.feedback:
     default: true
@@ -45,6 +49,9 @@ commands:
   verify:
     usage: "§cUsage: /verify <Player>"
     permission: hardsmp.command.verify
+  keys:
+    usage: "§cUsage: /keys"
+    permission: hardsmp.command.keys
   feedback:
     permission: hardsmp.command.feedback
   bug:

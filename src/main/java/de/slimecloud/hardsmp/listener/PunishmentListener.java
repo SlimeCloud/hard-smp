@@ -38,7 +38,6 @@ public class PunishmentListener implements Listener {
     }
 
     private void handler(Punishment punishment, Boolean isRevoke) {
-        System.out.println("handler");
 
         PunishmentType type = punishment.getType();
         String executor = punishment.getOperator();

@@ -20,6 +20,8 @@ permissions:
     default: true
   hardsmp.command.bug:
     default: true
+  hardsmp.verify.bypass:
+    default: false
 
 commands:
   formatting:

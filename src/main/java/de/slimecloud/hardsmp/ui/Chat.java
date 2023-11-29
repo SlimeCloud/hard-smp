@@ -3,10 +3,13 @@ package de.slimecloud.hardsmp.ui;
 import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
+import de.slimecloud.hardsmp.verify.Verification;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.leoko.advancedban.manager.PunishmentManager;
 import me.leoko.advancedban.manager.UUIDManager;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
@@ -15,6 +18,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +56,12 @@ public class Chat implements Listener {
 
         if (PunishmentManager.get().isMuted(UUIDManager.get().getUUID(player.getName()))) {
             return;
+        } else if (!Verification.load(player.getUniqueId().toString()).isVerified()) {
+            if (player.hasPermission("hardsmp.verify.bypass")) return;
+            player.sendMessage(HardSMP.getPrefix().append(Component.text("Bitte verifiziere dich bevor du schreiben kannst!", NamedTextColor.RED))
+                    .append(Component.newline()
+                    .append(Component.newline().append(HardSMP.getPrefix()).append(Component.text("Bei Problemen, öffne bitte ein Ticket im Discord", TextColor.color(0x88D657))))));
+            return;
         }
 
         User user = HardSMP.getInstance().getLuckPerms().getUserManager().getUser(player.getUniqueId());
@@ -66,7 +76,7 @@ public class Chat implements Listener {
 
         rank = switch (rank) {
             case "1" -> "\uE002";
-            case "2" -> "\uE002";
+            case "2" -> "\uE003";
             case "3" -> "\uE004";
             default -> "";
         };

@@ -24,6 +24,9 @@ permissions:
     default: true
   hardsmp.command.bug:
     default: true
+  hardsmp.admin.chestkey:
+    default: op
+    description: "Mit dieser berechtigung können kisten immer geöffnet und abgebaut werden"
 
 commands:
   formatting:

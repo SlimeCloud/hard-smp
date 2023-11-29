@@ -28,8 +28,6 @@ import org.bukkit.inventory.*;
 
 import java.util.*;
 
-import static net.kyori.adventure.text.format.TextColor.color;
-
 @Getter
 public class ChestKey extends CustomItem implements Listener {
 
@@ -43,7 +41,8 @@ public class ChestKey extends CustomItem implements Listener {
 
     public ChestKey(HardSMP plugin) {
         super("chest-key", Material.IRON_HOE, 2);
-        builder.setDisplayName(ChatColor.RESET + "Schlüssel")
+        builder.setDisplayName(ChatColor.RESET + "§öSchlüssel")
+                .setLore(Formatter.parseText("§äMit diesem Schlüssel kannst du mit §öSHIFT + RECHTSKLICK §äKisten/Shulker absperren."), Component.text("Achte darauf den Schlüssel immer bei dir zu tragen wenn du deine Kisten wieder öffnen willst."))
                 .setUnbreakable(true)
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
 
@@ -300,11 +299,14 @@ public class ChestKey extends CustomItem implements Listener {
         data.set(idKey, Longs.toArray(ids));
     }
 
+    /**
+     * Important: returns also true if the player has the permission "hardsmp.admin.chestkey"
+     */
     public boolean playerHasKeyForContainer(Player player, long id) {
         for (ItemStack item : player.getInventory().getContents()) {
             if (isItem(item) && Longs.asList(getIDS(item)).contains(id)) return true;
         }
-        return false;
+        return player.hasPermission("hardsmp.admin.chestkey");
     }
 
     public void crack(Block block) {

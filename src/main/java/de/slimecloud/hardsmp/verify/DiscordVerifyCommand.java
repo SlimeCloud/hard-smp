@@ -96,11 +96,13 @@ public class DiscordVerifyCommand {
                 return;
             }
 
-            HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(uuid, (User user) -> {
-                user.data().clear(NodeType.INHERITANCE::matches);
-                Node node = InheritanceNode.builder(group).build();
-                user.data().add(node);
-            });
+            if (!player.hasPermission("hardsmp.verify.bypass")) {
+                HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(uuid, (User user) -> {
+                    user.data().clear(NodeType.INHERITANCE::matches);
+                    Node node = InheritanceNode.builder(group).build();
+                    user.data().add(node);
+                });
+            }
 
             MinecraftVerificationListener.activeCodes.invalidate(uuid);
 
@@ -130,7 +132,7 @@ public class DiscordVerifyCommand {
                             .build()
             ).setEphemeral(true).queue();
 
-            if (isPreVerify || !player.hasPermission("hardsmp.verify.bypass")) Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyKick", "AutoVerify", PunishmentType.KICK, 0L, null, true);
+            if (isPreVerify && !player.hasPermission("hardsmp.verify.bypass")) Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyKick", "AutoVerify", PunishmentType.KICK, 0L, null, true);
         });
     }
 }

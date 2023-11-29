@@ -53,14 +53,15 @@ public class Chat implements Listener {
         event.setCancelled(true);
         Player player = event.getPlayer();
 
-        if (PunishmentManager.get().isMuted(UUIDManager.get().getUUID(player.getName()))) {
-            return;
-        } else if (!Verification.load(player.getUniqueId().toString()).isVerified()) {
-            if (player.hasPermission("hardsmp.verify.bypass")) return;
-            player.sendMessage(HardSMP.getPrefix().append(Component.text("Bitte verifiziere dich bevor du schreiben kannst!", NamedTextColor.RED))
-                    .append(Component.newline()
-                    .append(Component.newline().append(HardSMP.getPrefix()).append(Component.text("Bei Problemen, öffne bitte ein Ticket im Discord", TextColor.color(0x88D657))))));
-            return;
+        if (!player.hasPermission("hardsmp.verify.bypass")) {
+            if (PunishmentManager.get().isMuted(UUIDManager.get().getUUID(player.getName()))) {
+                return;
+            } else if (!Verification.load(player.getUniqueId().toString()).isVerified()) {
+                player.sendMessage(HardSMP.getPrefix().append(Component.text("Bitte verifiziere dich bevor du schreiben kannst!", NamedTextColor.RED))
+                        .append(Component.newline()
+                                .append(Component.newline().append(HardSMP.getPrefix()).append(Component.text("Bei Problemen, öffne bitte ein Ticket im Discord", TextColor.color(0x88D657))))));
+                return;
+            }
         }
 
         User user = HardSMP.getInstance().getLuckPerms().getUserManager().getUser(player.getUniqueId());

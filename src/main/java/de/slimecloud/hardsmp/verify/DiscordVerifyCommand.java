@@ -5,7 +5,6 @@ import de.mineking.discordutils.commands.ApplicationCommandMethod;
 import de.mineking.discordutils.commands.option.Option;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.event.PlayerVerifyEvent;
-import me.leoko.advancedban.manager.TimeManager;
 import me.leoko.advancedban.manager.UUIDManager;
 import me.leoko.advancedban.utils.Punishment;
 import me.leoko.advancedban.utils.PunishmentType;
@@ -26,7 +25,8 @@ import org.bukkit.entity.Player;
 import java.awt.*;
 import java.time.Instant;
 
-@ApplicationCommand(name = "verify", description = "Verifier deinen Minecraft Account")
+
+@ApplicationCommand(name = "verify", description = "Verifizere deinen Minecraft Account")
 public class DiscordVerifyCommand {
     private final HardSMP plugin;
     private final Boolean isPreVerify;
@@ -69,6 +69,33 @@ public class DiscordVerifyCommand {
                 return;
             }
 
+
+
+            Integer idCount = plugin.getDatabase().handle(handle -> handle.createQuery("select count(*) from verification where discordid = :id").bind("id", event.getUser().getIdLong()).mapTo(int.class).one());
+
+            if (idCount == 1) {
+                event.replyEmbeds(
+                        new EmbedBuilder()
+                                .setTitle("❌ Account konnte nicht Verifiziert werden")
+                                .setDescription("Der User " + event.getMember().getAsMention() + " ist bereits verifiziert und mit einem Minecraft Account verbunden\n" +
+                                        "Sollte dies ein Fehler sein wende dich via Ticket an ein Teammitglied!")
+                                .setColor(Color.decode("#569d3c"))
+                                .setTimestamp(Instant.now())
+                                .build()
+                ).setEphemeral(true).queue();
+                return;
+            } else if (idCount >= 2) {
+                event.replyEmbeds(
+                        new EmbedBuilder()
+                                .setTitle("❌ Account konnte nicht Verifiziert werden")
+                                .setDescription("Dein Discord Acc wurde zu oft zur verifikation genutzt. Bitte wende dich via Ticket an ein Teammitglied!")
+                                .setColor(Color.decode("#569d3c"))
+                                .setTimestamp(Instant.now())
+                                .build()
+                ).setEphemeral(true).queue();
+                return;
+            }
+
             HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(uuid, (User user) -> {
                 user.data().clear(NodeType.INHERITANCE::matches);
                 Node node = InheritanceNode.builder(group).build();
@@ -103,7 +130,7 @@ public class DiscordVerifyCommand {
                             .build()
             ).setEphemeral(true).queue();
 
-            if (isPreVerify || !player.hasPermission("hardsmp.verify.bypass")) Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyKick", "AutoVerify", PunishmentType.KICK, 0L, null, false);
+            if (isPreVerify || !player.hasPermission("hardsmp.verify.bypass")) Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyKick", "AutoVerify", PunishmentType.KICK, 0L, null, true);
         });
     }
 }

@@ -21,7 +21,7 @@ public class ShopGui {
     public ShopGui(Player player, List<Offer> offers) {
         ItemManager itemManager = HardSMP.getInstance().getItemManager();
         List<MerchantRecipe> recipes = new ArrayList<>();
-        double points = PlayerController.getPlayer((OfflinePlayer) player).getPoints();
+        double points = PlayerController.getPlayer((OfflinePlayer) player).getActualPoints();
         int i = 0;
         for (Offer offer : offers) {
             Price price = offer.price();

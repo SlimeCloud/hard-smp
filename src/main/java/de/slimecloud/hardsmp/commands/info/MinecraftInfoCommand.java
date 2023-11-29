@@ -1,4 +1,4 @@
-package de.slimecloud.hardsmp.info;
+package de.slimecloud.hardsmp.commands.info;
 
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.player.PlayerController;

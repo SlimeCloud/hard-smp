@@ -7,7 +7,7 @@ import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.event.DeathPointHandler;
-import de.slimecloud.hardsmp.info.MinecraftInfoCommand;
+import de.slimecloud.hardsmp.commands.info.MinecraftInfoCommand;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;

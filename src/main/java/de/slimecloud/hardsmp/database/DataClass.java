@@ -94,12 +94,14 @@ public abstract class DataClass {
             String name = field.getName().toLowerCase();
             if (field.isAnnotationPresent(Key.class)) keys.add(name);
 
-            try {
-                Object newVal = field.get(this);
-                if (newVal.equals(field.get(cacheObj)) && !field.isAnnotationPresent(Key.class)) continue;
-                updatedValues.put(name, field.getType().isEnum() ? ((Enum<?>) newVal).ordinal() : newVal);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
+            if(!field.isAnnotationPresent(Autoincrement.class)) {
+                try {
+                    Object newVal = field.get(this);
+                    if (newVal.equals(field.get(cacheObj)) && !field.isAnnotationPresent(Key.class)) continue;
+                    updatedValues.put(name, field.getType().isEnum() ? ((Enum<?>) newVal).ordinal() : newVal);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -129,7 +131,14 @@ public abstract class DataClass {
         );
 
         final String fSql = sql;
-        HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate(fSql).bindMap(updatedValues).execute());
+        var generatedKeys = HardSMP.getInstance().getDatabase().handle(handle -> handle.createUpdate(fSql).bindMap(updatedValues).executeAndReturnGeneratedKeys()).mapToMap().one();
+        generatedKeys.forEach((name, value) -> {
+            try {
+                getClass().getField(name).set(this, value);
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         updateCache();
         return this;

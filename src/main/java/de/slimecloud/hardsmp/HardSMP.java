@@ -9,8 +9,11 @@ import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.listener.DeathPointHandler;
 import de.slimecloud.hardsmp.item.ChestKey;
 import de.slimecloud.hardsmp.item.CustomItem;
+import de.slimecloud.hardsmp.event.DeathPointHandler;
+import de.slimecloud.hardsmp.info.MinecraftInfoCommand;
 import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.item.LockPick;
+import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import de.slimecloud.hardsmp.ui.Chat;
@@ -103,6 +106,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("feedback", new FeedbackCommand());
         registerCommand("leaderboard", new LeaderboardCommand());
 
+        registerCommand("info", new MinecraftInfoCommand());
         //Events
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
@@ -110,6 +114,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(rules);
         registerEvent(keyChain);
         registerEvent(new DeathPointHandler());
+        registerEvent(new PunishmentListener(this));
 
         //UI
         registerEvent(new ScoreboardManager(this));

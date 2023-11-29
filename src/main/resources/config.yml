@@ -72,7 +72,7 @@ help:
     leaderboard: "Zeigt das aktuelle Punkte-Leaderboard an"
 
 rules:
-  Discord Regeln: "Auf dem Minecraft Server gelten die gleichen regeln wie auf dem Slimecloud Discord Server. Verwarnung in Minecraft führen auch zu Verwarnungen in Discord!"
+  Discord Regeln: "§äAuf dem Minecraft Server gelten die gleichen regeln wie auf dem Slimecloud Discord Server. Verwarnung in Minecraft führen auch zu Verwarnungen in Discord!"
   Allgemeine Chatregeln:
     1: "Keine Beleidigungen"
     2: "Kein Mobbing"
@@ -132,11 +132,14 @@ ui:
 
 verify:
   code-length: 5
+  pre-verify: false
 
 discord:
   token: xxx
   console-channel: 123
   netrunner-role: 123
+  guild: 123
+  mod-log-channel: 123
 
 teamchat:
   messageFormat: "§8[§äTeam§öChat§8] §c%player§7:"

@@ -1,8 +1,11 @@
 package de.slimecloud.hardsmp.player;
 
+import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.player.data.PointCategory;
 import de.slimecloud.hardsmp.player.data.Points;
+import de.slimecloud.hardsmp.verify.Verification;
 import lombok.RequiredArgsConstructor;
+import net.dv8tion.jda.api.entities.User;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
@@ -91,6 +94,13 @@ public class PlayerController {
         @Override
         public UUID getUniqueId() {
             return getOfflinePlayer().getUniqueId();
+        }
+
+        @Override
+        public @Nullable User getDiscord() {
+            Verification verify = Verification.load(getOfflinePlayer().getUniqueId().toString());
+            long discordUserID = verify.getDiscordID();
+            return discordUserID == 0 ? null : HardSMP.getInstance().getDiscordBot().jdaInstance.getUserById(discordUserID);
         }
     }
 

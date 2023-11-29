@@ -47,9 +47,10 @@ public class DiscordAppender extends AbstractAppender {
 
     @Override
     public void append(LogEvent event) {
-        if(event.getLevel() == Level.ERROR && lastError.plus(Duration.ofMinutes(1)).isBefore(Instant.now())) jda.getChannelById(MessageChannel.class, channel)
-                .sendMessage("<@&" + HardSMP.getInstance().getConfig().getLong("discord.netrunner-role") + ">")
-                .queue();
+        if (event.getLevel() == Level.ERROR && lastError.plus(Duration.ofMinutes(1)).isBefore(Instant.now()))
+            jda.getChannelById(MessageChannel.class, channel)
+                    .sendMessage("<@&" + HardSMP.getInstance().getConfig().getLong("discord.netrunner-role") + ">")
+                    .queue();
 
         lastError = Instant.now();
 

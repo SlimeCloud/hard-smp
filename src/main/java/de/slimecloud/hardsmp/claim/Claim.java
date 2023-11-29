@@ -1,13 +1,20 @@
 package de.slimecloud.hardsmp.claim;
 
+import de.slimecloud.hardsmp.database.Autoincrement;
 import de.slimecloud.hardsmp.database.DataClass;
+import de.slimecloud.hardsmp.database.Key;
 import de.slimecloud.hardsmp.database.Table;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.bukkit.Location;
 
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Table(name = "claims")
 @AllArgsConstructor
@@ -16,11 +23,23 @@ import java.util.UUID;
 @Setter
 public class Claim extends DataClass {
 
+    public static Map<Integer, Claim> allClaims = loadAll(Claim::new, Collections.emptyMap()).stream().collect(Collectors.toMap(Claim::getId, c -> c));
     private String uuid;
     private int x1, z1, x2, z2;
 
-    public static List<Claim> load(UUID uuid) {
-        return loadAll(Claim::new, Map.of("uuid", uuid.toString()));
+    @Key
+    @Autoincrement
+    private int id;
+
+    public static Set<Claim> load(UUID uuid) {
+        return loadAll(Claim::new, Map.of("uuid", uuid.toString())).stream().peek(c -> allClaims.put(c.id, c)).collect(Collectors.toSet());
+    }
+
+    @Override
+    public synchronized Claim save() {
+        allClaims.put(id, this);
+        super.save();
+        return this;
     }
 
     public boolean contains(Location loc) {

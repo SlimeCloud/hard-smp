@@ -51,7 +51,7 @@ commands:
     usage: "§cUsage: /leaderboard <Page>"
     permission: hardsmp.command.leaderboard
   claim:
-    usage: "§cUsage: /claim <start/cancel/finish>"
+    usage: "§cUsage: /claim <start/cancel/finish/remove>"
     permission: hardsmp.command.claim
   info:
     usage: "§cUsage: /info discord/minecraft <id or name>"

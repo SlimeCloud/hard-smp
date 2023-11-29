@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     public static final Map<UUID, ClaimInfo> claimingPlayers = new HashMap<>();
+    private final List<UUID> deletingPlayers = new ArrayList<>();
 
     private final Team firstTeam;
     private final Team secondTeam;
@@ -64,7 +65,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist schon im Claim-Modus!")));
                         return true;
                     }
-                    if (ClaimRights.load(uuid).getClaimCount() <= Claim.loadAll(Claim::new, Collections.emptyMap()).stream().filter(c -> c.getUuid().equals(uuid.toString())).count()) {
+                    if (ClaimRights.load(uuid) != null && ClaimRights.load(uuid).getClaimCount() <= Claim.loadAll(Claim::new, Collections.emptyMap()).stream().filter(c -> c.getUuid().equals(uuid.toString())).count()) {
                         commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast schon zu viele Claims!")));
                         return true;
                     }
@@ -104,6 +105,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist nicht im Claim-Modus!")));
                 }
                 case "cancel" -> {
+                    if (deletingPlayers.contains(uuid)) {
+                        player.sendMessage(HardSMP.getPrefix().append(Component.text("§cLöschen abgebrochen!")));
+                        deletingPlayers.remove(uuid);
+                        return true;
+                    }
                     ClaimInfo task = claimingPlayers.remove(uuid);
                     if (task != null) {
                         task.stopTasks();
@@ -113,10 +119,28 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§aClaim-Modus erfolgreich beendet!")));
                     } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist nicht im Claim-Modus!")));
                 }
+                case "remove" -> {
+                    if (claimingPlayers.containsKey(player.getUniqueId())) {
+                        player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu befindest dich im Claim-Modus!")));
+                        return true;
+                    }
+                    Stream<Claim> ownClaims = Claim.loadAll(Claim::new, Collections.emptyMap()).stream().filter(c -> c.getUuid().equals(uuid.toString()));
+                    if (ownClaims.anyMatch(c -> c.contains(player.getLocation()))) {
+                        if (deletingPlayers.contains(uuid)) {
+                            HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate("delete from claims where x = :y").bind("y", uuid.toString()).execute());
+                            deletingPlayers.remove(uuid);
+                            player.sendMessage(HardSMP.getPrefix().append(Component.text("§aClaim gelöscht!")));
+                            return true;
+                        } else {
+                            player.sendMessage(HardSMP.getPrefix().append(Component.text("§4Möchtest du dieses claim wirklich löschen?\nBenutze erneut §6/claim remove§4 um dies zu bestätigen!\nBenutze §6/claim cancel§4 um den Prozess abzubrechen!")));
+                            deletingPlayers.add(uuid);
+                        }
+                    } else player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu befindest dich nicht auf einem deiner Claims!")));
+                }
                 default ->
-                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish]!")));
+                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove]!")));
             }
-        } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish]!")));
+        } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove]!")));
 
         return true;
     }
@@ -168,7 +192,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                 event.getPlayer().sendMessage(Component.text("§cDie Fläche ist zu groß!"));
                 return;
             }
-            if (getBlocks(event.getPlayer()) > ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize()) {
+            if (ClaimRights.load(event.getPlayer().getUniqueId()) != null && getBlocks(event.getPlayer()) > ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize()) {
                 info.loc2 = old;
                 event.getPlayer().sendMessage(Component.text("§cDu kannst nicht so viele Blöcke claimen!\nKaufe dir mehr Blöcke im §äShop§c!"));
                 return;
@@ -247,7 +271,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return Stream.of("start", "cancel", "finish")
+        return Stream.of("start", "cancel", "finish", "remove")
                 .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
                 .toList();
     }

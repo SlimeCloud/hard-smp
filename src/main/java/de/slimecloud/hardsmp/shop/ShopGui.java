@@ -25,7 +25,7 @@ public class ShopGui {
         int i = 0;
         for (Offer offer : offers) {
             Price price = offer.price();
-            MerchantRecipe recipe = new MerchantRecipe(itemManager.getBuilder(offer.item()).addLore(List.of("", ChatColor.LIGHT_PURPLE + "benötige punkte: " + price.requiredPoints())).setLocalizedName(String.valueOf(i++)).setAmount(offer.amount()).build(), Integer.MAX_VALUE);
+            MerchantRecipe recipe = new MerchantRecipe(itemManager.getBuilder(offer.item()).addLore(List.of("", ChatColor.LIGHT_PURPLE + "benötige punkte: " + Math.round(price.requiredPoints()))).setLocalizedName(String.valueOf(i++)).setAmount(offer.amount()).build(), Integer.MAX_VALUE);
             Material mat;
             if ((mat = Material.getMaterial(price.firstItem().toUpperCase())) == null) {
                 HardSMP.getInstance().getLogger().warning("skipped offer '" + offer.item() + "' cause item '" + price.firstItem().toUpperCase() + "' not found");

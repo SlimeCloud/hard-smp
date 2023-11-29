@@ -26,7 +26,7 @@ import java.awt.*;
 import java.time.Instant;
 
 
-@ApplicationCommand(name = "verify", description = "Verifier deinen Minecraft Account")
+@ApplicationCommand(name = "verify", description = "Verifizere deinen Minecraft Account")
 public class DiscordVerifyCommand {
     private final HardSMP plugin;
     private final Boolean isPreVerify;

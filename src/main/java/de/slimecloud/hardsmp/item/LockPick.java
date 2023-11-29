@@ -31,7 +31,8 @@ public class LockPick extends CustomItem implements Listener {
 	public LockPick(ChestKey chestKey) {
 		super("lock-pick", Material.IRON_HOE, 1);
 		builder.setDisplayName(ChatColor.RESET + "§öDietrich")
-				.setLore(Formatter.parseText("§äMit dem Dietrich kannst du verlossene Kisten/Shulker öffnen. Drücke dafür §öSHIFT §äund so oft &öRECHTSKLICK §äbis sich die Kiste sich öffnet!"))
+				.setLore(Formatter.parseText("§äMit dem Dietrich kannst du verlossene Kisten/Shulker öffnen."),
+						Formatter.parseText("§äDrücke dafür §öSHIFT §äund so oft &öRECHTSKLICK §äbis sich die Kiste sich öffnet!"))
 				.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		this.chestKey = chestKey;
 		this.probability = chestKey.getPlugin().getConfig().getDouble("chest-key.lockpick.probability", 2);

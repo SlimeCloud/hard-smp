@@ -131,7 +131,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             .findAny().ifPresentOrElse(
                                     claim -> {
                                         if (deletingPlayers.contains(uuid)) {
-                                            HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate("delete from claims where id = :id").bind("id", claim.getId()).execute());
+                                            claim.delete();
                                             deletingPlayers.remove(uuid);
                                             player.sendMessage(HardSMP.getPrefix().append(Component.text("§aClaim gelöscht!")));
                                         } else {

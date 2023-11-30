@@ -1,5 +1,6 @@
 package de.slimecloud.hardsmp.claim;
 
+import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.database.Autoincrement;
 import de.slimecloud.hardsmp.database.DataClass;
 import de.slimecloud.hardsmp.database.Key;
@@ -53,4 +54,8 @@ public class Claim extends DataClass {
                 && Math.min(loc1.getZ(), loc2.getZ()) <= Math.max(z1, z2);
     }
 
+    public void delete() {
+        HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate("delete from claims where id = :id").bind("id", id).execute());
+        allClaims.remove(id);
+    }
 }

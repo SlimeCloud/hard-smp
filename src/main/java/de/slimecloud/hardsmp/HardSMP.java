@@ -154,7 +154,7 @@ public final class HardSMP extends JavaPlugin {
 
         Bukkit.getWorlds().forEach(
                 world -> world.getEntitiesByClass(Shulker.class).removeIf(
-                        shulker -> shulker.getScoreboardTags().contains("claimselection1") || shulker.getScoreboardTags().contains("claimselection2")
+                        shulker -> shulker.getScoreboardTags().stream().anyMatch(s -> s.contains("marker1")) || shulker.getScoreboardTags().stream().anyMatch(s -> s.contains("marker2"))
                 )
         );
 

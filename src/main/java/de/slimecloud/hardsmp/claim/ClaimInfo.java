@@ -7,7 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Shulker;
 import org.bukkit.util.Vector;
 
 import java.util.concurrent.TimeUnit;
@@ -20,6 +22,8 @@ public class ClaimInfo {
         this.task = Bukkit.getAsyncScheduler().runDelayed(HardSMP.getInstance(), x -> {
             ClaimCommand.claimingPlayers.remove(player.getUniqueId());
             player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast zu lange gebraucht!\nClaim-Modus beendet!")));
+            player.getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + player.getUniqueId()) || sb.getScoreboardTags().contains("marker2" + player.getUniqueId())).forEach(Entity::remove);
+            stopTasks();
         }, 5, TimeUnit.MINUTES);
 
         this.particles = Bukkit.getAsyncScheduler().runAtFixedRate(HardSMP.getInstance(), x -> {

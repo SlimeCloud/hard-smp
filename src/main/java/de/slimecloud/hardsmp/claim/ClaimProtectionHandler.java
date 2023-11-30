@@ -22,11 +22,14 @@ import java.util.List;
 public class ClaimProtectionHandler implements Listener {
 
     private boolean isClaimed(Location loc, Player player) {
-        if(player.hasPermission("track.team")) { //TODO is this condition actually working?
-            player.sendMessage(Component.text("Du führst eine Aktion in geclaimtem Gebiet aus!", NamedTextColor.GOLD));
-            return false;
+        if (Claim.allClaims.values().stream().anyMatch(claim -> claim.contains(loc) && !claim.getUuid().equals(player.getUniqueId().toString()))) {
+            if (player.hasPermission("hardsmp.claim.bypass")) { //TODO is this condition actually working?
+                player.sendMessage(Component.text("Du führst eine Aktion in geclaimtem Gebiet aus!", NamedTextColor.GOLD));
+                return false;
+            }
+            return true;
         }
-        return Claim.allClaims.values().stream().anyMatch(claim -> claim.contains(loc) && !claim.getUuid().equals(player.getUniqueId().toString()));
+        return false;
     }
 
     @EventHandler

@@ -40,6 +40,8 @@ public class PlayerController {
 
         @Override
         public void addPoints(double points) {
+            if(getPlayer().hasPermission("hardsmp.points.bypass")) return;
+
             HardSMP.getInstance().getLogger().info("Added " + points + " points to player " + player.getName());
 
             Points p = getData();

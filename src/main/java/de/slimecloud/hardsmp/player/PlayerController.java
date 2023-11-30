@@ -25,6 +25,10 @@ public class PlayerController {
         return new EventPlayerImpl(player);
     }
 
+    public static double applyFormula(double points, OfflinePlayer player) {
+        return points * 0.1 * (Math.pow(0.5, (player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (115 * 180d) - 6.5)) + 10);
+    }
+
     @RequiredArgsConstructor
     private static class EventPlayerImpl implements EventPlayer {
 
@@ -38,14 +42,14 @@ public class PlayerController {
         @Override
         public void addPoints(double points) {
             Points p = getData();
-            p.setPoints(p.getPoints() + points);
+            p.setPoints(p.getPoints() + applyFormula(points, player));
             p.save();
         }
 
         @Override
         public void setPoints(double points) {
             Points p = getData();
-            p.setPoints(points);
+            p.setPoints(applyFormula(points, player));
             p.save();
         }
 
@@ -61,23 +65,22 @@ public class PlayerController {
 
         @Override
         public double getActualPoints() {
-            double points = getPoints();
-            points += PointCategory.CROUCH_ONE_CM.calculate(player.getStatistic(Statistic.CROUCH_ONE_CM));
-            points += PointCategory.FLY_ONE_CM.calculate(player.getStatistic(Statistic.FLY_ONE_CM));
-            points += PointCategory.SPRINT_ONE_CM.calculate(player.getStatistic(Statistic.SPRINT_ONE_CM));
-            points += PointCategory.SWIM_ONE_CM.calculate(player.getStatistic(Statistic.SWIM_ONE_CM));
-            points += PointCategory.WALK_ONE_CM.calculate(player.getStatistic(Statistic.WALK_ONE_CM));
-            points += PointCategory.WALK_ON_WATER_ONE_CM.calculate(player.getStatistic(Statistic.WALK_ON_WATER_ONE_CM));
-            points += PointCategory.WALK_UNDER_WATER_ONE_CM.calculate(player.getStatistic(Statistic.WALK_UNDER_WATER_ONE_CM));
-            points += PointCategory.BOAT_ONE_CM.calculate(player.getStatistic(Statistic.BOAT_ONE_CM));
-            points += PointCategory.AVIATE_ONE_CM.calculate(player.getStatistic(Statistic.AVIATE_ONE_CM));
-            points += PointCategory.HORSE_ONE_CM.calculate(player.getStatistic(Statistic.HORSE_ONE_CM));
-            points += PointCategory.MINECART_ONE_CM.calculate(player.getStatistic(Statistic.MINECART_ONE_CM));
-            points += PointCategory.PIG_ONE_CM.calculate(player.getStatistic(Statistic.PIG_ONE_CM));
-            points += PointCategory.STRIDER_ONE_CM.calculate(player.getStatistic(Statistic.STRIDER_ONE_CM));
+            double statPoints = 0;
+            statPoints += PointCategory.CROUCH_ONE_CM.calculate(player.getStatistic(Statistic.CROUCH_ONE_CM));
+            statPoints += PointCategory.FLY_ONE_CM.calculate(player.getStatistic(Statistic.FLY_ONE_CM));
+            statPoints += PointCategory.SPRINT_ONE_CM.calculate(player.getStatistic(Statistic.SPRINT_ONE_CM));
+            statPoints += PointCategory.SWIM_ONE_CM.calculate(player.getStatistic(Statistic.SWIM_ONE_CM));
+            statPoints += PointCategory.WALK_ONE_CM.calculate(player.getStatistic(Statistic.WALK_ONE_CM));
+            statPoints += PointCategory.WALK_ON_WATER_ONE_CM.calculate(player.getStatistic(Statistic.WALK_ON_WATER_ONE_CM));
+            statPoints += PointCategory.WALK_UNDER_WATER_ONE_CM.calculate(player.getStatistic(Statistic.WALK_UNDER_WATER_ONE_CM));
+            statPoints += PointCategory.BOAT_ONE_CM.calculate(player.getStatistic(Statistic.BOAT_ONE_CM));
+            statPoints += PointCategory.AVIATE_ONE_CM.calculate(player.getStatistic(Statistic.AVIATE_ONE_CM));
+            statPoints += PointCategory.HORSE_ONE_CM.calculate(player.getStatistic(Statistic.HORSE_ONE_CM));
+            statPoints += PointCategory.MINECART_ONE_CM.calculate(player.getStatistic(Statistic.MINECART_ONE_CM));
+            statPoints += PointCategory.PIG_ONE_CM.calculate(player.getStatistic(Statistic.PIG_ONE_CM));
+            statPoints += PointCategory.STRIDER_ONE_CM.calculate(player.getStatistic(Statistic.STRIDER_ONE_CM));
 
-            points *= 0.1 * (Math.pow(0.5, (player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (115 * 180d) - 6.5)) + 10);
-            return points;
+            return getPoints() + applyFormula(statPoints, player);
         }
 
         @Override

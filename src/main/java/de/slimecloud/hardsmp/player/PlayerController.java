@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class PlayerController {
-
     public static EventPlayer getPlayer(HumanEntity player) {
         return getPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
     }
@@ -41,6 +40,8 @@ public class PlayerController {
 
         @Override
         public void addPoints(double points) {
+            HardSMP.getInstance().getLogger().info("Added " + points + " points to player " + player.getName());
+
             Points p = getData();
             p.setPoints(p.getPoints() + applyFormula(points, player));
             p.save();
@@ -48,6 +49,8 @@ public class PlayerController {
 
         @Override
         public void setPoints(double points) {
+            HardSMP.getInstance().getLogger().info("Set " + player.getName() + "'s points to " + points);
+
             Points p = getData();
             p.setPoints(applyFormula(points, player));
             p.save();
@@ -55,6 +58,7 @@ public class PlayerController {
 
         @Override
         public void removePoints(double points) {
+            HardSMP.getInstance().getLogger().info("Removed " + points + " points to player " + player.getName());
             addPoints(points * -1);
         }
 

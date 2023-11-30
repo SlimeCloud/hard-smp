@@ -131,7 +131,7 @@ public abstract class DataClass {
         );
 
         final String fSql = sql;
-        var generatedKeys = HardSMP.getInstance().getDatabase().handle(handle -> handle.createUpdate(fSql).bindMap(updatedValues).executeAndReturnGeneratedKeys()).mapToMap().one();
+        var generatedKeys = HardSMP.getInstance().getDatabase().handle(handle -> handle.createUpdate(fSql).bindMap(updatedValues).executeAndReturnGeneratedKeys().mapToMap().one());
         generatedKeys.forEach((name, value) -> {
             try {
                 getClass().getField(name).set(this, value);

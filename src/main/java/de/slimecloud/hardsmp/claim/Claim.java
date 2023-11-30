@@ -38,8 +38,8 @@ public class Claim extends DataClass {
 
     @Override
     public synchronized Claim save() {
-        allClaims.put(id, this);
         super.save();
+        allClaims.put(id, this);
         return this;
     }
 

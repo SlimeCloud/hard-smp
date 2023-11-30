@@ -114,8 +114,6 @@ ui:
 
   tablist:
     header: "\uE005"
-    prefix: " §7[§r%prefix§7]"
-    name: "%prefix §r%name  §ö%points"
     footer: "§j---  §7[%tps §öTPS§7]  §j---"
 
   chat:

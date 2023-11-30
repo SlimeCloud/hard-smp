@@ -66,7 +66,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist schon im Claim-Modus!")));
                         return true;
                     }
-                    if (ClaimRights.load(uuid) != null && ClaimRights.load(uuid).getClaimCount() <= Claim.allClaims.values().stream().filter(c -> c.getUuid().equals(uuid.toString())).count()) {
+                    if (!player.hasPermission("hardsmp.claim.bypass") && ClaimRights.load(uuid).getClaimCount() <= Claim.allClaims.values().stream().filter(c -> c.getUuid().equals(uuid.toString())).count()) {
                         commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast schon zu viele Claims!")));
                         return true;
                     }
@@ -205,7 +205,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                 event.getPlayer().sendMessage(Component.text("§cDie Fläche ist zu groß!"));
                 return;
             }
-            if (ClaimRights.load(event.getPlayer().getUniqueId()) != null && getBlocks(event.getPlayer()) > ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize()) {
+            if (!event.getPlayer().hasPermission("hardsmp.claim.bypass") && getBlocks(event.getPlayer()) > ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize()) {
                 info.loc2 = old;
                 event.getPlayer().sendMessage(Component.text("§cDu kannst nicht so viele Blöcke claimen!\nKaufe dir mehr Blöcke im §äShop§c!"));
                 return;
@@ -244,7 +244,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     public final int defaultMaxBlocks = HardSMP.getInstance().getConfig().getInt("claim.maxblocks");
 
     public int getMaxBlocks(Player player) {
-        if(player.hasPermission("track.team")) return Integer.MAX_VALUE;
+        if(player.hasPermission("hardsmp.claim.bypass")) return Integer.MAX_VALUE;
         else return defaultMaxBlocks;
     }
 

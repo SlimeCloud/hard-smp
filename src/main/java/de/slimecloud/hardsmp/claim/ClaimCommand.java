@@ -250,7 +250,25 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event) {
-        if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) return;
+        if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) {
+            Claim.allClaims.values().forEach(c -> {
+                if(!c.contains(event.getFrom())) {
+                    if(c.contains(event.getTo())) {
+                        String name;
+                        try {
+                            name = Bukkit.getOfflinePlayer(UUID.fromString(c.getUuid())).getName();
+                        } catch (IllegalArgumentException e) {
+                            name = c.getUuid();
+                        }
+                        event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", NamedTextColor.GREEN).append(Component.text(name, NamedTextColor.BLUE)));
+                    }
+                } else {
+                    if(!c.contains(event.getTo()))
+                        event.getPlayer().sendActionBar(Component.text("Du betrittst ", NamedTextColor.GREEN).append(Component.text("Wildnis", NamedTextColor.GRAY)));
+                }
+            });
+            return;
+        }
 
         int blocks = getBlocks(event.getPlayer());
         if (blocks == 0) return;

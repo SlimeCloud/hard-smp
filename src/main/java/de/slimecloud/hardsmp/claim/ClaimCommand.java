@@ -230,7 +230,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
         } else return;
 
-        actionbarColor.put(event.getPlayer().getUniqueId().toString(), getBlocks(event.getPlayer()) <= ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize());
+        if (info.loc1 != null && info.loc2 != null)
+            actionbarColor.put(event.getPlayer().getUniqueId().toString(), getBlocks(event.getPlayer()) <= ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize());
 
         mark.setInvisible(true);
         mark.setAI(false);

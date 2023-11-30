@@ -167,6 +167,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
         Shulker mark;
 
+        int maxBlocks = getMaxBlocks(event.getPlayer());
+
         if (event.getAction().isLeftClick()) {
             if (info.loc1 != null && event.getClickedBlock().getLocation().getX() == info.loc1.getX() && event.getClickedBlock().getLocation().getZ() == info.loc1.getZ()) return;
             if (info.loc2 != null && event.getClickedBlock().getLocation().getX() == info.loc2.getX() && event.getClickedBlock().getLocation().getZ() == info.loc2.getZ()) return;
@@ -239,7 +241,12 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     }
 
-    public final int maxBlocks = HardSMP.getInstance().getConfig().getInt("claim.maxblocks");
+    public final int defaultMaxBlocks = HardSMP.getInstance().getConfig().getInt("claim.maxblocks");
+
+    public int getMaxBlocks(Player player) {
+        if(player.hasPermission("track.team")) return Integer.MAX_VALUE;
+        else return defaultMaxBlocks;
+    }
 
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event) {
@@ -248,7 +255,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         int blocks = getBlocks(event.getPlayer());
         if (blocks == 0) return;
 
-        event.getPlayer().sendActionBar(Component.text(blocks > maxBlocks || blocks > ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize() ? "§c" : "§a" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
+        event.getPlayer().sendActionBar(Component.text(blocks > getMaxBlocks(event.getPlayer()) || blocks > ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize() ? "§c" : "§a" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
     }
 
     private int getBlocks(Player player) {

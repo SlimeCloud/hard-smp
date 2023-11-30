@@ -46,7 +46,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         if (firstTeam == null) firstTeam = board.registerNewTeam("claimselection1");
 
         Team secondTeam = board.getTeam("claimselection2");
-        if(secondTeam == null) secondTeam = board.registerNewTeam("claimselection2");
+        if (secondTeam == null) secondTeam = board.registerNewTeam("claimselection2");
 
         firstTeam.color(NamedTextColor.BLUE);
         secondTeam.color(NamedTextColor.RED);
@@ -97,6 +97,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                 return true;
                             }
 
+                            actionbarColor.invalidate(uuid.toString());
                             claimingPlayers.remove(uuid);
                             task.stopTasks();
                             new Claim(uuid.toString(), (int) task.loc1.getX(), (int) task.loc1.getZ(), (int) task.loc2.getX(), (int) task.loc2.getZ(), 0).save();
@@ -119,6 +120,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     if (task != null) {
                         task.stopTasks();
 
+                        actionbarColor.invalidate(uuid.toString());
                         player.getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + uuid) || sb.getScoreboardTags().contains("marker2" + uuid)).forEach(Entity::remove);
 
                         commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§aClaim-Modus erfolgreich beendet!")));
@@ -239,18 +241,12 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         mark.setLootTable(null);
         mark.spawnAt(event.getClickedBlock().getLocation());
 
-        /*if (info.loc1 != null && info.loc2 != null) {
-            int blocks = (int) ((Math.abs(info.loc1.getX() - info.loc2.getX()) + 1) * (Math.abs(info.loc1.getZ() - info.loc2.getZ()) + 1));
-
-            event.getPlayer().sendActionBar(Component.text( "§a" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
-        }*/
-
     }
 
     public final int defaultMaxBlocks = HardSMP.getInstance().getConfig().getInt("claim.maxblocks");
 
     public int getMaxBlocks(Player player) {
-        if(player.hasPermission("hardsmp.claim.bypass")) return Integer.MAX_VALUE;
+        if (player.hasPermission("hardsmp.claim.bypass")) return Integer.MAX_VALUE;
         else return defaultMaxBlocks;
     }
 
@@ -258,18 +254,19 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     private void onPlayerMove(PlayerMoveEvent event) {
         if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) {
             Claim.allClaims.values().forEach(c -> {
-                if(!c.contains(event.getFrom())) {
-                    if(c.contains(event.getTo())) {
+                if (!c.contains(event.getFrom())) {
+                    if (c.contains(event.getTo())) {
                         String name;
                         try {
                             name = Bukkit.getOfflinePlayer(UUID.fromString(c.getUuid())).getName();
                         } catch (IllegalArgumentException e) {
                             name = c.getUuid();
                         }
+                        if (name == null) name = "Unbekannt";
                         event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", NamedTextColor.GREEN).append(Component.text(name, NamedTextColor.BLUE)));
                     }
                 } else {
-                    if(!c.contains(event.getTo()))
+                    if (!c.contains(event.getTo()))
                         event.getPlayer().sendActionBar(Component.text("Du betrittst ", NamedTextColor.GREEN).append(Component.text("Wildnis", NamedTextColor.GRAY)));
                 }
             });
@@ -280,7 +277,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         if (blocks == 0) return;
 
         Boolean valid = actionbarColor.getIfPresent(event.getPlayer().getUniqueId().toString());
-        event.getPlayer().sendActionBar(Component.text(valid != null && valid ? "§a" : "§c" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
+        event.getPlayer().sendActionBar(Component.text(((valid != null && valid) ? "§a" : "§c") + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
     }
 
     private int getBlocks(Player player) {

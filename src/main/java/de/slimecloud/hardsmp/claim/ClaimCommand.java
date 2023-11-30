@@ -1,5 +1,7 @@
 package de.slimecloud.hardsmp.claim;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -31,6 +33,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     public static final Map<UUID, ClaimInfo> claimingPlayers = new HashMap<>();
     private final List<UUID> deletingPlayers = new ArrayList<>();
+
+    private final Cache<String, Boolean> actionbarColor = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
 
     private final Team firstTeam;
     private final Team secondTeam;
@@ -224,6 +228,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
         } else return;
 
+        actionbarColor.put(event.getPlayer().getUniqueId().toString(), getBlocks(event.getPlayer()) <= ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize());
+
         mark.setInvisible(true);
         mark.setAI(false);
 
@@ -233,11 +239,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         mark.setLootTable(null);
         mark.spawnAt(event.getClickedBlock().getLocation());
 
-        if (info.loc1 != null && info.loc2 != null) {
+        /*if (info.loc1 != null && info.loc2 != null) {
             int blocks = (int) ((Math.abs(info.loc1.getX() - info.loc2.getX()) + 1) * (Math.abs(info.loc1.getZ() - info.loc2.getZ()) + 1));
 
             event.getPlayer().sendActionBar(Component.text( "§a" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
-        }
+        }*/
 
     }
 
@@ -255,7 +261,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         int blocks = getBlocks(event.getPlayer());
         if (blocks == 0) return;
 
-        event.getPlayer().sendActionBar(Component.text(blocks > getMaxBlocks(event.getPlayer()) || blocks > ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize() ? "§c" : "§a" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
+        Boolean valid = actionbarColor.getIfPresent(event.getPlayer().getUniqueId().toString());
+        event.getPlayer().sendActionBar(Component.text(valid != null && valid ? "§a" : "§c" + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
     }
 
     private int getBlocks(Player player) {

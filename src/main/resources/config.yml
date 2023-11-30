@@ -5,6 +5,15 @@ database:
 
 shop:
   offers:
+    lock-pick:
+      item: "lock-pick"
+      amount: 1
+      price:
+        item: "iron_ingot"
+        amount: 32
+        second-item: "gold_ingot"
+        second-amount: 1
+        required-points: 100
     chest-key:
       item: "chest-key"
       amount: 1
@@ -23,6 +32,22 @@ shop:
         amount: 1
         second-item: "netherite_ingot"
         second-amount: 3
+
+chest-key:
+  lockable: ["CHEST", "TRAPPED_CHEST", "BARREL", "SHULKER_BOX"]
+  no-key: "§cVerschlossen"
+  lockpick:
+    #probability to crack a container in % per try
+    probability: 0.4
+  success:
+    lock: "§2Erfolgreich verschlossen"
+    unlock: "§2Erfolgreich geöffnet"
+    crack: "§2Erfolgreich geknackt"
+    crack-msg: |-
+      §2Erfolgreich geknackt!\n
+      §6Du kannst die Kiste jetzt einmal öffnen, oder Abbauen.
+    
+
 
 help:
   root: "§ä----- §öHilfe §ä----- \n\n§äNutze §ö/help event §äfür kommende Events \n§äNutze §ö/help command §äfür eine Command-Übersicht \n§äNutze §ö/help support §äfür Infos zum Support \n\n§ä----- §öHilfe §ä-----"
@@ -80,23 +105,24 @@ ui:
   scoreboard:
     title: "\uE001"
     text:
-      #every format has to start with a § if the rank are no custom unicode
-      default: "%rank. %name   §u%points"
-      rank_1: "§l§6%rank. %name   §r§u%points"
-      rank_2: "§l§i%rank. %name   §r§u%points"
-      rank_3: "§l§y%rank. %name   §r§u%points"
+      default: "%rank. %name §ä%points"
+      rank_1: "\uE002§l§v %name §r§ä%points"
+      rank_2: "\uE003§l§w %name §r§ä%points"
+      rank_3: "\uE004§l§z %name §r§ä%points"
+      rank_4: "§i%rank. %name §r§ä%points"
+      rank_5: "§i%rank. %name §r§ä%points"
 
   tablist:
-    header: "§j-----  §2Hard-SMP  §j-----"
-    prefix: "§8[§7%prefix§8]"
-    name: "%prefix §r%name  §p%points"
-    footer: "§j---  §7[%tps §8TPS§7]  §j---"
+    header: "\uE005"
+    prefix: " §7[§r%prefix§7]"
+    name: "%prefix §r%name  §ö%points"
+    footer: "§j---  §7[%tps §öTPS§7]  §j---"
 
   chat:
     prefix: "§7[%prefix§7]"
     #colr = color rank
     #coln = color name
-    format: "%colr#%rank %prefix %coln%name: "
+    format: "%colr#%rank %prefix %coln%name§7: "
     color:
       name_default: "§ä"
       name_1: "§v"
@@ -130,7 +156,10 @@ bugform:
   link: "google.com"
 
 leaderboard:
-  playersPerPage: 10
+  playersPerPage: 9
 
 claim:
   maxblocks: 200
+
+  
+

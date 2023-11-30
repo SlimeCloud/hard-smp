@@ -10,7 +10,12 @@ import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.claim.ClaimProtectionHandler;
 import de.slimecloud.hardsmp.event.DeathPointHandler;
 import de.slimecloud.hardsmp.info.MinecraftInfoCommand;
+import de.slimecloud.hardsmp.commands.info.MinecraftInfoCommand;
+import de.slimecloud.hardsmp.item.ChestKey;
+import de.slimecloud.hardsmp.item.CustomItem;
 import de.slimecloud.hardsmp.item.ItemManager;
+import de.slimecloud.hardsmp.item.LockPick;
+import de.slimecloud.hardsmp.listener.DeathPointHandler;
 import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
@@ -26,7 +31,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.luckperms.api.LuckPerms;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
@@ -34,7 +38,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class HardSMP extends JavaPlugin {
@@ -58,6 +61,12 @@ public final class HardSMP extends JavaPlugin {
 
     @Getter
     private DiscordBot discordBot;
+
+    @Getter
+    private ChestKey chestKey;
+
+    @Getter
+    private LockPick lockPick;
 
     @Override
     public void onEnable() {
@@ -86,6 +95,8 @@ public final class HardSMP extends JavaPlugin {
 
         ClaimCommand claim = new ClaimCommand();
         RulesCommand rules = new RulesCommand();
+        RulesCommand rules;
+        KeyChainCommand keyChain;
 
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
@@ -95,24 +106,19 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("help", new HelpCommand());
         registerCommand("rules", rules);
         registerCommand("teamchat", new TeamChatCommand());
+        registerCommand("keys", keyChain = new KeyChainCommand(this));
         registerCommand("bug", new BugCommand());
         registerCommand("feedback", new FeedbackCommand());
         registerCommand("leaderboard", new LeaderboardCommand());
         registerCommand("claim", claim);
 
         registerCommand("info", new MinecraftInfoCommand());
-
-
-        itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
-        itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
-
-        SlimeHandler.setupOffers(getConfig());
-
         //Events
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
         registerEvent(new PointsListener());
         registerEvent(rules);
+        registerEvent(keyChain);
         registerEvent(new DeathPointHandler());
         registerEvent(claim);
         registerEvent(new ClaimProtectionHandler());
@@ -122,6 +128,16 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
         registerEvent(new Chat(getConfig()));
+
+        //Custom Items
+        registerEvent(chestKey = new ChestKey(this));
+        registerEvent(lockPick = new LockPick(chestKey));
+
+
+        CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
+        itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
+
+        SlimeHandler.setupOffers(getConfig());
 
         AdvancementHandler.register(this, this::registerEvent);
 

@@ -1,6 +1,7 @@
 package de.slimecloud.hardsmp.commands;
 
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.verify.Verification;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -47,6 +48,10 @@ public class UnverifyCommand implements CommandExecutor, TabCompleter {
                 Node node = InheritanceNode.builder(group).build();
                 user.data().remove(node);
             });
+
+            Verification.load(player.getUniqueId().toString())
+                    .setVerified(false)
+                    .save();
 
             player.sendMessage(HardSMP.getPrefix()
                     .append(Component.text("Du wurdest", TextColor.color(0x88d657)))

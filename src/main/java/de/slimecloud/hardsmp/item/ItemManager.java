@@ -27,6 +27,7 @@ public class ItemManager {
             return;
         }
         stackMap.put(id, stack);
+        main.getLogger().info("registered item '" + id + "'");
     }
 
     public void unregisterItem(String id) {

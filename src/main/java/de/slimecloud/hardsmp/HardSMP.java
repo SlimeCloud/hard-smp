@@ -5,8 +5,8 @@ import de.cyklon.spigotutils.item.ItemBuilder;
 import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.*;
-import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.commands.info.MinecraftInfoCommand;
+import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.ChestKey;
 import de.slimecloud.hardsmp.item.CustomItem;
 import de.slimecloud.hardsmp.item.ItemManager;
@@ -16,6 +16,7 @@ import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import de.slimecloud.hardsmp.ui.Chat;
+import de.slimecloud.hardsmp.ui.Placeholders;
 import de.slimecloud.hardsmp.ui.Tablist;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
@@ -66,6 +67,8 @@ public final class HardSMP extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new Placeholders().register();
+
         instance = this;
         this.luckPerms = getServer().getServicesManager().load(LuckPerms.class);
         this.spark = SparkProvider.get();

@@ -1,6 +1,7 @@
 package de.slimecloud.hardsmp.claim;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,6 +13,7 @@ import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerTakeLecternBookEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 import java.util.Collection;
@@ -20,6 +22,10 @@ import java.util.List;
 public class ClaimProtectionHandler implements Listener {
 
     private boolean isClaimed(Location loc, Player player) {
+        if(player.hasPermission("track.team")) { //TODO is this condition actually working?
+            player.sendMessage(Component.text("Du führst eine Aktion in geclaimtem Gebiet aus!", NamedTextColor.GOLD));
+            return false;
+        }
         return Claim.allClaims.values().stream().anyMatch(claim -> claim.contains(loc) && !claim.getUuid().equals(player.getUniqueId().toString()));
     }
 
@@ -52,6 +58,23 @@ public class ClaimProtectionHandler implements Listener {
         if (event.getDamager() instanceof Player player && isClaimed(event.getEntity().getLocation(), player)) {
             event.setCancelled(true);
             player.sendMessage(Component.text("§cDu kannst das hier nicht boxen!"));
+        }
+    }
+
+
+    @EventHandler
+    private void onSignEdit(SignChangeEvent event) {
+        if (isClaimed(event.getBlock().getLocation(), event.getPlayer())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Component.text("§cDu kannst dieses Schild nicht editieren!"));
+        }
+    }
+
+    @EventHandler
+    private void onLectern(PlayerTakeLecternBookEvent event) {
+        if (isClaimed(event.getLectern().getLocation(), event.getPlayer())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Component.text("§cDu kannst dieses Schild nicht editieren!"));
         }
     }
 
@@ -131,5 +154,4 @@ public class ClaimProtectionHandler implements Listener {
             event.getVehicle().setVelocity(event.getVehicle().getVelocity().multiply(-1));
         }
     }
-
 }

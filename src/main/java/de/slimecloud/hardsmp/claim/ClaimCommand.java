@@ -140,6 +140,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                             claim.delete();
                                             deletingPlayers.remove(uuid);
                                             player.sendMessage(HardSMP.getPrefix().append(Component.text("§aClaim gelöscht!")));
+                                            player.sendActionBar(Component.text("Du betrittst ", NamedTextColor.GREEN).append(Component.text("Wildnis", NamedTextColor.GRAY)));
                                         } else {
                                             player.sendMessage(HardSMP.getPrefix().append(Component.text("§4Möchtest du dieses claim wirklich löschen?\nBenutze erneut §6/claim remove§4 um dies zu bestätigen!\nBenutze §6/claim cancel§4 um den Prozess abzubrechen!")));
                                             deletingPlayers.add(uuid);

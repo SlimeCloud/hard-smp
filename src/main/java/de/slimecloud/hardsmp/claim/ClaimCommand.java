@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
@@ -136,6 +137,10 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                         } else {
                                             player.sendMessage(HardSMP.getPrefix().append(Component.text("§4Möchtest du dieses claim wirklich löschen?\nBenutze erneut §6/claim remove§4 um dies zu bestätigen!\nBenutze §6/claim cancel§4 um den Prozess abzubrechen!")));
                                             deletingPlayers.add(uuid);
+                                            Bukkit.getAsyncScheduler().runDelayed(HardSMP.getInstance(), x -> {
+                                                deletingPlayers.remove(uuid);
+                                                player.sendMessage(HardSMP.getPrefix().append(Component.text("§cLöschen abgebrochen!")));
+                                            }, 1, TimeUnit.MINUTES);
                                         }
                                     },
                                     () -> player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu befindest dich nicht auf einem deiner Claims!")))

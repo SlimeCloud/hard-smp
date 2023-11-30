@@ -5,11 +5,10 @@ import de.cyklon.spigotutils.item.ItemBuilder;
 import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.claim.ClaimCommand;
+import de.slimecloud.hardsmp.claim.ClaimInfo;
 import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.claim.ClaimProtectionHandler;
-import de.slimecloud.hardsmp.event.DeathPointHandler;
-import de.slimecloud.hardsmp.info.MinecraftInfoCommand;
 import de.slimecloud.hardsmp.commands.info.MinecraftInfoCommand;
 import de.slimecloud.hardsmp.item.ChestKey;
 import de.slimecloud.hardsmp.item.CustomItem;
@@ -31,12 +30,14 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.luckperms.api.LuckPerms;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Shulker;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -95,7 +96,6 @@ public final class HardSMP extends JavaPlugin {
 
         ClaimCommand claim = new ClaimCommand();
         RulesCommand rules = new RulesCommand();
-        RulesCommand rules;
         KeyChainCommand keyChain;
 
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
@@ -151,6 +151,15 @@ public final class HardSMP extends JavaPlugin {
     @Override
     public void onDisable() {
         ScoreboardUI.getScoreboards().forEach(ScoreboardUI::delete);
+
+        Bukkit.getWorlds().forEach(
+                world -> world.getEntitiesByClass(Shulker.class).removeIf(
+                        shulker -> shulker.getScoreboardTags().contains("claimselection1") || shulker.getScoreboardTags().contains("claimselection2")
+                )
+        );
+
+        ClaimCommand.claimingPlayers.values().forEach(ClaimInfo::stopTasks);
+        ClaimCommand.claimingPlayers.clear();
 
         this.discordBot.shutdown();
     }

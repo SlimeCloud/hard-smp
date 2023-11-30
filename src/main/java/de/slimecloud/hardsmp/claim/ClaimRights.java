@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 @Table(name = "claimrights")
 @Getter
@@ -18,12 +17,12 @@ public class ClaimRights extends DataClass {
 
     private final String uuid;
 
-    private int claimCount;
-    private int totalClaimSize;
+    private int claimCount = 0;
+    private int totalClaimSize = 0;
 
     public static ClaimRights load(UUID uuid) {
-        Supplier <ClaimRights> s = () -> new ClaimRights(uuid.toString());
-        return load(s, Map.of("uuid", uuid.toString())).orElse(null);
+        return load(() -> new ClaimRights(uuid.toString()), Map.of("uuid", uuid.toString()))
+                .orElse(new ClaimRights(uuid.toString()));
     }
 
 }

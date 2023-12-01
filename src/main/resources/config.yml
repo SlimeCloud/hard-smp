@@ -13,7 +13,7 @@ shop:
         amount: 32
         second-item: "gold_ingot"
         second-amount: 1
-        required-points: 100
+        required-points: 1500
     chest-key:
       item: "chest-key"
       amount: 1
@@ -114,8 +114,6 @@ ui:
 
   tablist:
     header: "\uE005"
-    prefix: " §7[§r%prefix§7]"
-    name: "%prefix §r%name  §ö%points"
     footer: "§j---  §7[%tps §öTPS§7]  §j---"
 
   chat:

@@ -40,7 +40,7 @@ public class PlayerController {
 
         @Override
         public void addPoints(double points) {
-            if(getPlayer().hasPermission("hardsmp.points.bypass")) return;
+            if(getPlayer() == null || getPlayer().hasPermission("hardsmp.points.bypass")) return;
 
             HardSMP.getInstance().getLogger().info("Added " + points + " points to player " + player.getName());
 
@@ -73,7 +73,7 @@ public class PlayerController {
         public double getActualPoints() {
             double statPoints = 0;
 
-            if(!getPlayer().hasPermission("hardsmp.points.bypass")) {
+            if(getPlayer() == null || !getPlayer().hasPermission("hardsmp.points.bypass")) {
                 statPoints += PointCategory.CROUCH_ONE_CM.calculate(player.getStatistic(Statistic.CROUCH_ONE_CM));
                 statPoints += PointCategory.FLY_ONE_CM.calculate(player.getStatistic(Statistic.FLY_ONE_CM));
                 statPoints += PointCategory.SPRINT_ONE_CM.calculate(player.getStatistic(Statistic.SPRINT_ONE_CM));

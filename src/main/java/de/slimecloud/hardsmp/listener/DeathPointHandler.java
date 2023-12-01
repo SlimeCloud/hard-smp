@@ -1,4 +1,4 @@
-package de.slimecloud.hardsmp.event;
+package de.slimecloud.hardsmp.listener;
 
 import de.slimecloud.hardsmp.player.EventPlayer;
 import de.slimecloud.hardsmp.player.PlayerController;

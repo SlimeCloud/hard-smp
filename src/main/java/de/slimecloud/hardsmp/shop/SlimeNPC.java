@@ -16,6 +16,7 @@ public class SlimeNPC {
         slime.setWander(false);
         slime.setInvulnerable(true);
         slime.setCollidable(false);
+        slime.setPersistent(true);
         slime.setCustomNameVisible(true);
         slime.getPersistentDataContainer().set(HardSMP.getInstance().SHOP_KEY, PersistentDataType.STRING, "shop");
         slime.customName(Component.text("Shop"));

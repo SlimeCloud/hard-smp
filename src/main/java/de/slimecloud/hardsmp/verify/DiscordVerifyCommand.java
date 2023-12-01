@@ -5,6 +5,9 @@ import de.mineking.discordutils.commands.ApplicationCommandMethod;
 import de.mineking.discordutils.commands.option.Option;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.event.PlayerVerifyEvent;
+import me.leoko.advancedban.manager.UUIDManager;
+import me.leoko.advancedban.utils.Punishment;
+import me.leoko.advancedban.utils.PunishmentType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.kyori.adventure.text.Component;
@@ -22,8 +25,17 @@ import org.bukkit.entity.Player;
 import java.awt.*;
 import java.time.Instant;
 
-@ApplicationCommand(name = "verify", description = "Verifier deinen Minecraft Account")
+
+@ApplicationCommand(name = "verify", description = "Verifizere deinen Minecraft Account")
 public class DiscordVerifyCommand {
+    private final HardSMP plugin;
+    private final Boolean isPreVerify;
+
+    public DiscordVerifyCommand() {
+        this.plugin = HardSMP.getInstance();
+        this.isPreVerify = plugin.getConfig().getBoolean("verify.pre-verify", false);
+    }
+
     @ApplicationCommandMethod
     public void performCommand(SlashCommandInteractionEvent event,
                                @Option(description = "Gebe den Code ein der dir im Minecraft Chat angezeigt wird") String code
@@ -57,11 +69,40 @@ public class DiscordVerifyCommand {
                 return;
             }
 
-            HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(uuid, (User user) -> {
-                user.data().clear(NodeType.INHERITANCE::matches);
-                Node node = InheritanceNode.builder(group).build();
-                user.data().add(node);
-            });
+
+
+            Integer idCount = plugin.getDatabase().handle(handle -> handle.createQuery("select count(*) from verification where discordid = :id").bind("id", event.getUser().getIdLong()).mapTo(int.class).one());
+
+            if (idCount == 1) {
+                event.replyEmbeds(
+                        new EmbedBuilder()
+                                .setTitle("❌ Account konnte nicht Verifiziert werden")
+                                .setDescription("Der User " + event.getMember().getAsMention() + " ist bereits verifiziert und mit einem Minecraft Account verbunden\n" +
+                                        "Sollte dies ein Fehler sein wende dich via Ticket an ein Teammitglied!")
+                                .setColor(Color.decode("#569d3c"))
+                                .setTimestamp(Instant.now())
+                                .build()
+                ).setEphemeral(true).queue();
+                return;
+            } else if (idCount >= 2) {
+                event.replyEmbeds(
+                        new EmbedBuilder()
+                                .setTitle("❌ Account konnte nicht Verifiziert werden")
+                                .setDescription("Dein Discord Acc wurde zu oft zur verifikation genutzt. Bitte wende dich via Ticket an ein Teammitglied!")
+                                .setColor(Color.decode("#569d3c"))
+                                .setTimestamp(Instant.now())
+                                .build()
+                ).setEphemeral(true).queue();
+                return;
+            }
+
+            if (!player.hasPermission("hardsmp.verify.bypass")) {
+                HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(uuid, (User user) -> {
+                    user.data().clear(NodeType.INHERITANCE::matches);
+                    Node node = InheritanceNode.builder(group).build();
+                    user.data().add(node);
+                });
+            }
 
             MinecraftVerificationListener.activeCodes.invalidate(uuid);
 
@@ -73,7 +114,7 @@ public class DiscordVerifyCommand {
                     Component.text("Erfolgreich Verifiziert!", TextColor.color(0x88d657)),
                     HardSMP.getPrefix()
                             .append(Component.text("Du wurdest erfolgreich", TextColor.color(0x88d657)))
-                            .append(Component.text(" Verifiziert", TextColor.color(0x55cfc4), TextDecoration.BOLD))
+                            .append(Component.text(" Verifiziert", TextColor.color(0xF6ED82), TextDecoration.BOLD))
                             .append(Component.text("!", TextColor.color(0x88d657))));
 
             Bukkit.getScheduler().runTask(HardSMP.getInstance(), () -> Bukkit.getPluginManager().callEvent(vevent));
@@ -90,6 +131,8 @@ public class DiscordVerifyCommand {
                             .setTimestamp(Instant.now())
                             .build()
             ).setEphemeral(true).queue();
+
+            if (isPreVerify && !player.hasPermission("hardsmp.verify.bypass")) Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyKick", "AutoVerify", PunishmentType.KICK, 0L, null, true);
         });
     }
 }

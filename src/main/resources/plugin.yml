@@ -7,15 +7,26 @@ authors: [SlimeCloud Netrunner]
 depend:
   - LuckPerms
   - spark
+  - PlaceholderAPI
 description: HardSMP (Das 'S' steht für "Slime")
 website: https://discord.gg/slimecloud
 
 
 permissions:
+  hardsmp.command.formatting:
+    default: true
   hardsmp.command.help:
     default: true
   hardsmp.command.rules:
     default: true
+  hardsmp.command.keys:
+    default: true
+  hardsmp.command.feedback:
+    default: true
+  hardsmp.command.bug:
+    default: true
+  hardsmp.verify.bypass:
+    default: false
 
 commands:
   formatting:
@@ -49,3 +60,16 @@ commands:
   hatitem:
     usage: "§cUsage: /hatitem <Player>"
     permission: hardsmp.command.hatitem
+  keys:
+    usage: "§cUsage: /keys"
+    permission: hardsmp.command.keys
+  feedback:
+    permission: hardsmp.command.feedback
+  bug:
+    permission: hardsmp.command.bug
+  leaderboard:
+    usage: "§cUsage: /leaderboard <Page>"
+    permission: hardsmp.command.leaderboard
+  info:
+    usage: "§cUsage: /info discord/minecraft <id or name>"
+    permission: hardsmp.commands.discord

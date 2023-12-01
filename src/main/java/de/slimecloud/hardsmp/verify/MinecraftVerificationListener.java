@@ -4,10 +4,17 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.slimecloud.hardsmp.HardSMP;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import me.leoko.advancedban.manager.UUIDManager;
+import me.leoko.advancedban.utils.Punishment;
+import me.leoko.advancedban.utils.PunishmentType;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.Node;
+import net.luckperms.api.node.NodeType;
+import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,8 +40,21 @@ public class MinecraftVerificationListener implements Listener {
 
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {
-        User user = HardSMP.getInstance().getLuckPerms().getPlayerAdapter(Player.class).getUser(event.getPlayer());
-        if (!user.getPrimaryGroup().equals("default")) return;
+        Player player = event.getPlayer();
+        if (player.hasPermission("hardsmp.verify.bypass")) return;
+        Verification verification = Verification.load(player.getUniqueId().toString());
+        if (verification.isVerified()) {
+            Punishment.create(player.getName(), UUIDManager.get().getUUID(player.getName()), "@VerifyJoinKick", "AutoVerify", PunishmentType.KICK, 0L, null, true);
+            return;
+        }
+
+        Group group = HardSMP.getInstance().getLuckPerms().getGroupManager().getGroup("verified");
+
+        if (group != null) HardSMP.getInstance().getLuckPerms().getUserManager().modifyUser(player.getUniqueId(), (User user) -> {
+            user.data().clear(NodeType.INHERITANCE::matches);
+            Node node = InheritanceNode.builder(group).build();
+            user.data().remove(node);
+        });
 
         String code;
 
@@ -61,7 +81,7 @@ public class MinecraftVerificationListener implements Listener {
     @EventHandler()
     private void onMove(PlayerMoveEvent event) {
         User user = HardSMP.getInstance().getLuckPerms().getPlayerAdapter(Player.class).getUser(event.getPlayer());
-        if (!user.getPrimaryGroup().equals("default")) return;
+        if (!user.getPrimaryGroup().equals("default") || event.getPlayer().hasPermission("hardsmp.verify.bypass")) return;
 
         event.setCancelled(true);
 
@@ -82,7 +102,7 @@ public class MinecraftVerificationListener implements Listener {
                     public void accept(ScheduledTask task) {
                         player.sendActionBar(
                                 text("Dein Verifikations-Code: ", color(0x88d657))
-                                        .append(text(code, color(0x55cfc4), TextDecoration.BOLD)
+                                        .append(text(code, color(0xF6ED82), TextDecoration.BOLD)
                                                 .clickEvent(ClickEvent.copyToClipboard(code)))
                         );
 
@@ -105,22 +125,22 @@ public class MinecraftVerificationListener implements Listener {
                                 .append(text(" verifiziert", color(0x88d657), TextDecoration.BOLD))
                                 .append(text("!\n", color(0x88d657)))
                                 .append(text("==========================\n\n", color(0x88d657)))
-                                .append(text("Zum Verifizieren:\n\n", color(0x55cfc4), TextDecoration.BOLD, TextDecoration.UNDERLINED))
-                                .append(text("1. ", color(0x55cfc4)))
+                                .append(text("Zum Verifizieren:\n\n", color(0xF6ED82), TextDecoration.BOLD, TextDecoration.UNDERLINED))
+                                .append(text("1. ", color(0xF6ED82)))
                                 .append(text("Joine dem ", color(0x88d657)))
-                                .append(text("Discord", color(0x55cfc4), TextDecoration.BOLD, TextDecoration.UNDERLINED)
-                                        .hoverEvent(HoverEvent.showText(text("Klicke hier um zu Joinen", color(0x55cfc4))
+                                .append(text("Discord", color(0xF6ED82), TextDecoration.BOLD, TextDecoration.UNDERLINED)
+                                        .hoverEvent(HoverEvent.showText(text("Klicke hier um zu Joinen", color(0xF6ED82))
                                                 .clickEvent(ClickEvent.openUrl("https://discord.gg/slimecloud"))))
                                         .clickEvent(ClickEvent.openUrl("https://discord.gg/slimecloud")))
                                 .append(text(".\n", color(0x88d657)))
-                                .append(text("2. ", color(0x55cfc4)))
+                                .append(text("2. ", color(0xF6ED82)))
                                 .append(text("Nutze auf dem Discord den Befehl ", color(0x88d657)))
-                                .append(text("/verify\n", color(0x55cfc4))
-                                        .hoverEvent(HoverEvent.showText(text("Gib diesen Befehl auf Discord ein.", color(0x55cfc4))))))
-                        .append(text("3. ", color(0x55cfc4)))
+                                .append(text("/verify\n", color(0xF6ED82))
+                                        .hoverEvent(HoverEvent.showText(text("Gib diesen Befehl auf Discord ein.", color(0xF6ED82))))))
+                        .append(text("3. ", color(0xF6ED82)))
                         .append(text("Gib als Code ", color(0x88d657)))
-                        .append(text(code, color(0x55cfc4), TextDecoration.UNDERLINED)
-                                .hoverEvent(HoverEvent.showText(text("Klicke hier um den Code zu kopieren", color(0x55cfc4))
+                        .append(text(code, color(0xF6ED82), TextDecoration.UNDERLINED)
+                                .hoverEvent(HoverEvent.showText(text("Klicke hier um den Code zu kopieren", color(0xF6ED82))
                                         .clickEvent(ClickEvent.copyToClipboard(code)))))
                         .clickEvent(ClickEvent.copyToClipboard(code))
                         .append(text(" ein.\n", color(0x88d657)))

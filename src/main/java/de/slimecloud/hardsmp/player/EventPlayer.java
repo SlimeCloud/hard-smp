@@ -1,5 +1,6 @@
 package de.slimecloud.hardsmp.player;
 
+import net.dv8tion.jda.api.entities.User;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -59,5 +60,11 @@ public interface EventPlayer {
      * @see UUID
      */
     UUID getUniqueId();
+
+    /**
+     * @return the Discord User of the Player or null if player is not verified
+     * @see User
+     */
+    @Nullable User getDiscord();
 
 }

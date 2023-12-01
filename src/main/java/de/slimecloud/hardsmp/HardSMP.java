@@ -10,10 +10,7 @@ import de.slimecloud.hardsmp.claim.ClaimProtectionHandler;
 import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.commands.info.MinecraftInfoCommand;
 import de.slimecloud.hardsmp.database.Database;
-import de.slimecloud.hardsmp.item.ChestKey;
-import de.slimecloud.hardsmp.item.CustomItem;
-import de.slimecloud.hardsmp.item.ItemManager;
-import de.slimecloud.hardsmp.item.LockPick;
+import de.slimecloud.hardsmp.item.*;
 import de.slimecloud.hardsmp.listener.DeathPointHandler;
 import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
@@ -69,6 +66,17 @@ public final class HardSMP extends JavaPlugin {
 
     @Getter
     private LockPick lockPick;
+
+    @Getter
+    private PlotBuyer plotBuyer25;
+    @Getter
+    private PlotBuyer plotBuyer100;
+    @Getter
+    private PlotBuyer plotBuyer500;
+    @Getter
+    private PlotBuyer plotBuyer1000;
+    @Getter
+    private PlotBuyer plotBuyer5000;
 
     @Override
     public void onEnable() {
@@ -136,6 +144,11 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(chestKey = new ChestKey(this));
         registerEvent(lockPick = new LockPick(chestKey));
 
+        registerEvent(plotBuyer25 = new PlotBuyer(25, 100, 4, 1));
+        registerEvent(plotBuyer100 = new PlotBuyer(100, 500, 5, 2));
+        registerEvent(plotBuyer500 = new PlotBuyer(500, 1500, 3, 3));
+        registerEvent(plotBuyer1000 = new PlotBuyer(1000, 3000, 2, 4));
+        registerEvent(plotBuyer5000 = new PlotBuyer(5000, 10000, 2, 5));
 
         CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());

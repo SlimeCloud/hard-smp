@@ -58,4 +58,8 @@ public class Claim extends DataClass {
         HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate("delete from claims where id = :id").bind("id", id).execute());
         allClaims.remove(id);
     }
+
+    public int getSize() {
+        return Math.abs(x1 - x2) * Math.abs(z1 - z2);
+    }
 }

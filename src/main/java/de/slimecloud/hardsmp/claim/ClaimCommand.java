@@ -137,6 +137,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             .findAny().ifPresentOrElse(
                                     claim -> {
                                         if (deletingPlayers.contains(uuid)) {
+                                            ClaimRights rights = ClaimRights.load(uuid);
+                                            rights.setTotalClaimed(rights.getTotalClaimed() - claim.getSize());
                                             claim.delete();
                                             deletingPlayers.remove(uuid);
                                             player.sendMessage(HardSMP.getPrefix().append(Component.text("§aClaim gelöscht!")));
@@ -214,7 +216,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                 event.getPlayer().sendMessage(Component.text("§cDie Fläche ist zu groß!"));
                 return;
             }
-            if (!event.getPlayer().hasPermission("hardsmp.claim.bypass") && getBlocks(event.getPlayer()) > ClaimRights.load(event.getPlayer().getUniqueId()).getTotalClaimSize()) {
+            ClaimRights rights = ClaimRights.load(event.getPlayer().getUniqueId());
+            if (!event.getPlayer().hasPermission("hardsmp.claim.bypass") && getBlocks(event.getPlayer()) > rights.getTotalClaimSize() - rights.getTotalClaimed()) {
                 info.loc2 = old;
                 event.getPlayer().sendMessage(Component.text("§cDu kannst nicht so viele Blöcke claimen!\nKaufe dir mehr Blöcke im §äShop§c!"));
                 return;

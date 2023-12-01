@@ -134,10 +134,14 @@ public abstract class DataClass {
         var generatedKeys = HardSMP.getInstance().getDatabase().handle(handle -> handle.createUpdate(fSql).bindMap(updatedValues).executeAndReturnGeneratedKeys().mapToMap().one());
         generatedKeys.forEach((name, value) -> {
             try {
-                Field field = getClass().getDeclaredField(name);
-                field.setAccessible(true);
-                field.set(this, value);
-            } catch (IllegalAccessException | NoSuchFieldException e) {
+                for (Field f : getClass().getDeclaredFields()) {
+                    if (f.getName().equalsIgnoreCase(name)) {
+                        f.setAccessible(true);
+                        f.set(this, value);
+                    }
+                }
+
+            } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         });

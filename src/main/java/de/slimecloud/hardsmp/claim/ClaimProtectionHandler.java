@@ -128,7 +128,7 @@ public class ClaimProtectionHandler implements Listener {
     @EventHandler
     private void onPistonExtend(BlockPistonExtendEvent event) {
         Collection<Claim> claims = Claim.allClaims.values();
-        List<Claim> first = claims.stream().filter(claim -> claim.contains(event.getBlock().getLocation())).toList();
+        List<Claim> first = claims.stream().filter(claim -> claim.contains(event.getBlock().getLocation().add(event.getDirection().getDirection().multiply(-1)))).toList();
 
         if (!first.isEmpty() && !event.getBlocks().stream().allMatch(block -> first.get(0).contains(block.getLocation().add(event.getDirection().getDirection())))) {
             event.setCancelled(true);
@@ -140,7 +140,7 @@ public class ClaimProtectionHandler implements Listener {
     @EventHandler
     private void onPistonRetract(BlockPistonRetractEvent event) {
         Collection<Claim> claims = Claim.allClaims.values();
-        List<Claim> first = claims.stream().filter(claim -> claim.contains(event.getBlock().getLocation())).toList();
+        List<Claim> first = claims.stream().filter(claim -> claim.contains(event.getBlock().getLocation().add(event.getDirection().getDirection()))).toList();
 
         if (!first.isEmpty() && !event.getBlocks().stream().allMatch(block -> first.get(0).contains(block.getLocation().add(event.getDirection().getDirection())))) {
             event.setCancelled(true);

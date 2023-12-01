@@ -192,7 +192,9 @@ public class PointsListener implements Listener {
     @EventHandler
     public void onAdvancementDone(PlayerAdvancementDoneEvent event) {
         AdvancementType type = AdvancementType.getAdvancementType(event.getAdvancement());
-        int rarity = ADVANCEMENTS_RARITY.getOrDefault(type, 1);
+        Integer rarity = ADVANCEMENTS_RARITY.get(type);
+        if(rarity == null) return;
+
         addPoints(event.getPlayer(), PointCategory.ADVANCEMENT, rarity);
     }
 

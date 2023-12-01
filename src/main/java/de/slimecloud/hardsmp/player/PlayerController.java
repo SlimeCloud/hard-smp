@@ -25,7 +25,9 @@ public class PlayerController {
     }
 
     public static double applyFormula(double points, OfflinePlayer player) {
-        return points * 0.1 * (Math.pow(0.5, (player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (115 * 180d) - 6.5)) + 10);
+        return points; //TODO debug
+
+        //return points * 0.1 * (Math.pow(0.5, (player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (115 * 180d) - 6.5)) + 10);
     }
 
     @RequiredArgsConstructor

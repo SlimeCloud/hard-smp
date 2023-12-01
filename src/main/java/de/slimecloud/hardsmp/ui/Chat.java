@@ -13,6 +13,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -69,7 +70,7 @@ public class Chat implements Listener {
         if (user == null) prefix = null;
         else prefix = user.getCachedData().getMetaData().getPrefix();
 
-        prefix = prefix == null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§"));
+        prefix = prefix == null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§").replace("#88D657", "ä").replace("#F6ED82", "ö"));
         String rank = ScoreboardManager.STATS.get(player.getUniqueId()).first().toString();
         String nameColor = this.nameColor.getOrDefault(Integer.valueOf(rank), this.nameColor.get(-1));
         String rankColor = this.rankColor.getOrDefault(Integer.valueOf(rank), this.rankColor.get(-1));

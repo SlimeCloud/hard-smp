@@ -86,7 +86,7 @@ public class PlayerController {
             statPoints += PointCategory.PIG_ONE_CM.calculate(player.getStatistic(Statistic.PIG_ONE_CM));
             statPoints += PointCategory.STRIDER_ONE_CM.calculate(player.getStatistic(Statistic.STRIDER_ONE_CM));
 
-            return getPoints() + applyFormula(statPoints, player);
+            return getPoints() + applyFormula(statPoints / 5, player);
         }
 
         @Override

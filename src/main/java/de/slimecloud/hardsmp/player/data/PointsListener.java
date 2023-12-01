@@ -129,7 +129,6 @@ public class PointsListener implements Listener {
         ADVANCEMENTS_RARITY.put(CustomAdvancement.GOLD1, 3);
         ADVANCEMENTS_RARITY.put(CustomAdvancement.GHAST, 3);
         ADVANCEMENTS_RARITY.put(CustomAdvancement.DIAMOND, 3);
-        ADVANCEMENTS_RARITY.put(CustomAdvancement.ROOT, 3);
 
         ADVANCEMENTS_RARITY.put(CustomAdvancement.TREASURE, 2);
         ADVANCEMENTS_RARITY.put(CustomAdvancement.FISH, 2);

@@ -147,6 +147,25 @@ teamchat:
   messageFormat: "§8[§äTeam§öChat§8] §c%player§7:"
   messageColor: "§6"
 
+
+enderchest:
+  playerNotFoundErrorMessage: "§cDer angegebene Spieler konnte nicht gefunden werden!"
+
+invsee:
+  playerNotFoundErrorMessage: "§cDer angegebene Spieler konnte nicht gefunden werden!"
+  notInInvsee: "§cDu bist nicht in einem Invsee!"
+  couldntUpdatePlayer: "§cDer InvseePlayer konnte nicht aktualisiert werden!"
+  couldntNotRestoreInvWithError: "§cDein Inventar konnte nicht wieder hergestellt werden!\nError: %error"
+  couldntNotRestoreInv: "§cDein Inventar konnte nicht wieder hergestellt werden!"
+  leavedInvsee: "§2Invsee wurde verlassen!"
+  exitInvseeBeforeNew: "§cDu bist bereits in einem Invsee! Benutze /invsee exit zum schließen!"
+  invSaveError: "§cEtwas mit der Inventory Speicherung hat nicht geklappt! Bitte reporte diesen Fehler!"
+  invseeHintMessage: "§2Benutze /invsee exit, um das Inventar zu aktualisieren und um dein Inventar zurück zu bekommen."
+
+
+hatitem:
+  playerNotFoundErrorMessage: "§cDer angegebene Spieler konnte nicht gefunden werden!"
+
 feedback:
   link: "google.com"
 
@@ -155,3 +174,4 @@ bugform:
 
 leaderboard:
   playersPerPage: 9
+

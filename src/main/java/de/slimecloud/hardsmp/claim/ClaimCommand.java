@@ -29,6 +29,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import static net.kyori.adventure.text.format.TextColor.color;
+
 public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     public static final Map<UUID, ClaimInfo> claimingPlayers = new HashMap<>();
@@ -78,11 +80,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     claimingPlayers.put(uuid, new ClaimInfo(player)
                     );
                     commandSender.sendMessage(HardSMP.getPrefix()
-                            .append(Component.text("§aClaim-Modus erfolgreich gestartet!\n" + "Wähle zwei Ecken mit "))
+                            .append(Component.text("Claim-Modus erfolgreich gestartet!\n" + "Wähle zwei Ecken mit ", color(0x88D657)))
                             .append(Component.keybind("key.attack"))
-                            .append(Component.text( "§a und "))
+                            .append(Component.text( " und ", color(0x88D657)))
                             .append(Component.keybind("key.use"))
-                            .append(Component.text("§a!"))
+                            .append(Component.text("!", color(0x88D657)))
                     );
                 }
                 case "finish" -> {
@@ -105,7 +107,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             player.getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + uuid) || sb.getScoreboardTags().contains("marker2" + uuid)).forEach(Entity::remove);
 
                             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text(
-                                    "§aDer Bereich von (" + (int) task.loc1.getX() + ", " + (int) task.loc1.getZ() + ") bis (" + (int) task.loc2.getX() + ", " + task.loc2.getZ() + ")\nwurde erfolgreich geclaimt!"
+                                    "Der Bereich von (" + (int) task.loc1.getX() + ", " + (int) task.loc1.getZ() + ") bis (" + (int) task.loc2.getX() + ", " + task.loc2.getZ() + ")\nwurde erfolgreich geclaimt!", color(0x88D657)
                             )));
                         } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast nicht alle Ecken gesetzt!")));
                     } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist nicht im Claim-Modus!")));
@@ -123,7 +125,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         actionbarColor.invalidate(uuid.toString());
                         player.getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + uuid) || sb.getScoreboardTags().contains("marker2" + uuid)).forEach(Entity::remove);
 
-                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§aClaim-Modus erfolgreich beendet!")));
+                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Claim-Modus erfolgreich beendet!", color(0x88D657))));
                     } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist nicht im Claim-Modus!")));
                 }
                 case "remove" -> {
@@ -141,8 +143,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                             rights.setTotalClaimed(rights.getTotalClaimed() - claim.getSize());
                                             claim.delete();
                                             deletingPlayers.remove(uuid);
-                                            player.sendMessage(HardSMP.getPrefix().append(Component.text("§aClaim gelöscht!")));
-                                            player.sendActionBar(Component.text("Du betrittst ", NamedTextColor.GREEN).append(Component.text("Wildnis", NamedTextColor.GRAY)));
+                                            player.sendMessage(HardSMP.getPrefix().append(Component.text("Claim gelöscht!", color(0x88D657))));
+                                            player.sendActionBar(Component.text("Du betrittst ", color(0x88D657)).append(Component.text("Wildnis", NamedTextColor.GRAY)));
                                         } else {
                                             player.sendMessage(HardSMP.getPrefix().append(Component.text("§4Möchtest du dieses claim wirklich löschen?\nBenutze erneut §6/claim remove§4 um dies zu bestätigen!\nBenutze §6/claim cancel§4 um den Prozess abzubrechen!")));
                                             deletingPlayers.add(uuid);
@@ -193,9 +195,10 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                 return;
             }
 
-            event.getPlayer().sendMessage(HardSMP.getPrefix().append(
-                    Component.text("§9Erste §aEcke: " + info.loc1.getX() + ", " + info.loc1.getZ())
-            ));
+            event.getPlayer().sendMessage(HardSMP.getPrefix()
+                    .append(Component.text("§9Erste ")
+                    .append(Component.text("Ecke: " + info.loc1.getX() + ", " + info.loc1.getZ(), color(0x88D657))))
+            );
 
             event.getPlayer().getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + event.getPlayer().getUniqueId())).forEach(Entity::remove);
 
@@ -270,11 +273,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             name = c.getUuid();
                         }
                         if (name == null) name = "Unbekannt";
-                        event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", NamedTextColor.GREEN).append(Component.text(name, NamedTextColor.BLUE)));
+                        event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", color(0x88D657)).append(Component.text(name, NamedTextColor.BLUE)));
                     }
                 } else {
                     if (!c.contains(event.getTo()))
-                        event.getPlayer().sendActionBar(Component.text("Du betrittst ", NamedTextColor.GREEN).append(Component.text("Wildnis", NamedTextColor.GRAY)));
+                        event.getPlayer().sendActionBar(Component.text("Du betrittst ", color(0x88D657)).append(Component.text("Wildnis", NamedTextColor.GRAY)));
                 }
             });
             return;

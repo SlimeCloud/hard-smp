@@ -50,16 +50,6 @@ commands:
   verify:
     usage: "§cUsage: /verify <Player>"
     permission: hardsmp.command.verify
-  enderchest:
-    aliases: ["ec"]
-    usage: "§cUsage: /enderchest <Player>"
-    permission: hardsmp.command.enderchest
-  invsee:
-    usage: "§cUsage: /invsee exit/from <Player>"
-    permission: hardsmp.command.invsee
-  hatitem:
-    usage: "§cUsage: /hatitem <Player>"
-    permission: hardsmp.command.hatitem
   keys:
     usage: "§cUsage: /keys"
     permission: hardsmp.command.keys

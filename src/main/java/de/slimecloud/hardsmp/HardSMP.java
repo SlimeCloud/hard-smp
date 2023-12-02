@@ -16,6 +16,7 @@ import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import de.slimecloud.hardsmp.ui.Chat;
+import de.slimecloud.hardsmp.ui.JoinMessage;
 import de.slimecloud.hardsmp.ui.Placeholders;
 import de.slimecloud.hardsmp.ui.Tablist;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
@@ -112,6 +113,7 @@ public final class HardSMP extends JavaPlugin {
         RulesCommand rules = new RulesCommand();
         KeyChainCommand keyChain;
 
+        //commands
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
         registerCommand("formatting", new FormattingCommand());
@@ -120,6 +122,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("help", new HelpCommand());
         registerCommand("rules", rules);
         registerCommand("teamchat", new TeamChatCommand());
+        registerCommand("enderchest", new EnderchestCommand());
         registerCommand("keys", keyChain = new KeyChainCommand(this));
         registerCommand("bug", new BugCommand());
         registerCommand("feedback", new FeedbackCommand());
@@ -127,6 +130,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("msg", new MsgCommand());
         registerCommand("reply", new ReplyCommand());
         registerCommand("claim", claim);
+        registerCommand("hatitem", new HatItemCommand());
 
         registerCommand("info", new MinecraftInfoCommand());
         //Events
@@ -144,6 +148,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
         registerEvent(chat = new Chat(getConfig()));
+        registerEvent(new JoinMessage());
 
         //Custom Items
         registerEvent(chestKey = new ChestKey(this));

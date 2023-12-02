@@ -46,9 +46,11 @@ public class PlayerController {
         public void addPoints(double points) {
             if(getPlayer() == null || getPlayer().hasPermission("hardsmp.points.bypass")) return;
 
-            HardSMP.getInstance().getLogger().info("Added " + points + " points to player " + player.getName());
-
+            double direct = points;
             points = applyFormula(points, player);
+
+            HardSMP.getInstance().getLogger().info("Added " + direct + " [" + points + "] points to player " + player.getName());
+
             if(points > 50 && player.getPlayer() != null) player.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("Dir wurden ").append(Component.text((int) points).color(NamedTextColor.RED)).append(Component.text(" Punkte hinzugefügt"))));
 
             double current = getActualPoints();

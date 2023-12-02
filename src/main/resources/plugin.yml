@@ -81,9 +81,11 @@ commands:
   hatitem:
     alias: ["hat"]
     usage: "§cUsage: /hatitem [<Player>]"
-    permission: hardsmp.commands.hatitem
+    permission: hardsmp.command.hatitem
   enderchest:
     alias: ["ec"]
     usage: "§cUsage: /enderchest [<Player>]"
     permission: hardsmp.commands.enderchest
+  spawn:
+    permission: hardsmp.command.spawn
 

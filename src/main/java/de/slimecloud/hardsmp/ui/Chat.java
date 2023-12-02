@@ -13,7 +13,6 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -72,7 +71,7 @@ public class Chat implements Listener {
 
         prefix = prefix == null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§").replace("#88D657", "ä").replace("#F6ED82", "ö"));
         String rank = ScoreboardManager.STATS.get(player.getUniqueId()).first().toString();
-        String nameColor = this.nameColor.getOrDefault(Integer.valueOf(rank), this.nameColor.get(-1));
+        String nameColor = event.getPlayer().hasPermission("hardsmp.chat.highlight") ? HardSMP.getInstance().getConfig().getString("ui.chat.color.team") : this.nameColor.getOrDefault(Integer.valueOf(rank), this.nameColor.get(-1));
         String rankColor = this.rankColor.getOrDefault(Integer.valueOf(rank), this.rankColor.get(-1));
 
         rank = switch (rank) {

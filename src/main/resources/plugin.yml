@@ -33,6 +33,8 @@ permissions:
     default: false
   hardsmp.command.hatitem.other:
     default: false
+  hardsmp.command.enderchest.other:
+    default: false
 
 commands:
   formatting:
@@ -80,3 +82,8 @@ commands:
     alias: ["hat"]
     usage: "§cUsage: /hatitem [<Player>]"
     permission: hardsmp.commands.hatitem
+  enderchest:
+    alias: ["ec"]
+    usage: "§cUsage: /enderchest [<Player>]"
+    permission: hardsmp.commands.enderchest
+

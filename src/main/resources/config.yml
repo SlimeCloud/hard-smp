@@ -142,7 +142,7 @@ ui:
   scoreboard:
     title: "\uE001"
     text:
-      default: "%rank. %name §ä%points"
+      default: "%rank%name §ä%points"
       rank_1: "\uE002§l§v %name §r§ä%points"
       rank_2: "\uE003§l§w %name §r§ä%points"
       rank_3: "\uE004§l§z %name §r§ä%points"

@@ -80,7 +80,7 @@ public class Chat implements Listener {
             case "1" -> "§r\uE002";
             case "2" -> "§r\uE003";
             case "3" -> "§r\uE004";
-            default -> "§7" + rank;
+            default -> "§7#" + rank;
         };
 
         if(sender.getPlayer().hasPermission("hardsmp.chat.highlight")) {
@@ -94,17 +94,6 @@ public class Chat implements Listener {
                 .replace("%prefix", prefix)
                 .replace("%name", sender.getName());
 
-        if (!isInt(String.valueOf(formattedFormat.charAt(3)))) formattedFormat = formattedFormat.replace("#", "");
         return Formatter.parseText(formattedFormat);
     }
-
-    private static boolean isInt(String s) {
-        try {
-            Integer.parseInt(s);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
 }

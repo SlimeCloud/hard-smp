@@ -117,7 +117,9 @@ ui:
     footer: "§j---  §7[%tps §öTPS§7]  §j---"
 
   chat:
-    msgPrefix: "§7Private Nachricht von§r "
+    msgPrefix:
+      receive: "§öPrivate Nachricht von§r "
+      outgoing: "§öPrivate Nachricht an§r "
     prefix: "§7[%prefix§7]"
     #colr = color rank
     #coln = color name

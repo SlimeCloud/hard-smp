@@ -2,6 +2,7 @@ package de.slimecloud.hardsmp.commands;
 
 import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -23,12 +24,10 @@ public class MsgCommand implements TabExecutor {
             sender.sendMessage("Kann nur als Spieler ausgeführt werden");
             return true;
         }
-
-        Bukkit.getOfflinePlayer(args[0]).getPlayer().sendMessage(
-                Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.msgPrefix"))
-                        .append(HardSMP.getInstance().getChat().formatName(player))
-                        .append(Formatter.parseText("&", "&r&7&o " + String.join(" ", Arrays.copyOfRange(args, 1, args.length))))
-        );
+        Component message = HardSMP.getInstance().getChat().formatName(player).decorate(TextDecoration.BOLD)
+                .append(Formatter.parseText("&", "&r&7&o " + String.join(" ", Arrays.copyOfRange(args, 1, args.length))));
+        Bukkit.getOfflinePlayer(args[0]).getPlayer().sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.msgPrefix.receive")).append(message));
+        sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.msgPrefix.outgoing")).append(message));
         return true;
     }
 

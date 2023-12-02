@@ -32,6 +32,43 @@ shop:
         amount: 1
         second-item: "netherite_ingot"
         second-amount: 3
+    plot-buyer-25:
+      item: "plot-buyer-25"
+      amount: 1
+      price:
+        required-points: 500
+        item: "iron_ingot"
+        amount: 10
+    plot-buyer-100:
+      item: "plot-buyer-100"
+      amount: 1
+      price:
+        required-points: 1000
+        item: "diamond"
+        amount: 5
+    plot-buyer-500:
+      item: "plot-buyer-500"
+      amount: 1
+      price:
+        required-points: 5000
+        item: "diamond"
+        amount: 17
+    plot-buyer-1000:
+      item: "plot-buyer-1000"
+      amount: 1
+      price:
+        required-points: 10000
+        item: "netherite_ingot"
+        amount: 3
+    plot-buyer-5000:
+      item: "plot-buyer-5000"
+      amount: 1
+      price:
+        required-points: 20000
+        item: "netherite_ingot"
+        amount: 10
+        second-item: "diamond"
+        second-amount: 32
 
 chest-key:
   lockable: ["CHEST", "TRAPPED_CHEST", "BARREL", "SHULKER_BOX"]

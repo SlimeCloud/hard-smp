@@ -94,7 +94,7 @@ public abstract class DataClass {
             String name = field.getName().toLowerCase();
             if (field.isAnnotationPresent(Key.class)) keys.add(name);
 
-            if(!field.isAnnotationPresent(Autoincrement.class)) {
+            if (!field.isAnnotationPresent(Autoincrement.class)) {
                 try {
                     Object newVal = field.get(this);
                     if (newVal.equals(field.get(cacheObj)) && !field.isAnnotationPresent(Key.class)) continue;

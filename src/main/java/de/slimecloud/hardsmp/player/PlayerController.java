@@ -6,6 +6,8 @@ import de.slimecloud.hardsmp.player.data.Points;
 import de.slimecloud.hardsmp.verify.Verification;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.User;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
@@ -25,7 +27,7 @@ public class PlayerController {
     }
 
     public static double applyFormula(double points, OfflinePlayer player) {
-        int hours = player.getStatistic(Statistic.PLAY_ONE_MINUTE) * 20 / 3600;
+        int hours = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (20 * 3600);
         return points * 0.01 * (Math.pow(0.5, (hours / 70.0 - 6.5)) + 10);
     }
 
@@ -45,8 +47,11 @@ public class PlayerController {
 
             HardSMP.getInstance().getLogger().info("Added " + points + " points to player " + player.getName());
 
+            points = applyFormula(points, player);
+            if(points > 50 && player.getPlayer() != null) player.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("Dir wurden ").append(Component.text((int) points).color(NamedTextColor.RED)).append(Component.text(" Punkte hinzugefügt"))));
+
             Points p = getData();
-            p.setPoints(p.getPoints() + applyFormula(points, player));
+            p.setPoints(p.getPoints() + points);
             p.save();
         }
 

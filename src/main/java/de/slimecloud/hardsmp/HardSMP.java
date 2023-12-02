@@ -111,6 +111,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("feedback", new FeedbackCommand());
         registerCommand("leaderboard", new LeaderboardCommand());
         registerCommand("msg", new MsgCommand());
+        registerCommand("reply", new ReplyCommand());
 
         registerCommand("info", new MinecraftInfoCommand());
         //Events
@@ -157,7 +158,8 @@ public final class HardSMP extends JavaPlugin {
         return Component.text("[", NamedTextColor.DARK_GRAY)
                 .append(Component.text("Hard", TextColor.color(0x88D657)))
                 .append(Component.text("SMP", TextColor.color(0xF6ED82)))
-                .append(Component.text("] ", NamedTextColor.DARK_GRAY));
+                .append(Component.text("] ", NamedTextColor.DARK_GRAY))
+                .color(NamedTextColor.GRAY);
     }
 
     private void registerEvent(Listener listener) {

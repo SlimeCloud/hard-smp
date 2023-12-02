@@ -23,8 +23,9 @@ public class PlotBuyer extends CustomItem implements Listener {
 
         builder.setDisplayName(ChatColor.RESET + "§6Grundstück " + blockAmount + " Blöcke")
                 .setLore(Formatter.parseText("§cBenötigte Punkte: " + pointsRequired),
-                        Formatter.parseText("§äKaufe dir ein Grundstück, dass du mit §ö/claim§ä überall platzieren kannst!"),
+                        Formatter.parseText("§äKaufe dir ein Grundstück, dass du mit §ö/claim§ä überall sichern kannst!"),
                         Formatter.parseText("§äDieses Grundstück kannst du insgesamt §ö" + quantity + "§ä mal kaufen."))
+                        //ToDo pls add an indicator how often the player bought this extension already
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         add();
     }

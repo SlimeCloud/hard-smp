@@ -37,11 +37,11 @@ public class ReplyCommand implements CommandExecutor, EmptyTabCompleter {
 
         Component message = Formatter.parseText("&", "&r&7&o " + String.join(" ", args));
 
-        Bukkit.getOfflinePlayer(target).getPlayer().sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.msgPrefix.receive"))
+        Bukkit.getOfflinePlayer(target).getPlayer().sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.receive"))
                 .append(HardSMP.getInstance().getChat().formatName(player).decorate(TextDecoration.BOLD))
                 .append(message)
         );
-        sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.msgPrefix.outgoing"))
+        sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.outgoing"))
                 .append(HardSMP.getInstance().getChat().formatName(Bukkit.getOfflinePlayer(target).getPlayer()).decorate(TextDecoration.BOLD))
                 .append(message)
         );

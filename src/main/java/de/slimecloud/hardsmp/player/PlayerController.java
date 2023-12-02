@@ -48,7 +48,7 @@ public class PlayerController {
             HardSMP.getInstance().getLogger().info("Added " + points + " points to player " + player.getName());
 
             points = applyFormula(points, player);
-            if(points > 50 && player.getPlayer() != null) player.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("Dir wurden ").append(Component.text(points).color(NamedTextColor.RED)).append(Component.text(" Punkte hinzugefügt"))));
+            if(points > 50 && player.getPlayer() != null) player.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("Dir wurden ").append(Component.text((int) points).color(NamedTextColor.RED)).append(Component.text(" Punkte hinzugefügt"))));
 
             Points p = getData();
             p.setPoints(p.getPoints() + points);

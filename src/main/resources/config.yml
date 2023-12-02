@@ -120,6 +120,9 @@ ui:
     msgPrefix:
       receive: "§öPrivate Nachricht von§r "
       outgoing: "§öPrivate Nachricht an§r "
+    replyPrefix:
+      receive: "§öAntwort von§r "
+      outgoing: "§öAntwort an§r "
     prefix: "§7[%prefix§7]"
     #colr = color rank
     #coln = color name

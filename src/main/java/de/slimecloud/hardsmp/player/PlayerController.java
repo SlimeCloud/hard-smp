@@ -8,7 +8,6 @@ import de.slimecloud.hardsmp.verify.Verification;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.User;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -52,20 +51,21 @@ public class PlayerController {
             points = applyFormula(points, player);
             if(points > 50 && player.getPlayer() != null) player.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("Dir wurden ").append(Component.text((int) points).color(NamedTextColor.RED)).append(Component.text(" Punkte hinzugefügt"))));
 
+            double current = getActualPoints();
 
-            if(PlayerController.getPlayer(player).getActualPoints() < 100 && PlayerController.getPlayer(player).getActualPoints() + points >= 100) {
+            if(current < 100 && current + points >= 100) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §61 §aClaim platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(1);
-            } else if(PlayerController.getPlayer(player).getActualPoints() < 500 && PlayerController.getPlayer(player).getActualPoints() + points >= 500) {
+            } else if(current < 500 && current + points >= 500) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §62 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(2);
-            } else if(PlayerController.getPlayer(player).getActualPoints() < 1500 && PlayerController.getPlayer(player).getActualPoints() + points >= 1500) {
+            } else if(current < 1500 && current + points >= 1500) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §63 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(3);
-            } else if(PlayerController.getPlayer(player).getActualPoints() < 3000 && PlayerController.getPlayer(player).getActualPoints() + points >= 3000) {
+            } else if(current < 3000 && current + points >= 3000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §64 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(4);
-            } else if(PlayerController.getPlayer(player).getActualPoints() < 10000 && PlayerController.getPlayer(player).getActualPoints() + points >= 10000) {
+            } else if(current < 10000 && current + points >= 10000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §65 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(5);
             }

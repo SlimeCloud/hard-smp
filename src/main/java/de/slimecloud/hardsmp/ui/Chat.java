@@ -64,14 +64,19 @@ public class Chat implements Listener {
             }
         }
 
-        User user = HardSMP.getInstance().getLuckPerms().getUserManager().getUser(player.getUniqueId());
+        Component message = formatName(event.getPlayer()).append(Formatter.parseText("&", "&r" + " " + LegacyComponentSerializer.legacySection().serialize(event.originalMessage())));
+        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(message));
+    }
+
+    public Component formatName(Player sender) {
+        User user = HardSMP.getInstance().getLuckPerms().getUserManager().getUser(sender.getUniqueId());
         String prefix;
         if (user == null) prefix = null;
         else prefix = user.getCachedData().getMetaData().getPrefix();
 
         prefix = prefix == null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§").replace("#88D657", "ä").replace("#F6ED82", "ö"));
-        String rank = ScoreboardManager.STATS.get(player.getUniqueId()).first().toString();
-        String nameColor = event.getPlayer().hasPermission("hardsmp.chat.highlight") ? HardSMP.getInstance().getConfig().getString("ui.chat.color.team") : this.nameColor.getOrDefault(Integer.valueOf(rank), this.nameColor.get(-1));
+        String rank = ScoreboardManager.STATS.get(sender.getUniqueId()).first().toString();
+        String nameColor = sender.getPlayer().hasPermission("hardsmp.chat.highlight") ? HardSMP.getInstance().getConfig().getString("ui.chat.color.team") : this.nameColor.getOrDefault(Integer.valueOf(rank), this.nameColor.get(-1));
         String rankColor = this.rankColor.getOrDefault(Integer.valueOf(rank), this.rankColor.get(-1));
 
         rank = switch (rank) {
@@ -86,16 +91,13 @@ public class Chat implements Listener {
                 .replace("%coln", nameColor)
                 .replace("%rank", rank)
                 .replace("%prefix", prefix)
-                .replace("%name", player.getName());
-        if (!isInt(String.valueOf(formattedFormat.charAt(3))))
-            formattedFormat = formattedFormat.substring(3, formattedFormat.length() - 1);
-        Component format = Formatter.parseText(formattedFormat);
-        LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
-        String msg = serializer.serialize(event.originalMessage());
-        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(format.append(Formatter.parseText("&", "&r" + " " + msg))));
+                .replace("%name", sender.getName());
+
+        if (!isInt(String.valueOf(formattedFormat.charAt(3)))) formattedFormat = formattedFormat.substring(3, formattedFormat.length() - 1);
+        return Formatter.parseText(formattedFormat);
     }
 
-    private boolean isInt(String s) {
+    private static boolean isInt(String s) {
         try {
             Integer.parseInt(s);
             return true;

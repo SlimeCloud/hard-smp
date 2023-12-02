@@ -65,6 +65,9 @@ public final class HardSMP extends JavaPlugin {
     @Getter
     private LockPick lockPick;
 
+    @Getter
+    private Chat chat;
+
     @Override
     public void onEnable() {
         new Placeholders().register();
@@ -107,6 +110,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("bug", new BugCommand());
         registerCommand("feedback", new FeedbackCommand());
         registerCommand("leaderboard", new LeaderboardCommand());
+        registerCommand("msg", new MsgCommand());
 
         registerCommand("info", new MinecraftInfoCommand());
         //Events
@@ -121,7 +125,7 @@ public final class HardSMP extends JavaPlugin {
         //UI
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
-        registerEvent(new Chat(getConfig()));
+        registerEvent(chat = new Chat(getConfig()));
 
         //Custom Items
         registerEvent(chestKey = new ChestKey(this));

@@ -10,6 +10,7 @@ import de.slimecloud.hardsmp.verify.Verification;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
@@ -90,7 +91,7 @@ public class DiscordInfoCommand {
     private final static Color color = Color.decode("#569d3c");
 
     public static MessageEmbed buildInfo(OfflinePlayer player, Verification verification) {
-        var user = HardSMP.getInstance().getDiscordBot().jdaInstance.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).retrieveMemberById(verification.getDiscordID()).complete();
+        Member user = HardSMP.getInstance().getDiscordBot().jdaInstance.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).retrieveMemberById(verification.getDiscordID()).complete();
 
         return new EmbedBuilder()
                 .setColor(color)

@@ -25,7 +25,7 @@ public class PlayerController {
     }
 
     public static double applyFormula(double points, OfflinePlayer player) {
-        var hours = player.getStatistic(Statistic.PLAY_ONE_MINUTE) * 20 * 3600;
+        int hours = player.getStatistic(Statistic.PLAY_ONE_MINUTE) * 20 / 3600;
         return points * 0.01 * (Math.pow(0.5, (hours / 70.0 - 6.5)) + 10);
     }
 

@@ -40,13 +40,6 @@ public class Claim extends DataClass {
     public synchronized Claim save() {
         super.save();
         allClaims.put(id, this);
-        for (Claim c : allClaims.values()) {
-            System.out.println(c.x1);
-            System.out.println(c.z1);
-            System.out.println(c.x2);
-            System.out.println(c.z2);
-
-        }
         return this;
     }
 

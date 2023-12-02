@@ -123,6 +123,7 @@ ui:
     format: "%colr#%rank %prefix %coln%name§7: "
     color:
       name_default: "§ä"
+      team: '§9'
       name_1: "§v"
       name_2: "§w"
       name_3: "§z"

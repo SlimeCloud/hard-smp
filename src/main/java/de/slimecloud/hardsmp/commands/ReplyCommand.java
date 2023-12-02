@@ -5,7 +5,6 @@ import com.google.common.cache.CacheBuilder;
 import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -45,11 +44,11 @@ public class ReplyCommand implements CommandExecutor, EmptyTabCompleter {
         Component message = Formatter.parseText("&", "&r&7&o " + String.join(" ", args));
 
         tPlayer.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.receive"))
-                .append(HardSMP.getInstance().getChat().formatName(player).decorate(TextDecoration.BOLD))
+                .append(HardSMP.getInstance().getChat().formatName(player))
                 .append(message)
         );
         sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.outgoing"))
-                .append(HardSMP.getInstance().getChat().formatName(tPlayer).decorate(TextDecoration.BOLD))
+                .append(HardSMP.getInstance().getChat().formatName(tPlayer))
                 .append(message)
         );
 

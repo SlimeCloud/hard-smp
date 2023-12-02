@@ -16,6 +16,7 @@ import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import de.slimecloud.hardsmp.ui.Chat;
+import de.slimecloud.hardsmp.ui.JoinMessage;
 import de.slimecloud.hardsmp.ui.Placeholders;
 import de.slimecloud.hardsmp.ui.Tablist;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
@@ -127,6 +128,7 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
         registerEvent(chat = new Chat(getConfig()));
+        registerEvent(new JoinMessage());
 
         //Custom Items
         registerEvent(chestKey = new ChestKey(this));

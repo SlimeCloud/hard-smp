@@ -111,6 +111,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("feedback", new FeedbackCommand());
         registerCommand("leaderboard", new LeaderboardCommand());
         registerCommand("msg", new MsgCommand());
+        registerCommand("reply", new ReplyCommand());
 
         registerCommand("info", new MinecraftInfoCommand());
         //Events

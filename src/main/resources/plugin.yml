@@ -48,6 +48,9 @@ commands:
     aliases: ["whisper", "dm"]
     usage: "§cUsage: /msg <Player> <Message>"
     permission: hardsmp.command.msg
+  reply:
+    aliases: ["r"]
+    permission: hardsmp.command.msg
   teamchat:
     aliases: ["tc"]
     usage: "§cUsage: /teamchat <Message>"

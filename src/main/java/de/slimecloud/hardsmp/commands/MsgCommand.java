@@ -24,10 +24,22 @@ public class MsgCommand implements TabExecutor {
             sender.sendMessage("Kann nur als Spieler ausgeführt werden");
             return true;
         }
-        Component message = HardSMP.getInstance().getChat().formatName(player).decorate(TextDecoration.BOLD)
-                .append(Formatter.parseText("&", "&r&7&o " + String.join(" ", Arrays.copyOfRange(args, 1, args.length))));
-        Bukkit.getOfflinePlayer(args[0]).getPlayer().sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.msgPrefix.receive")).append(message));
-        sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.msgPrefix.outgoing")).append(message));
+        Component message = Formatter.parseText("&", "&r&7&o " + String.join(" ", Arrays.copyOfRange(args, 1, args.length)));
+
+        Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
+
+        target.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.msgPrefix.receive"))
+                .append(HardSMP.getInstance().getChat().formatName(player).decorate(TextDecoration.BOLD))
+                .append(message)
+        );
+        sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.msgPrefix.outgoing"))
+                .append(HardSMP.getInstance().getChat().formatName(target).decorate(TextDecoration.BOLD))
+                .append(message)
+        );
+
+        ReplyCommand.reply.put(player.getUniqueId(), target.getUniqueId());
+        ReplyCommand.reply.put(target.getUniqueId(), player.getUniqueId());
+
         return true;
     }
 

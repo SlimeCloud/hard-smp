@@ -54,6 +54,7 @@ public class MsgCommand implements TabExecutor {
         if(args.length == 1) {
             return Bukkit.getOnlinePlayers().stream()
                     .map(Player::getName)
+                    .filter(n -> n.startsWith(args[0]))
                     .toList();
         }
 

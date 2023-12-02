@@ -43,28 +43,28 @@ shop:
       item: "plot-buyer-100"
       amount: 1
       price:
-        required-points: 1000
+        required-points: 3000
         item: "diamond"
         amount: 5
     plot-buyer-500:
       item: "plot-buyer-500"
       amount: 1
       price:
-        required-points: 5000
+        required-points: 7500
         item: "diamond"
         amount: 17
     plot-buyer-1000:
       item: "plot-buyer-1000"
       amount: 1
       price:
-        required-points: 10000
+        required-points: 15000
         item: "netherite_ingot"
         amount: 3
     plot-buyer-5000:
       item: "plot-buyer-5000"
       amount: 1
       price:
-        required-points: 20000
+        required-points: 25000
         item: "netherite_ingot"
         amount: 10
         second-item: "diamond"

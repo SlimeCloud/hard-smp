@@ -58,16 +58,16 @@ public class PlayerController {
             if(current < 500 && current + points >= 500) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §61 §aClaim platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(1);
-            } else if(current < 1000 && current + points >= 1000) {
+            } else if(current < 5000 && current + points >= 5000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §62 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(2);
-            } else if(current < 5000 && current + points >= 5000) {
+            } else if(current < 10000 && current + points >= 10000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §63 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(3);
-            } else if(current < 10000 && current + points >= 10000) {
+            } else if(current < 20000 && current + points >= 20000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §64 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(4);
-            } else if(current < 20000 && current + points >= 20000) {
+            } else if(current < 30000 && current + points >= 30000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §65 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(5);
             }

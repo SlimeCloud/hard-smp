@@ -109,6 +109,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text(
                                     "Der Bereich von (" + (int) task.loc1.getX() + ", " + (int) task.loc1.getZ() + ") bis (" + (int) task.loc2.getX() + ", " + task.loc2.getZ() + ")\nwurde erfolgreich geclaimt!", color(0x88D657)
                             )));
+
+                            commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Hinweis: ").color(NamedTextColor.RED)).append(Component.text("Das claimen eines Gebiets schützt keine Kisten! Verwende dazu einen Schlüssel, den du am Spawn kaufen kannst.").color(NamedTextColor.GRAY)));
                         } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast nicht alle Ecken gesetzt!")));
                     } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist nicht im Claim-Modus!")));
                 }

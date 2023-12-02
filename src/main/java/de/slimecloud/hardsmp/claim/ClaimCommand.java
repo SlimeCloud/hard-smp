@@ -137,7 +137,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     }
 
                     Claim.allClaims.values().stream()
-                            .filter(c -> c.getUuid().equals(uuid.toString()) && c.contains(player.getLocation()))
+                            .filter(c -> c.getUuid().equals(uuid.toString()) && c.containsPlayer(player.getLocation()))
                             .findAny().ifPresentOrElse(
                                     claim -> {
                                         if (deletingPlayers.contains(uuid)) {
@@ -266,8 +266,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     private void onPlayerMove(PlayerMoveEvent event) {
         if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) {
             Claim.allClaims.values().forEach(c -> {
-                if (!c.contains(event.getFrom())) {
-                    if (c.contains(event.getTo())) {
+                if (!c.containsPlayer(event.getFrom())) {
+                    if (c.containsPlayer(event.getTo())) {
                         String name;
                         try {
                             name = Bukkit.getOfflinePlayer(UUID.fromString(c.getUuid())).getName();
@@ -278,7 +278,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", color(0x88D657)).append(Component.text(name, NamedTextColor.BLUE)));
                     }
                 } else {
-                    if (!c.contains(event.getTo()))
+                    if (!c.containsPlayer(event.getTo()))
                         event.getPlayer().sendActionBar(Component.text("Du betrittst ", color(0x88D657)).append(Component.text("Wildnis", NamedTextColor.GRAY)));
                 }
             });

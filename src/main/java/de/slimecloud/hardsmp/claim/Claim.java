@@ -40,11 +40,28 @@ public class Claim extends DataClass {
     public synchronized Claim save() {
         super.save();
         allClaims.put(id, this);
+        for (Claim c : allClaims.values()) {
+            System.out.println(c.x1);
+            System.out.println(c.z1);
+            System.out.println(c.x2);
+            System.out.println(c.z2);
+
+        }
         return this;
     }
 
     public boolean contains(Location loc) {
         return Math.min(x1, x2) <= loc.x() && loc.x() <= Math.max(x1, x2) && Math.min(z1, z2) <= loc.z() && loc.z() <= Math.max(z1, z2);
+    }
+
+    public boolean containsPlayer(Location loc) {
+        Location newLoc = new Location(
+                loc.getWorld(),
+                loc.getX() < 0 ? (int) loc.getX() - 1 : (int) loc.getX(),
+                loc.getY(),
+                loc.getZ() < 0 ? (int) loc.getZ() - 1 : (int) loc.getZ()
+        );
+        return Math.min(x1, x2) <= newLoc.x() && newLoc.x() <= Math.max(x1, x2) && Math.min(z1, z2) <= newLoc.z() && newLoc.z() <= Math.max(z1, z2);
     }
 
     public boolean overlaps(Location loc1, Location loc2) {

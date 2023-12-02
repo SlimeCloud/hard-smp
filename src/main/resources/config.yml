@@ -114,7 +114,7 @@ ui:
 
   tablist:
     header: "\uE005"
-    footer: "§j---  §7[%tps §öTPS§7]  §j---"
+    footer: "§j---  §7[%tps §öTPS§r | §ö%players Spieler§7]  §j---"
 
   chat:
     msgPrefix:

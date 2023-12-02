@@ -78,6 +78,9 @@ public final class HardSMP extends JavaPlugin {
     @Getter
     private PlotBuyer plotBuyer5000;
 
+    @Getter
+    private Chat chat;
+
     @Override
     public void onEnable() {
         new Placeholders().register();
@@ -121,6 +124,8 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("bug", new BugCommand());
         registerCommand("feedback", new FeedbackCommand());
         registerCommand("leaderboard", new LeaderboardCommand());
+        registerCommand("msg", new MsgCommand());
+        registerCommand("reply", new ReplyCommand());
         registerCommand("claim", claim);
 
         registerCommand("info", new MinecraftInfoCommand());
@@ -138,7 +143,7 @@ public final class HardSMP extends JavaPlugin {
         //UI
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
-        registerEvent(new Chat(getConfig()));
+        registerEvent(chat = new Chat(getConfig()));
 
         //Custom Items
         registerEvent(chestKey = new ChestKey(this));
@@ -184,7 +189,8 @@ public final class HardSMP extends JavaPlugin {
         return Component.text("[", NamedTextColor.DARK_GRAY)
                 .append(Component.text("Hard", TextColor.color(0x88D657)))
                 .append(Component.text("SMP", TextColor.color(0xF6ED82)))
-                .append(Component.text("] ", NamedTextColor.DARK_GRAY));
+                .append(Component.text("] ", NamedTextColor.DARK_GRAY))
+                .color(NamedTextColor.GRAY);
     }
 
     private void registerEvent(Listener listener) {

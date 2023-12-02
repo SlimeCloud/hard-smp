@@ -17,7 +17,7 @@ public class PlotBuyer extends CustomItem implements Listener {
     private final int quantity;
 
     public PlotBuyer(int blockAmount, int pointsRequired, int quantity, int index) {
-        super("plot-buyer", Material.HEAVY_WEIGHTED_PRESSURE_PLATE, index);
+        super("plot-buyer-" + blockAmount, Material.HEAVY_WEIGHTED_PRESSURE_PLATE, index);
         this.blockAmount = blockAmount;
         this.quantity = quantity;
 

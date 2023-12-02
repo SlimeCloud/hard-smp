@@ -59,8 +59,6 @@ public class Chat implements Listener {
             }
         }
 
-        System.out.println(formatName(event.getPlayer()));
-
         Component message = formatName(event.getPlayer())
                 .append(Component.text(": ").color(NamedTextColor.GRAY))
                 .append(Formatter.parseText("&", "&r" + LegacyComponentSerializer.legacySection().serialize(event.originalMessage())));
@@ -76,7 +74,7 @@ public class Chat implements Listener {
 
         prefix = prefix == null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§").replace("#88D657", "ä").replace("#F6ED82", "ö"));
         String rank = ScoreboardManager.STATS.get(sender.getUniqueId()).first().toString();
-        String nameColor = sender.getPlayer().hasPermission("hardsmp.chat.highlight") ? HardSMP.getInstance().getConfig().getString("ui.chat.color.team") : this.nameColor.getOrDefault(Integer.valueOf(rank), this.nameColor.get(-1));
+        String nameColor = this.nameColor.getOrDefault(Integer.valueOf(rank), this.nameColor.get(-1));
 
         rank = switch (rank) {
             case "1" -> "§r\uE002";
@@ -85,7 +83,10 @@ public class Chat implements Listener {
             default -> "§7" + rank;
         };
 
-        System.out.println(rank);
+        if(sender.getPlayer().hasPermission("hardsmp.chat.highlight")) {
+            rank = "";
+            nameColor = HardSMP.getInstance().getConfig().getString("ui.chat.color.team");
+        } else rank += " ";
 
         String formattedFormat = this.format
                 .replace("%coln", nameColor)

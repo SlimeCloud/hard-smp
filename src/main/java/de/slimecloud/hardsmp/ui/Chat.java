@@ -64,7 +64,7 @@ public class Chat implements Listener {
             }
         }
 
-        var message = formatName(event.getPlayer()).append(Formatter.parseText("&", "&r" + " " + LegacyComponentSerializer.legacySection().serialize(event.originalMessage())));
+        Component message = formatName(event.getPlayer()).append(Formatter.parseText("&", "&r" + " " + LegacyComponentSerializer.legacySection().serialize(event.originalMessage())));
         Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(message));
     }
 

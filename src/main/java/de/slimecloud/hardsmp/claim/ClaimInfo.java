@@ -30,16 +30,16 @@ public class ClaimInfo {
 
             Particle.DustOptions firstCorner = new Particle.DustOptions(Color.BLUE, 1.0F);
             if (loc1 != null)
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc1.getX() + 0.5, loc1.getY() + 0.5, loc1.getZ() + 0.5), 1000, 0.0, 100.0, 0.0, 1.0, firstCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc1.getX() + 0.5, loc1.getY() + 0.5, loc1.getZ() + 0.5), 100, 0.0, 10, 0.0, 1.0, firstCorner);
 
             Particle.DustOptions secondCorner = new Particle.DustOptions(Color.RED, 1.0F);
             if (loc2 != null)
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc2.getX() + 0.5, loc2.getY() + 0.5, loc2.getZ() + 0.5), 1000, 0.0, 100.0, 0.0, 1.0, secondCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc2.getX() + 0.5, loc2.getY() + 0.5, loc2.getZ() + 0.5), 100, 0.0, 10.0, 0.0, 1.0, secondCorner);
 
             Particle.DustOptions extraCorner = new Particle.DustOptions(Color.WHITE, 1.0F);
             if (loc1 != null && loc2 != null) {
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc1.getX(), loc1.getY(), loc2.getZ()).add(new Vector(0.5, 0.5, 0.5)), 1000, 0.0, 100.0, 0.0, 1.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc2.getX(), loc1.getY(), loc1.getZ()).add(new Vector(0.5, 0.5, 0.5)), 1000, 0.0, 100.0, 0.0, 1.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc1.getX(), loc1.getY(), loc2.getZ()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), loc2.getX(), loc1.getY(), loc1.getZ()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
 
                 player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (loc1.getX() + loc2.getX()) / 2, (loc1.getY() + loc2.getY()) / 2 + 1, loc1.getZ()).add(new Vector(0.5, 0.5, 0.5)), (int) Math.abs(loc1.getX() - loc2.getX()) * 5, Math.abs(loc1.getX() - loc2.getX()) / 4, 0.0, 0.0, extraCorner);
                 player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (loc1.getX() + loc2.getX()) / 2, (loc1.getY() + loc2.getY()) / 2 + 1, loc2.getZ()).add(new Vector(0.5, 0.5, 0.5)), (int) Math.abs(loc1.getX() - loc2.getX()) * 5, Math.abs(loc1.getX() - loc2.getX()) / 4, 0.0, 0.0, extraCorner);

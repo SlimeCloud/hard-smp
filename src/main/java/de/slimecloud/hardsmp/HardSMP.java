@@ -99,6 +99,7 @@ public final class HardSMP extends JavaPlugin {
         RulesCommand rules;
         KeyChainCommand keyChain;
 
+        //commands
         registerCommand("spawn-shop-npc", new SpawnShopNPCCommand());
         registerCommand("point", new PointCommand());
         registerCommand("formatting", new FormattingCommand());
@@ -113,6 +114,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("leaderboard", new LeaderboardCommand());
         registerCommand("msg", new MsgCommand());
         registerCommand("reply", new ReplyCommand());
+        registerCommand("hatitem", new HatItemCommand());
 
         registerCommand("info", new MinecraftInfoCommand());
         //Events

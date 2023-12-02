@@ -35,7 +35,7 @@ public class MinecraftInfoCommand implements CommandExecutor, TabCompleter {
         switch (args[0]) {
             case "discord" -> {
                 try {
-                    var name = String.join(" ", args).split(" ", 2)[1];
+                    String name = String.join(" ", args).split(" ", 2)[1];
                     user = jda.getGuildById(HardSMP.getInstance().getConfig().getLong("discord.guild")).getMembersByEffectiveName(name, true).get(0).getUser();
                 } catch (NullPointerException | IndexOutOfBoundsException ignored) {
                     sender.sendMessage(Component.text("Nutzer nicht gefunden!").color(NamedTextColor.RED));

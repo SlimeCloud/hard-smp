@@ -114,23 +114,25 @@ ui:
 
   tablist:
     header: "\uE005"
-    footer: "§j---  §7[%tps §öTPS§7]  §j---"
+    footer: "§j---  §7[%tps §öTPS§r | §ö%players Spieler§7]  §j---"
 
   chat:
+    msgPrefix:
+      receive: "§öPrivate Nachricht von§r "
+      outgoing: "§öPrivate Nachricht an§r "
+    replyPrefix:
+      receive: "§öAntwort von§r "
+      outgoing: "§öAntwort an§r "
     prefix: "§7[%prefix§7]"
     #colr = color rank
     #coln = color name
-    format: "%colr#%rank %prefix %coln%name§7: "
+    format: "#%rank %prefix %coln%name"
     color:
       name_default: "§ä"
+      team: '§9'
       name_1: "§v"
       name_2: "§w"
       name_3: "§z"
-
-      rank_default: "§7"
-      rank_1: "§v"
-      rank_2: "§w"
-      rank_3: "§z"
 
 verify:
   code-length: 5
@@ -147,25 +149,6 @@ teamchat:
   messageFormat: "§8[§äTeam§öChat§8] §c%player§7:"
   messageColor: "§6"
 
-
-enderchest:
-  playerNotFoundErrorMessage: "§cDer angegebene Spieler konnte nicht gefunden werden!"
-
-invsee:
-  playerNotFoundErrorMessage: "§cDer angegebene Spieler konnte nicht gefunden werden!"
-  notInInvsee: "§cDu bist nicht in einem Invsee!"
-  couldntUpdatePlayer: "§cDer InvseePlayer konnte nicht aktualisiert werden!"
-  couldntNotRestoreInvWithError: "§cDein Inventar konnte nicht wieder hergestellt werden!\nError: %error"
-  couldntNotRestoreInv: "§cDein Inventar konnte nicht wieder hergestellt werden!"
-  leavedInvsee: "§2Invsee wurde verlassen!"
-  exitInvseeBeforeNew: "§cDu bist bereits in einem Invsee! Benutze /invsee exit zum schließen!"
-  invSaveError: "§cEtwas mit der Inventory Speicherung hat nicht geklappt! Bitte reporte diesen Fehler!"
-  invseeHintMessage: "§2Benutze /invsee exit, um das Inventar zu aktualisieren und um dein Inventar zurück zu bekommen."
-
-
-hatitem:
-  playerNotFoundErrorMessage: "§cDer angegebene Spieler konnte nicht gefunden werden!"
-
 feedback:
   link: "google.com"
 
@@ -174,4 +157,3 @@ bugform:
 
 leaderboard:
   playersPerPage: 9
-

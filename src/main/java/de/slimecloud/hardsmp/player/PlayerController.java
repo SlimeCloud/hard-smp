@@ -25,9 +25,8 @@ public class PlayerController {
     }
 
     public static double applyFormula(double points, OfflinePlayer player) {
-        return points; //TODO debug
-
-        //return points * 0.1 * (Math.pow(0.5, (player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (115 * 180d) - 6.5)) + 10);
+        var hours = player.getStatistic(Statistic.PLAY_ONE_MINUTE) * 20 * 3600;
+        return points * 0.01 * (Math.pow(0.5, (hours / 70.0 - 6.5)) + 10);
     }
 
     @RequiredArgsConstructor
@@ -91,7 +90,7 @@ public class PlayerController {
                 statPoints += PointCategory.STRIDER_ONE_CM.calculate(player.getStatistic(Statistic.STRIDER_ONE_CM));
             }
 
-            return getPoints() + applyFormula(statPoints / 10, player);
+            return getPoints() + applyFormula(statPoints / 15, player);
         }
 
         @Override

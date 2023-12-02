@@ -35,14 +35,21 @@ public class ReplyCommand implements CommandExecutor, EmptyTabCompleter {
             return true;
         }
 
+        var tPlayer = Bukkit.getOfflinePlayer(target).getPlayer();
+
+        if(tPlayer == null) {
+            sender.sendMessage(HardSMP.getPrefix().append(Component.text("Spieler ist nicht mehr online!")));
+            return true;
+        }
+
         Component message = Formatter.parseText("&", "&r&7&o " + String.join(" ", args));
 
-        Bukkit.getOfflinePlayer(target).getPlayer().sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.receive"))
+        tPlayer.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.receive"))
                 .append(HardSMP.getInstance().getChat().formatName(player).decorate(TextDecoration.BOLD))
                 .append(message)
         );
         sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.outgoing"))
-                .append(HardSMP.getInstance().getChat().formatName(Bukkit.getOfflinePlayer(target).getPlayer()).decorate(TextDecoration.BOLD))
+                .append(HardSMP.getInstance().getChat().formatName(tPlayer).decorate(TextDecoration.BOLD))
                 .append(message)
         );
 

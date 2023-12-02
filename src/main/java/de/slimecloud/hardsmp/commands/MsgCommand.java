@@ -24,9 +24,15 @@ public class MsgCommand implements TabExecutor {
             sender.sendMessage("Kann nur als Spieler ausgeführt werden");
             return true;
         }
-        Component message = Formatter.parseText("&", "&r&7&o " + String.join(" ", Arrays.copyOfRange(args, 1, args.length)));
 
         Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
+
+        if(target == null) {
+            sender.sendMessage(HardSMP.getPrefix().append(Component.text("Spieler nicht gefunden!")));
+            return true;
+        }
+
+        Component message = Formatter.parseText("&", "&r&7&o " + String.join(" ", Arrays.copyOfRange(args, 1, args.length)));
 
         target.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.msgPrefix.receive"))
                 .append(HardSMP.getInstance().getChat().formatName(player).decorate(TextDecoration.BOLD))

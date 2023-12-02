@@ -16,6 +16,7 @@ import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import de.slimecloud.hardsmp.ui.Chat;
+import de.slimecloud.hardsmp.ui.JoinMessage;
 import de.slimecloud.hardsmp.ui.Placeholders;
 import de.slimecloud.hardsmp.ui.Tablist;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
@@ -65,6 +66,9 @@ public final class HardSMP extends JavaPlugin {
     @Getter
     private LockPick lockPick;
 
+    @Getter
+    private Chat chat;
+
     @Override
     public void onEnable() {
         new Placeholders().register();
@@ -103,14 +107,12 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("help", new HelpCommand());
         registerCommand("rules", rules = new RulesCommand());
         registerCommand("teamchat", new TeamChatCommand());
-        registerCommand("enderchest", new EnderchestCommand());
-        registerCommand("invsee", new InvseeCommand());
-        registerCommand("hatitem", new HatItemCommand());
         registerCommand("keys", keyChain = new KeyChainCommand(this));
         registerCommand("bug", new BugCommand());
         registerCommand("feedback", new FeedbackCommand());
         registerCommand("leaderboard", new LeaderboardCommand());
-      
+        registerCommand("msg", new MsgCommand());
+        registerCommand("reply", new ReplyCommand());
 
         registerCommand("info", new MinecraftInfoCommand());
         //Events
@@ -125,7 +127,8 @@ public final class HardSMP extends JavaPlugin {
         //UI
         registerEvent(new ScoreboardManager(this));
         registerEvent(new Tablist(this));
-        registerEvent(new Chat(getConfig()));
+        registerEvent(chat = new Chat(getConfig()));
+        registerEvent(new JoinMessage());
 
         //Custom Items
         registerEvent(chestKey = new ChestKey(this));
@@ -157,7 +160,8 @@ public final class HardSMP extends JavaPlugin {
         return Component.text("[", NamedTextColor.DARK_GRAY)
                 .append(Component.text("Hard", TextColor.color(0x88D657)))
                 .append(Component.text("SMP", TextColor.color(0xF6ED82)))
-                .append(Component.text("] ", NamedTextColor.DARK_GRAY));
+                .append(Component.text("] ", NamedTextColor.DARK_GRAY))
+                .color(NamedTextColor.GRAY);
     }
 
     private void registerEvent(Listener listener) {

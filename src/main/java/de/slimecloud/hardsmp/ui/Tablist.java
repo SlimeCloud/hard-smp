@@ -35,7 +35,10 @@ public class Tablist implements Listener {
         if (tps <= 15) color = "§c";
         else if (tps <= 18) color = "§p";
         else color = "§ä";
-        player.sendPlayerListHeaderAndFooter(header, Formatter.parseText(footer.replace("%tps", color.toString() + Math.round(tps))));
+        player.sendPlayerListHeaderAndFooter(header, Formatter.parseText(footer
+                .replace("%tps", color.toString() + Math.round(tps))
+                .replace("%players", String.valueOf(Bukkit.getOnlinePlayers().size()))
+        ));
     }
 
     @EventHandler

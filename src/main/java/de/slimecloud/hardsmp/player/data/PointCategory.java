@@ -29,17 +29,16 @@ public enum PointCategory {
     PIG_ONE_CM(0.05d / (2.42 * 100), (points, cm) -> points * cm),
     STRIDER_ONE_CM(0.05d / (4.14 * 100), (points, cm) -> points * cm),
 
-    FISH_CAUGHT(0.5),
-    ENCHANT_ITEM(1, (points, weight) -> points / weight), // points / enchant weight  (lower weight is better enchantment)
-    JUMP(1d / 20),
-    MOB_KILL(0.05, (points, mob_hp) -> points * mob_hp), //  points*mob-hp
+    FISH_CAUGHT(5),
+    ENCHANT_ITEM(10, (points, weight) -> points / weight), // points / enchant weight  (lower weight is better enchantment)
+    JUMP(0.1),
+    MOB_KILL(0.1, (points, mob_hp) -> points * mob_hp), //  points*mob-hp
     DEATH(1),
-    PLAYER_KILL(0.5, (points, hp) -> points * hp), // points * hp after kill
-    RAID_WIN(5),
-    VILLAGER_TRADED(1d / 15),
-    PLAY_TIME(1), // per 5 min
+    PLAYER_KILL(5, (points, hp) -> points * hp), // points * hp after kill
+    RAID_WIN(20),
+    VILLAGER_TRADED(10),
 
-    ADVANCEMENT(1, (points, lvl) -> List.of(50, 100, 200, 400, 800).get((int) (lvl - 1)) * points);
+    ADVANCEMENT(1, (points, lvl) -> List.of(50, 100, 200, 400, 800, 1000).get((int) (lvl - 1)) * points);
     //50, 100, 200, 400 und 800
 
     private final double points;

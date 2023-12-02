@@ -43,7 +43,9 @@ public class ChestKey extends CustomItem implements Listener {
         super("chest-key", Material.IRON_HOE, 2);
         builder.setDisplayName(ChatColor.RESET + "§öSchlüssel")
                 .setLore(Formatter.parseText("§äMit diesem Schlüssel kannst du mit §öSHIFT + RECHTSKLICK §äKisten/Shulker absperren."),
-                        Formatter.parseText("§äAchte darauf den Schlüssel immer bei dir zu tragen wenn du deine Kisten wieder öffnen willst."))
+                        Formatter.parseText("§äDeine Schlüssel kannst du in §ö/keys §äverstauen."),
+                        Formatter.parseText("§ä§lAber §r§ädarauf den Schlüssel im Inv zu haben wenn du deine Kisten wieder öffnen willst!")
+                        )
                 .setUnbreakable(true)
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
 

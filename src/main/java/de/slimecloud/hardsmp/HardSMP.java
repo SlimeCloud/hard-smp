@@ -178,10 +178,11 @@ public final class HardSMP extends JavaPlugin {
     public void onDisable() {
         ScoreboardUI.getScoreboards().forEach(ScoreboardUI::delete);
 
-        Bukkit.getWorlds().forEach(
-                world -> world.getEntitiesByClass(Shulker.class).removeIf(
-                        shulker -> shulker.getScoreboardTags().stream().anyMatch(s -> s.contains("marker1")) || shulker.getScoreboardTags().stream().anyMatch(s -> s.contains("marker2"))
-                )
+        System.out.println("disable");
+
+        Bukkit.getWorlds().forEach(world -> world.getEntitiesByClass(Shulker.class).stream()
+                .filter(shulker -> shulker.getScoreboardTags().stream().anyMatch(s -> s.contains("marker1") || s.contains("marker2")))
+                .forEach(Shulker::remove)
         );
 
         ClaimCommand.claimingPlayers.values().forEach(ClaimInfo::stopTasks);

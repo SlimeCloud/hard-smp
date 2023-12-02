@@ -31,6 +31,8 @@ permissions:
     default: false
   hardsmp.chat.highlight:
     default: false
+  hardsmp.command.hatitem.other:
+    default: false
 
 commands:
   formatting:

@@ -19,10 +19,15 @@ public class HatItemCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        if (!(sender instanceof Player)) sender.sendMessage("Der Command kann nur als Spieler ausgeführt werden!");
-        Player sendPlayer = Bukkit.getPlayer(sender.getName());
+        if (!(sender instanceof Player sendPlayer)) {
+            sender.sendMessage("Der Command kann nur als Spieler ausgeführt werden!");
+            return true;
+        }
         Player targetPlayer = sendPlayer;
         if (args.length > 0) {
+            if (!sendPlayer.hasPermission("hardsmp.command.hatitem.other")) {
+                sendPlayer.sendMessage(HardSMP.getPrefix().append(Component.text("Du hast keine Berechtigung anderen Spielern ein Item zuu setzen!", NamedTextColor.RED)));
+            }
             targetPlayer = Bukkit.getPlayer(args[0]);
             if (targetPlayer == null) {
                 sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("hatitem.playerNotFoundErrorMessage", "§cSpieler wurde nicht gefunden!")));

@@ -27,6 +27,8 @@ permissions:
     default: true
   hardsmp.verify.bypass:
     default: false
+  hardsmp.claim.bypass:
+    default: false
 
 commands:
   formatting:

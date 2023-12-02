@@ -23,7 +23,7 @@ public class ClaimProtectionHandler implements Listener {
 
     private boolean isClaimed(Location loc, Player player) {
         if (Claim.allClaims.values().stream().anyMatch(claim -> claim.contains(loc) && !claim.getUuid().equals(player.getUniqueId().toString()))) {
-            if (player.hasPermission("hardsmp.claim.bypass")) { //TODO is this condition actually working?
+            if (player.hasPermission("hardsmp.claim.bypass")) {
                 player.sendMessage(Component.text("Du führst eine Aktion in geclaimtem Gebiet aus!", NamedTextColor.GOLD));
                 return false;
             }

@@ -38,7 +38,7 @@ public enum PointCategory {
     RAID_WIN(20),
     VILLAGER_TRADED(10),
 
-    ADVANCEMENT(1, (points, lvl) -> List.of(50, 100, 200, 400, 800).get((int) (lvl - 1)) * points);
+    ADVANCEMENT(1, (points, lvl) -> List.of(50, 100, 200, 400, 800, 1000).get((int) (lvl - 1)) * points);
     //50, 100, 200, 400 und 800
 
     private final double points;

@@ -144,11 +144,11 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(chestKey = new ChestKey(this));
         registerEvent(lockPick = new LockPick(chestKey));
 
-        registerEvent(plotBuyer25 = new PlotBuyer(25, 100, 4, 1));
-        registerEvent(plotBuyer100 = new PlotBuyer(100, 500, 5, 2));
-        registerEvent(plotBuyer500 = new PlotBuyer(500, 1500, 3, 3));
-        registerEvent(plotBuyer1000 = new PlotBuyer(1000, 3000, 2, 4));
-        registerEvent(plotBuyer5000 = new PlotBuyer(5000, 10000, 2, 5));
+        registerEvent(plotBuyer25 = new PlotBuyer(25, 100, 4, 3));
+        registerEvent(plotBuyer100 = new PlotBuyer(100, 500, 5, 4));
+        registerEvent(plotBuyer500 = new PlotBuyer(500, 1500, 3, 5));
+        registerEvent(plotBuyer1000 = new PlotBuyer(1000, 3000, 2, 6));
+        registerEvent(plotBuyer5000 = new PlotBuyer(5000, 10000, 2, 7));
 
         CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());

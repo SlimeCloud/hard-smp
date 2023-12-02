@@ -27,6 +27,8 @@ permissions:
     default: true
   hardsmp.verify.bypass:
     default: false
+  hardsmp.chat.highlight:
+    default: false
 
 commands:
   formatting:

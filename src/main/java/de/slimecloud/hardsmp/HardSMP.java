@@ -104,8 +104,6 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("rules", rules = new RulesCommand());
         registerCommand("teamchat", new TeamChatCommand());
         registerCommand("enderchest", new EnderchestCommand());
-        registerCommand("invsee", new InvseeCommand());
-        registerCommand("hatitem", new HatItemCommand());
         registerCommand("keys", keyChain = new KeyChainCommand(this));
         registerCommand("bug", new BugCommand());
         registerCommand("feedback", new FeedbackCommand());

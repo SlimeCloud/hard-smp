@@ -7,7 +7,7 @@
     "description": "Finde einen Schatz in einer vergrabenen Truhe",
     "frame": "task",
     "show_toast": true,
-    "announce_to_chat": false,
+    "announce_to_chat": true,
     "hidden": false
   },
   "parent": "hard-smp:hard-smp/fish",

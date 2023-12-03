@@ -2,17 +2,21 @@ package de.slimecloud.hardsmp.ui;
 
 import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.player.PlayerController;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.Verification;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.leoko.advancedban.manager.PunishmentManager;
 import me.leoko.advancedban.manager.UUIDManager;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -94,6 +98,15 @@ public class Chat implements Listener {
                 .replace("%prefix", prefix)
                 .replace("%name", sender.getName());
 
-        return Formatter.parseText(formattedFormat);
+        return Component.empty().append(Formatter.parseText(formattedFormat)
+                .clickEvent(ClickEvent.suggestCommand("/msg " + sender.getName()))
+                .hoverEvent(HoverEvent.showText(
+                        Component.text("Punkte: ", TextColor.color(0xF6ED82))
+                                .append(Component.text((int) PlayerController.getPlayer((OfflinePlayer) sender).getActualPoints(), TextColor.color(0x88D657))
+                )))).append(Component.empty()).clickEvent(null).hoverEvent(null);
+    }
+
+    public static Component getName(Player player) {
+        return HardSMP.getInstance().getChat().formatName(player);
     }
 }

@@ -20,6 +20,7 @@ public class SlimeNPC {
         slime.setCustomNameVisible(true);
         slime.getPersistentDataContainer().set(HardSMP.getInstance().SHOP_KEY, PersistentDataType.STRING, "shop");
         slime.customName(Component.text("Shop"));
+        slime.setBodyYaw(location.getYaw());
     }
 
 

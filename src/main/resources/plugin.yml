@@ -37,6 +37,7 @@ commands:
     usage: "§cUsage: /point <Player> add/set/remove/get"
     permission: hardsmp.command.point
   spawn-shop-npc:
+    usage: "§cUsage: /spawn-shop-npc general/claimshop"
     permission: hardsmp.command.spawn-shop
   help:
     permission: hardsmp.command.help

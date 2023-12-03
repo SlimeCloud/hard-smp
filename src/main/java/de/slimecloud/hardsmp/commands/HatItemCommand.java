@@ -10,12 +10,17 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class HatItemCommand implements CommandExecutor {
+import java.util.Collections;
+import java.util.List;
+
+public class HatItemCommand implements CommandExecutor, TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
@@ -26,7 +31,7 @@ public class HatItemCommand implements CommandExecutor {
         Player targetPlayer = sendPlayer;
         if (args.length > 0) {
             if (!sendPlayer.hasPermission("hardsmp.command.hatitem.other")) {
-                sendPlayer.sendMessage(HardSMP.getPrefix().append(Component.text("Du hast keine Berechtigung anderen Spielern ein Item zuu setzen!", NamedTextColor.RED)));
+                sendPlayer.sendMessage(HardSMP.getPrefix().append(Component.text("Du hast keine Berechtigung anderen Spielern ein Item zu setzen!", NamedTextColor.RED)));
             }
             targetPlayer = Bukkit.getPlayer(args[0]);
             if (targetPlayer == null) {
@@ -48,5 +53,17 @@ public class HatItemCommand implements CommandExecutor {
         targetPlayer.sendMessage(HardSMP.getPrefix().append(Component.text("Dir wurde " + item.getType().toString().toLowerCase().replace("_", " ") + " auf den Kopf gesetzt!", TextColor.color(0x88d657))));
 
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (sender.hasPermission("hardsmp.command.hatitem.other") && args.length == 1) {
+            return Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .filter(p -> p.startsWith(args[0]))
+                    .toList();
+        }
+
+        return Collections.emptyList();
     }
 }

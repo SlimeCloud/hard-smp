@@ -85,11 +85,11 @@ commands:
     usage: "§cUsage: /info discord/minecraft <id or name>"
     permission: hardsmp.command.discord
   hatitem:
-    alias: ["hat"]
+    aliases: ["hat"]
     usage: "§cUsage: /hatitem [<Player>]"
     permission: hardsmp.command.hatitem
   enderchest:
-    alias: ["ec"]
+    aliases: ["ec"]
     usage: "§cUsage: /enderchest [<Player>]"
     permission: hardsmp.command.enderchest
   spawn:

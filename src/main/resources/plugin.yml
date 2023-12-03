@@ -27,12 +27,18 @@ permissions:
     default: true
   hardsmp.command.msg:
     default: true
+  hardsmp.command.info:
+    default: false
   hardsmp.verify.bypass:
     default: false
   hardsmp.chat.highlight:
     default: false
+  hardsmp.command.hatitem:
+    default: true
   hardsmp.command.hatitem.other:
     default: false
+  hardsmp.command.enderchest:
+    default: true
   hardsmp.command.enderchest.other:
     default: false
 
@@ -77,7 +83,7 @@ commands:
     permission: hardsmp.command.leaderboard
   info:
     usage: "§cUsage: /info discord/minecraft <id or name>"
-    permission: hardsmp.commands.discord
+    permission: hardsmp.command.discord
   hatitem:
     alias: ["hat"]
     usage: "§cUsage: /hatitem [<Player>]"
@@ -85,7 +91,7 @@ commands:
   enderchest:
     alias: ["ec"]
     usage: "§cUsage: /enderchest [<Player>]"
-    permission: hardsmp.commands.enderchest
+    permission: hardsmp.command.enderchest
   spawn:
     permission: hardsmp.command.spawn
 

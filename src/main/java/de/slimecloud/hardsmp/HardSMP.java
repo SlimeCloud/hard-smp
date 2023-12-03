@@ -15,6 +15,7 @@ import de.slimecloud.hardsmp.listener.DeathPointHandler;
 import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
+import de.slimecloud.hardsmp.shop.claimshop.ClaimShopHandler;
 import de.slimecloud.hardsmp.ui.Chat;
 import de.slimecloud.hardsmp.ui.JoinMessage;
 import de.slimecloud.hardsmp.ui.Placeholders;
@@ -43,6 +44,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class HardSMP extends JavaPlugin {
 
     public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
+    public final NamespacedKey CLAIM_SHOP_KEY = new NamespacedKey(this, "claimshop");
 
     @Getter
     private static HardSMP instance;
@@ -61,6 +63,9 @@ public final class HardSMP extends JavaPlugin {
 
     @Getter
     private DiscordBot discordBot;
+
+    @Getter
+    private ClaimShopHandler claimShopHandler;
 
     @Getter
     private ChestKey chestKey;
@@ -110,6 +115,7 @@ public final class HardSMP extends JavaPlugin {
         }
 
         ClaimCommand claim = new ClaimCommand();
+        claimShopHandler = new ClaimShopHandler();
         RulesCommand rules = new RulesCommand();
         KeyChainCommand keyChain;
 
@@ -136,6 +142,7 @@ public final class HardSMP extends JavaPlugin {
         //Events
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
+        registerEvent(claimShopHandler);
         registerEvent(new PointsListener());
         registerEvent(rules);
         registerEvent(keyChain);

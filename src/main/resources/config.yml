@@ -32,9 +32,15 @@ shop:
         amount: 1
         second-item: "netherite_ingot"
         second-amount: 3
+
+claimshop:
+  offers:
     plot-buyer-25:
       item: "plot-buyer-25"
       amount: 1
+      quantity: 4
+      blocks: 25
+      index: 3
       price:
         required-points: 500
         item: "iron_ingot"
@@ -42,6 +48,9 @@ shop:
     plot-buyer-100:
       item: "plot-buyer-100"
       amount: 1
+      quantity: 5
+      blocks: 100
+      index: 4
       price:
         required-points: 3000
         item: "diamond"
@@ -49,6 +58,9 @@ shop:
     plot-buyer-500:
       item: "plot-buyer-500"
       amount: 1
+      quantity: 3
+      blocks: 500
+      index: 5
       price:
         required-points: 7500
         item: "diamond"
@@ -56,6 +68,9 @@ shop:
     plot-buyer-1000:
       item: "plot-buyer-1000"
       amount: 1
+      quantity: 2
+      blocks: 1000
+      index: 6
       price:
         required-points: 15000
         item: "netherite_ingot"
@@ -63,6 +78,9 @@ shop:
     plot-buyer-5000:
       item: "plot-buyer-5000"
       amount: 1
+      quantity: 2
+      blocks: 5000
+      index: 7
       price:
         required-points: 25000
         item: "netherite_ingot"

@@ -12,23 +12,19 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class JoinMessage implements Listener {
-    public Component getName(Player player) {
-        return HardSMP.getInstance().getChat().formatName(player);
-    }
-
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        event.joinMessage(Component.text("--> ").color(NamedTextColor.GREEN).append(getName(event.getPlayer())));
+        event.joinMessage(Component.text("--> ").color(NamedTextColor.GREEN).append(Chat.getName(event.getPlayer())));
     }
 
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
-        event.quitMessage(Component.text("<-- ").color(NamedTextColor.RED).append(getName(event.getPlayer())));
+        event.quitMessage(Component.text("<-- ").color(NamedTextColor.RED).append(Chat.getName(event.getPlayer())));
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        event.deathMessage(getName(event.getPlayer())
+        event.deathMessage(Chat.getName(event.getPlayer())
                 .append(Component.text(" ist gestorben ").color(NamedTextColor.GRAY))
                 .append(Component.text("[").color(NamedTextColor.DARK_GRAY))
                 .append(Component.text("-" + event.getPlayer().getStatistic(Statistic.DEATHS) * 100).color(NamedTextColor.RED))

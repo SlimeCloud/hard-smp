@@ -96,4 +96,8 @@ public class Chat implements Listener {
 
         return Formatter.parseText(formattedFormat);
     }
+
+    public static Component getName(Player player) {
+        return HardSMP.getInstance().getChat().formatName(player);
+    }
 }

@@ -12,7 +12,7 @@
   },
   "parent": "hard-smp:hard-smp/gold2",
   "criteria": {
-    "requirement": {
+    "gold3": {
       "trigger": "minecraft:impossible"
     }
   },

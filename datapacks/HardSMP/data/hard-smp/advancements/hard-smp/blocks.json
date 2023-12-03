@@ -12,7 +12,7 @@
   },
   "parent": "hard-smp:hard-smp/lumberjack",
   "criteria": {
-    "requirement": {
+    "blocks": {
       "trigger": "minecraft:impossible"
     }
   },

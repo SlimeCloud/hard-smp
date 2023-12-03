@@ -12,8 +12,252 @@
   },
   "parent": "hard-smp:hard-smp/root",
   "criteria": {
-    "requirement": {
-      "trigger": "minecraft:impossible"
+    "dandelion": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:dandelion",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "poppy": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:poppy",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "blue_orchid": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:blue_orchid",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "allium": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:allium",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "azure_bluet": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:azure_bluet",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "red_tulip": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:red_tulip",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "orange_tulip": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:orange_tulip",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "white_tulip": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:white_tulip",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "pink_tulip": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:pink_tulip",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "oxeye_daisy": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:oxeye_daisy",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "cornflower": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:cornflower",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "lily_of_the_valley": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:lily_of_the_valley",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "wither_rose": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:wither_rose",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "torchflower": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:torchflower",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "sunflower": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:sunflower",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "lilac": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:lilac",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "rose_bush": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:rose_bush",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "peony": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:peony",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    "pitcher_plant": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "player": [],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:pitcher_plant",
+            "properties": {}
+          }
+        ]
+      }
     }
   },
   "rewards": {

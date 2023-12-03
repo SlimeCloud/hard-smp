@@ -12,7 +12,7 @@
   },
   "parent": "hard-smp:hard-smp/root",
   "criteria": {
-    "requirement": {
+    "cave": {
       "trigger": "minecraft:item_used_on_block",
       "conditions": {
         "location": [

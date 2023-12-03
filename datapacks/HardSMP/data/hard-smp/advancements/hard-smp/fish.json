@@ -4,7 +4,7 @@
       "item": "minecraft:cooked_cod"
     },
     "title": "Bester Fischer",
-    "description": "Fange und und esse jede Fischart",
+    "description": "Fange, koche (wenn möglich) und esse jede Fischart",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
@@ -12,8 +12,45 @@
   },
   "parent": "hard-smp:hard-smp/root",
   "criteria": {
-    "requirement": {
-      "trigger": "minecraft:impossible"
+    "tropical_fish": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": [
+            "minecraft:tropical_fish"
+          ]
+        }
+      }
+    },
+    "pufferfish": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": [
+            "minecraft:pufferfish"
+          ]
+        }
+      }
+    },
+    "cooked_salmon": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": [
+            "minecraft:cooked_salmon"
+          ]
+        }
+      }
+    },
+    "cooked_cod": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": [
+            "minecraft:cooked_cod"
+          ]
+        }
+      }
     }
   },
   "rewards": {

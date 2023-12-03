@@ -12,7 +12,7 @@
   },
   "parent": "hard-smp:hard-smp/cave",
   "criteria": {
-    "requirement": {
+    "gold1": {
       "trigger": "minecraft:impossible"
     }
   },

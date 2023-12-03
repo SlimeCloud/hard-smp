@@ -12,7 +12,7 @@
   },
   "parent": "hard-smp:hard-smp/boat",
   "criteria": {
-    "requirement": {
+    "lightning": {
       "trigger": "minecraft:impossible"
     }
   },

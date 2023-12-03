@@ -126,7 +126,7 @@ ui:
     prefix: "§7[%prefix§7]"
     #colr = color rank
     #coln = color name
-    format: "#%rank %prefix %coln%name"
+    format: "%rank%prefix %coln%name"
     color:
       name_default: "§ä"
       team: '§9'

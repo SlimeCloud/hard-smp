@@ -160,11 +160,11 @@ public final class HardSMP extends JavaPlugin {
     }
 
     public static TextComponent getPrefix() {
-        return Component.text("[", NamedTextColor.DARK_GRAY)
+        return Component.empty().append(Component.text("[", NamedTextColor.DARK_GRAY)
                 .append(Component.text("Hard", TextColor.color(0x88D657)))
                 .append(Component.text("SMP", TextColor.color(0xF6ED82)))
                 .append(Component.text("] ", NamedTextColor.DARK_GRAY))
-                .color(NamedTextColor.GRAY);
+        ).color(NamedTextColor.GRAY);
     }
 
     private void registerEvent(Listener listener) {

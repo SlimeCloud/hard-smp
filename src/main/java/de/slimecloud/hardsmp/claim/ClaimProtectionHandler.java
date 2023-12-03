@@ -10,6 +10,8 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -30,6 +32,15 @@ public class ClaimProtectionHandler implements Listener {
             return true;
         }
         return false;
+    }
+
+    @EventHandler
+    private void onChest(InventoryOpenEvent event) {
+        if(event.getInventory().getType() != InventoryType.CHEST && event.getInventory().getType() != InventoryType.BARREL) return;
+        if (isClaimed(event.getInventory().getLocation(), (Player) event.getPlayer())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Component.text("§cDu kannst hier keine Kisten öffnen"));
+        }
     }
 
     @EventHandler

@@ -43,28 +43,28 @@ shop:
       item: "plot-buyer-100"
       amount: 1
       price:
-        required-points: 1000
+        required-points: 3000
         item: "diamond"
         amount: 5
     plot-buyer-500:
       item: "plot-buyer-500"
       amount: 1
       price:
-        required-points: 5000
+        required-points: 7500
         item: "diamond"
         amount: 17
     plot-buyer-1000:
       item: "plot-buyer-1000"
       amount: 1
       price:
-        required-points: 10000
+        required-points: 15000
         item: "netherite_ingot"
         amount: 3
     plot-buyer-5000:
       item: "plot-buyer-5000"
       amount: 1
       price:
-        required-points: 20000
+        required-points: 25000
         item: "netherite_ingot"
         amount: 10
         second-item: "diamond"
@@ -142,7 +142,7 @@ ui:
   scoreboard:
     title: "\uE001"
     text:
-      default: "%rank. %name §ä%points"
+      default: "%rank%name §ä%points"
       rank_1: "\uE002§l§v %name §r§ä%points"
       rank_2: "\uE003§l§w %name §r§ä%points"
       rank_3: "\uE004§l§z %name §r§ä%points"
@@ -151,23 +151,25 @@ ui:
 
   tablist:
     header: "\uE005"
-    footer: "§j---  §7[%tps §öTPS§7]  §j---"
+    footer: "§j---  §7[%tps §öTPS§r | §ö%players Spieler§7]  §j---"
 
   chat:
+    msgPrefix:
+      receive: "§öPrivate Nachricht von§r "
+      outgoing: "§öPrivate Nachricht an§r "
+    replyPrefix:
+      receive: "§öAntwort von§r "
+      outgoing: "§öAntwort an§r "
     prefix: "§7[%prefix§7]"
     #colr = color rank
     #coln = color name
-    format: "%colr#%rank %prefix %coln%name§7: "
+    format: "#%rank %prefix %coln%name"
     color:
       name_default: "§ä"
+      team: '§9'
       name_1: "§v"
       name_2: "§w"
       name_3: "§z"
-
-      rank_default: "§7"
-      rank_1: "§v"
-      rank_2: "§w"
-      rank_3: "§z"
 
 verify:
   code-length: 5

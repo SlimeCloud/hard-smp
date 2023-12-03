@@ -25,9 +25,17 @@ permissions:
     default: true
   hardsmp.command.bug:
     default: true
+  hardsmp.command.msg:
+    default: true
   hardsmp.verify.bypass:
     default: false
   hardsmp.claim.bypass:
+    default: false
+  hardsmp.chat.highlight:
+    default: false
+  hardsmp.command.hatitem.other:
+    default: false
+  hardsmp.command.enderchest.other:
     default: false
 
 commands:
@@ -43,9 +51,16 @@ commands:
     permission: hardsmp.command.help
   rules:
     permission: hardsmp.command.rules
+  msg:
+    aliases: ["whisper", "dm"]
+    usage: "§cUsage: /msg <Player> <Message>"
+    permission: hardsmp.command.msg
+  reply:
+    aliases: ["r"]
+    permission: hardsmp.command.msg
   teamchat:
     aliases: ["tc"]
-    usage: "§cUsage: /teamcaht <Message>"
+    usage: "§cUsage: /teamchat <Message>"
     permission: hardsmp.teamchat.send
   unverify:
     usage: "§cUsage: /unverify <Player>"
@@ -69,3 +84,12 @@ commands:
   info:
     usage: "§cUsage: /info discord/minecraft <id or name>"
     permission: hardsmp.commands.discord
+  hatitem:
+    alias: ["hat"]
+    usage: "§cUsage: /hatitem [<Player>]"
+    permission: hardsmp.commands.hatitem
+  enderchest:
+    alias: ["ec"]
+    usage: "§cUsage: /enderchest [<Player>]"
+    permission: hardsmp.commands.enderchest
+

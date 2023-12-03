@@ -8,6 +8,7 @@ import de.slimecloud.hardsmp.verify.Verification;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.User;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
@@ -27,9 +28,8 @@ public class PlayerController {
     }
 
     public static double applyFormula(double points, OfflinePlayer player) {
-        return points; //TODO debug
-
-        //return points * 0.1 * (Math.pow(0.5, (player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (115 * 180d) - 6.5)) + 10);
+        int hours = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (20 * 3600);
+        return points * 0.01 * (Math.pow(0.5, (hours / 70.0 - 6.5)) + 10);
     }
 
     @RequiredArgsConstructor
@@ -46,28 +46,34 @@ public class PlayerController {
         public void addPoints(double points) {
             if(getPlayer() == null || getPlayer().hasPermission("hardsmp.points.bypass")) return;
 
-            HardSMP.getInstance().getLogger().info("Added " + points + " points to player " + player.getName());
+            double direct = points;
+            points = applyFormula(points, player);
 
+            HardSMP.getInstance().getLogger().info("Added " + direct + " [" + points + "] points to player " + player.getName());
 
-            if(PlayerController.getPlayer(player).getActualPoints() < 100 && PlayerController.getPlayer(player).getActualPoints() + points >= 100) {
+            if(points > 50 && player.getPlayer() != null) player.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("Dir wurden ").append(Component.text((int) points).color(NamedTextColor.RED)).append(Component.text(" Punkte hinzugefügt"))));
+
+            double current = getActualPoints();
+
+            if(current < 500 && current + points >= 500) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §61 §aClaim platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(1);
-            } else if(PlayerController.getPlayer(player).getActualPoints() < 500 && PlayerController.getPlayer(player).getActualPoints() + points >= 500) {
+            } else if(current < 5000 && current + points >= 5000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §62 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(2);
-            } else if(PlayerController.getPlayer(player).getActualPoints() < 1500 && PlayerController.getPlayer(player).getActualPoints() + points >= 1500) {
+            } else if(current < 10000 && current + points >= 10000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §63 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(3);
-            } else if(PlayerController.getPlayer(player).getActualPoints() < 3000 && PlayerController.getPlayer(player).getActualPoints() + points >= 3000) {
+            } else if(current < 20000 && current + points >= 20000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §64 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(4);
-            } else if(PlayerController.getPlayer(player).getActualPoints() < 10000 && PlayerController.getPlayer(player).getActualPoints() + points >= 10000) {
+            } else if(current < 30000 && current + points >= 30000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §65 §aClaims platzieren!")));
                 ClaimRights.load(getUniqueId()).setClaimCount(5);
             }
 
             Points p = getData();
-            p.setPoints(p.getPoints() + applyFormula(points, player));
+            p.setPoints(p.getPoints() + points);
             p.save();
         }
 
@@ -111,7 +117,7 @@ public class PlayerController {
                 statPoints += PointCategory.STRIDER_ONE_CM.calculate(player.getStatistic(Statistic.STRIDER_ONE_CM));
             }
 
-            return getPoints() + applyFormula(statPoints / 10, player);
+            return getPoints() + applyFormula(statPoints / 15, player);
         }
 
         @Override

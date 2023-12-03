@@ -49,7 +49,7 @@ commands:
   rules:
     permission: hardsmp.command.rules
   msg:
-    aliases: ["whisper", "dm"]
+    aliases: ["whisper", "dm", "w"]
     usage: "§cUsage: /msg <Player> <Message>"
     permission: hardsmp.command.msg
   reply:

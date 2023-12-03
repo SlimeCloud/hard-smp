@@ -12,7 +12,7 @@
   },
   "parent": "hard-smp:hard-smp/frog",
   "criteria": {
-    "requirement": {
+    "ghast": {
       "trigger": "minecraft:impossible"
     }
   },

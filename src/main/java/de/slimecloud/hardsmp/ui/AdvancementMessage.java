@@ -1,6 +1,5 @@
 package de.slimecloud.hardsmp.ui;
 
-import de.cyklon.spigotutils.advancement.AdvancementType;
 import de.slimecloud.hardsmp.player.PlayerController;
 import de.slimecloud.hardsmp.player.data.PointCategory;
 import de.slimecloud.hardsmp.player.data.PointsListener;
@@ -17,8 +16,7 @@ public class AdvancementMessage implements Listener {
     private void onAdvancement(PlayerAdvancementDoneEvent event) {
         if(event.getAdvancement().getDisplay() == null) return;
 
-        AdvancementType type = AdvancementType.getAdvancementType(event.getAdvancement());
-        Integer rarity = PointsListener.ADVANCEMENTS_RARITY.get(type.getKey());
+        Integer rarity = PointsListener.ADVANCEMENTS_RARITY.get(event.getAdvancement().getKey().asString());
         if(rarity == null) return;
 
         event.message(Chat.getName(event.getPlayer())

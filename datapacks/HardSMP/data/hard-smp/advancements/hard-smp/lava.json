@@ -12,7 +12,7 @@
   },
   "parent": "hard-smp:hard-smp/bed",
   "criteria": {
-    "requirement": {
+    "lava": {
       "trigger": "minecraft:location",
       "conditions": {
         "player": [

@@ -12,7 +12,7 @@
   },
   "parent": "hard-smp:hard-smp/garden",
   "criteria": {
-    "requirement": {
+    "lumberjack": {
       "trigger": "minecraft:impossible"
     }
   },

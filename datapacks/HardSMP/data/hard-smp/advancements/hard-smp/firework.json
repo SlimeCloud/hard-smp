@@ -12,7 +12,7 @@
   },
   "parent": "hard-smp:hard-smp/bed",
   "criteria": {
-    "requirement": {
+    "firework": {
       "trigger": "minecraft:impossible"
     }
   },

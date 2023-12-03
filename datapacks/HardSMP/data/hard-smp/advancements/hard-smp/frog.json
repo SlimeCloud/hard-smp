@@ -12,8 +12,32 @@
   },
   "parent": "hard-smp:hard-smp/bed",
   "criteria": {
-    "requirement": {
-      "trigger": "minecraft:impossible"
+    "red": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:frog",
+          "nbt": "{variant:\"minecraft:temperate\"}"
+        }
+      }
+    },
+    "green": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:frog",
+          "nbt": "{variant:\"minecraft:cold\"}"
+        }
+      }
+    },
+    "white": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:frog",
+          "nbt": "{variant:\"minecraft:warm\"}"
+        }
+      }
     }
   },
   "rewards": {

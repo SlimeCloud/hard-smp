@@ -12,7 +12,7 @@
   },
   "parent": "hard-smp:hard-smp/fish",
   "criteria": {
-    "requirement": {
+    "treasure": {
       "trigger": "minecraft:location",
       "conditions": {
         "player": [

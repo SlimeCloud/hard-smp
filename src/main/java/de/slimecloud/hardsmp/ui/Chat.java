@@ -98,12 +98,12 @@ public class Chat implements Listener {
                 .replace("%prefix", prefix)
                 .replace("%name", sender.getName());
 
-        return Formatter.parseText(formattedFormat)
+        return Component.empty().append(Formatter.parseText(formattedFormat)
                 .clickEvent(ClickEvent.suggestCommand("/msg " + sender.getName()))
                 .hoverEvent(HoverEvent.showText(
                         Component.text("Punkte: ", TextColor.color(0xF6ED82))
                                 .append(Component.text((int) PlayerController.getPlayer((OfflinePlayer) sender).getActualPoints(), TextColor.color(0x88D657))
-                )));
+                )))).append(Component.empty()).clickEvent(null).hoverEvent(null);
     }
 
     public static Component getName(Player player) {

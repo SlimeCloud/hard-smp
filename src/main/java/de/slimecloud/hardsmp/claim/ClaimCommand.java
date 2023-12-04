@@ -154,6 +154,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                         if (deletingPlayers.contains(uuid)) {
                                             ClaimRights rights = ClaimRights.load(uuid);
                                             rights.setTotalClaimed(rights.getTotalClaimed() - claim.getSize());
+                                            rights.save();
                                             claim.delete();
                                             deletingPlayers.remove(uuid);
                                             player.sendMessage(HardSMP.getPrefix().append(Component.text("Claim gelöscht!", color(0x88D657))));

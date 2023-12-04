@@ -43,6 +43,8 @@ permissions:
     default: true
   hardsmp.command.enderchest.other:
     default: false
+  hardsmp.command.claim:
+    default: true
 
 commands:
   formatting:

@@ -62,8 +62,12 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (!(commandSender instanceof Player player)) return false;
+        if (!player.hasPermission("hardsmp.command.claim")) {
+            player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu darfst das nicht!")));
+            return false;
+        }
 
-        if (args.length == 1) {
+        if (args.length >= 1) {
             UUID uuid = ((Player) commandSender).getUniqueId();
 
             switch (args[0].toLowerCase()) {
@@ -168,14 +172,32 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     return true;
                 }
                 case "info" -> {
-                    ClaimRights rights = ClaimRights.load(player.getUniqueId());
-                    player.sendMessage(HardSMP.getPrefix()
-                            .append(Component.text("Du kannst noch ", color(0x88D657)))
-                            .append(Component.text("§6" + (rights.getTotalClaimSize() - rights.getTotalClaimed())))
-                            .append(Component.text(" Blöcke claimen.\nDu hast schon ", color(0x88D657)))
-                            .append(Component.text("§6" + rights.getTotalClaimed()))
-                            .append(Component.text(" Blöcke geclaimt.", color(0x88D657)))
-                    );
+                    if (args.length == 1) {
+                        ClaimRights rights = ClaimRights.load(player.getUniqueId());
+                        player.sendMessage(HardSMP.getPrefix()
+                                .append(Component.text("Du kannst noch ", color(0x88D657)))
+                                .append(Component.text("§6" + (rights.getTotalClaimSize() - rights.getTotalClaimed())))
+                                .append(Component.text(" Blöcke claimen.\nDu hast schon ", color(0x88D657)))
+                                .append(Component.text("§6" + rights.getTotalClaimed()))
+                                .append(Component.text(" Blöcke geclaimt.", color(0x88D657)))
+                        );
+                    } else if(args.length == 2) {
+                        if (player.hasPermission("hardsmp.command.claim.info.others")) {
+                            Player target = (Player) Bukkit.getOfflinePlayer(args[1]);
+                            ClaimRights rights = ClaimRights.load(target.getUniqueId());
+
+                            player.sendMessage(HardSMP.getPrefix()
+                                    .append(Component.text("§6" + target.getName()))
+                                    .append(Component.text(" kann noch ", color(0x88D657)))
+                                    .append(Component.text("§6" + (rights.getTotalClaimSize() - rights.getTotalClaimed())))
+                                    .append(Component.text(" Blöcke claimen.\n", color(0x88D657)))
+                                    .append(Component.text("§6" + target.getName()))
+                                    .append(Component.text(" hat schon ", color(0x88D657)))
+                                    .append(Component.text("§6" + rights.getTotalClaimed()))
+                                    .append(Component.text(" Blöcke geclaimt.", color(0x88D657)))
+                            );
+                        } else player.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove/info]!")));
+                    } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove/info]!")));
                 }
                 default ->
                         commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove/info]!")));

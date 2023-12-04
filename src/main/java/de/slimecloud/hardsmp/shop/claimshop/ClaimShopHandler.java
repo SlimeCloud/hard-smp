@@ -148,7 +148,7 @@ public class ClaimShopHandler implements Listener {
         if (!event.getCurrentItem().getType().equals(Material.IRON_HOE)) return;
 
         for (ClaimOffer offer : offers) {
-            if (offer.index == event.getCurrentItem().getItemMeta().getCustomModelData()) {
+            if (event.getCurrentItem().getItemMeta().hasCustomModelData() && offer.index == event.getCurrentItem().getItemMeta().getCustomModelData()) {
                 event.setCancelled(true);
                 shopBuy(offer, player);
                 refreshShopItems(player);

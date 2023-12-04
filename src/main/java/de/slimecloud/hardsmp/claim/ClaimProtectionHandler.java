@@ -117,6 +117,14 @@ public class ClaimProtectionHandler implements Listener {
     }
 
     @EventHandler
+    private void  onLeaver(PlayerInteractEvent event) {
+        if (event.getAction().isRightClick() && event.getClickedBlock() != null && event.getClickedBlock().getBlockData().getMaterial().toString().contains("LEVER") && isClaimed(event.getClickedBlock().getLocation(), event.getPlayer())){
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));
+        }
+    }
+
+    @EventHandler
     private void onExplosion(BlockExplodeEvent event) {
         Collection<Claim> claims = Claim.allClaims.values();
         event.blockList().removeIf(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation())));

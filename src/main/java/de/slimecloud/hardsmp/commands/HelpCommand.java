@@ -26,6 +26,8 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
         if (args.length != 0) {
             String cmd = args[0];
             if (!cmd.isBlank()) switch (cmd.toLowerCase()) {
+                case "claim" ->
+                        msg = Formatter.parseText(HardSMP.getInstance().getConfig().getString("help.claim", "Claim info..."));
                 case "event" ->
                         msg = Formatter.parseText(HardSMP.getInstance().getConfig().getString("help.event-info", "Event info..."));
                 case "support" ->

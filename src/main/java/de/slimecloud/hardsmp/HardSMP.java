@@ -5,6 +5,10 @@ import de.cyklon.spigotutils.item.ItemBuilder;
 import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
 import de.slimecloud.hardsmp.commands.*;
+import de.slimecloud.hardsmp.commands.home.HomeCommand;
+import de.slimecloud.hardsmp.commands.home.ListHomeCommand;
+import de.slimecloud.hardsmp.commands.home.RemoveHomeCommand;
+import de.slimecloud.hardsmp.commands.home.SetHomeCommand;
 import de.slimecloud.hardsmp.commands.info.MinecraftInfoCommand;
 import de.slimecloud.hardsmp.commands.SpawnCommand;
 import de.slimecloud.hardsmp.database.Database;
@@ -115,6 +119,10 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("reply", new ReplyCommand());
         registerCommand("hatitem", new HatItemCommand());
         registerCommand("spawn", new SpawnCommand());
+        registerCommand("home", new HomeCommand());
+        registerCommand("homeset", new SetHomeCommand());
+        registerCommand("homeremove", new RemoveHomeCommand());
+        registerCommand("homelist", new ListHomeCommand());
 
         registerCommand("info", new MinecraftInfoCommand());
         //Events

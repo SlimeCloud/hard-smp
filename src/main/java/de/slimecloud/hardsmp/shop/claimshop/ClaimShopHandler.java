@@ -145,7 +145,7 @@ public class ClaimShopHandler implements Listener {
         if (event.getCurrentItem() == null) return;
         if (event.getCurrentItem().getType().equals(Material.GRAY_STAINED_GLASS_PANE) && event.getCurrentItem().getItemMeta().getCustomModelData() == 3)
             event.setCancelled(true);
-        if (!event.getCurrentItem().getType().equals(Material.HEAVY_WEIGHTED_PRESSURE_PLATE)) return;
+        if (!event.getCurrentItem().getType().equals(Material.IRON_HOE)) return;
 
         for (ClaimOffer offer : offers) {
             if (offer.index == event.getCurrentItem().getItemMeta().getCustomModelData()) {

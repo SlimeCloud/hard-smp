@@ -30,8 +30,7 @@ public class SetHomeCommand implements CommandExecutor, EmptyTabCompleter {
             ));
             return true;
         }
-
-        if (!player.hasPermission("hardsmp.command.home.multiple") && HomeData.load(player.getUniqueId()).toArray().length > 1) {
+        if (!player.hasPermission("hardsmp.command.home.multiple") && HomeData.load(player.getUniqueId()).toArray().length == 1) {
             player.sendMessage(HardSMP.getPrefix().append(
                     Component.text("Du hast die maximale Anzahl an Homes erreicht!")
             ));

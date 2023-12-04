@@ -16,8 +16,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class HelpCommand implements CommandExecutor, TabCompleter {
     @Override
@@ -32,7 +32,7 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
                         msg = Formatter.parseText(HardSMP.getInstance().getConfig().getString("help.support-info", "Support info..."));
                 case "command" -> {
                     ConfigurationSection section = HardSMP.getInstance().getConfig().getConfigurationSection("help.command-info");
-                    if (section == null || section.getKeys(false).size() == 0) {
+                    if (section == null || section.getKeys(false).isEmpty()) {
                         msg = Component.text("Command info...");
                         break;
                     }
@@ -60,13 +60,8 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        List<String> list = new ArrayList<>();
-        if (args.length == 1) {
-            list.add("event");
-            list.add("support");
-            list.add("command");
-        }
-        list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()));
-        return list;
+        return Stream.of("event", "support", "command", "claim")
+                .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                .toList();
     }
 }

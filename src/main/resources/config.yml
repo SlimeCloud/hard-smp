@@ -129,6 +129,20 @@ help:
     feedback: "Zeigt den Link zum Feedback-Formular"
     bug: "Zeigt den Link zum Bugreport-Formular"
     leaderboard: "Zeigt das aktuelle Punkte-Leaderboard an"
+    claim: "Claimt Grundstücke und schützt sie gegen andere Spieler"
+  claim: |-
+    §ä----- §öClaim-System §ä-----
+    §äMit dem Claim-System kannst du Grundstücke claimen, die dann gegen den Einfluss von anderen Spielern geschützt sind.
+
+    §7- §äZuerst musst du beim Bauamt am Spawn Claims erwerben
+    §7- §äStarte den Claim-Modus mit §ö/claim start §äund wähle dein Gebiet aus (folge den Anweisungen im Chat)
+    §7- §äClaime dein ausgewähltes Gebiet mit §ö/claim finish
+    §7- §äWenn du ein Claim löschen möchtest, stell dich in das Gebiet und nutze §ö/claim remove
+    §7- §äMit §ö/claim info §äkannst du dir die aktuell verfügbaren Blöcke anzeigen lassen
+    
+    §cHINWEIS: §7Um ein Claim zu erweitern, musst du aktuell das Claim löschen und das größere Claim neu platzieren!
+    §ä----- §öClaim-System §ä-----
+    
 
 rules:
   Discord Regeln: "§äAuf dem Minecraft Server gelten die gleichen regeln wie auf dem Slimecloud Discord Server. Verwarnung in Minecraft führen auch zu Verwarnungen in Discord!"

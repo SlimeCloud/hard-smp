@@ -3,9 +3,11 @@ package de.slimecloud.hardsmp.claim;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.player.PlayerController;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scoreboard.Scoreboard;
@@ -356,6 +359,25 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         if (claimingPlayers.containsKey(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    private void onJoin(PlayerJoinEvent event) {
+        double points = PlayerController.getPlayer((OfflinePlayer) event.getPlayer()).getActualPoints();
+        ClaimRights rights = ClaimRights.load(event.getPlayer().getUniqueId());
+
+        if(points >= 30000) {
+            rights.setClaimCount(5);
+        } else if(points >= 20000) {
+            rights.setClaimCount(4);
+        } else if(points >= 10000) {
+            rights.setClaimCount(3);
+        } else if(points >= 5000) {
+            rights.setClaimCount(2);
+        } else if(points >= 500) {
+            rights.setClaimCount(1);
+        }
+        rights.save();
     }
 
     @Override

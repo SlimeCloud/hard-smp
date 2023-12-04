@@ -54,23 +54,25 @@ public class PlayerController {
             if(points > 50 && player.getPlayer() != null) player.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("Dir wurden ").append(Component.text((int) points).color(NamedTextColor.RED)).append(Component.text(" Punkte hinzugefügt"))));
 
             double current = getActualPoints();
+            ClaimRights rights = ClaimRights.load(getUniqueId());
 
             if(current < 500 && current + points >= 500) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §61 §aClaim platzieren!")));
-                ClaimRights.load(getUniqueId()).setClaimCount(1);
+                rights.setClaimCount(1);
             } else if(current < 5000 && current + points >= 5000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §62 §aClaims platzieren!")));
-                ClaimRights.load(getUniqueId()).setClaimCount(2);
+                rights.setClaimCount(2);
             } else if(current < 10000 && current + points >= 10000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §63 §aClaims platzieren!")));
-                ClaimRights.load(getUniqueId()).setClaimCount(3);
+                rights.setClaimCount(3);
             } else if(current < 20000 && current + points >= 20000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §64 §aClaims platzieren!")));
-                ClaimRights.load(getUniqueId()).setClaimCount(4);
+                rights.setClaimCount(4);
             } else if(current < 30000 && current + points >= 30000) {
                 getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §65 §aClaims platzieren!")));
-                ClaimRights.load(getUniqueId()).setClaimCount(5);
+                rights.setClaimCount(5);
             }
+            rights.save();
 
             Points p = getData();
             p.setPoints(p.getPoints() + points);

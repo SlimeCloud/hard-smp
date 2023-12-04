@@ -10,22 +10,24 @@ import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import java.util.concurrent.TimeUnit;
 
 public class ClaimInfo {
-    public final ScheduledTask task, particles;
+    public final BukkitTask task;
+    public final ScheduledTask particles;
     public Location loc1, loc2;
 
     public ClaimInfo(Player player) {
-        this.task = Bukkit.getAsyncScheduler().runDelayed(HardSMP.getInstance(), x -> {
+        this.task = Bukkit.getScheduler().runTaskLater(HardSMP.getInstance(), () -> {
             ClaimCommand.claimingPlayers.remove(player.getUniqueId());
             player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast zu lange gebraucht!\nClaim-Modus beendet!")));
             player.getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + player.getUniqueId()) || sb.getScoreboardTags().contains("marker2" + player.getUniqueId())).forEach(Entity::remove);
             stopTasks();
             ClaimCommand.claimingPlayers.remove(player.getUniqueId());
-        }, 5, TimeUnit.MINUTES);
+        }, 6000L);
 
         this.particles = Bukkit.getAsyncScheduler().runAtFixedRate(HardSMP.getInstance(), x -> {
 

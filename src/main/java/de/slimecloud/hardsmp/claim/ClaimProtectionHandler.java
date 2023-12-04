@@ -36,7 +36,17 @@ public class ClaimProtectionHandler implements Listener {
 
     @EventHandler
     private void onChest(InventoryOpenEvent event) {
-        if(event.getInventory().getType() == InventoryType.WORKBENCH || event.getInventory().getType() == InventoryType.PLAYER || event.getInventory().getType() == InventoryType.CREATIVE || event.getInventory().getType() == InventoryType.ENDER_CHEST || event.getInventory().getLocation() == null) return;
+        if(event.getInventory().getType() == InventoryType.WORKBENCH
+                || event.getInventory().getType() == InventoryType.PLAYER
+                || event.getInventory().getType() == InventoryType.CREATIVE
+                || event.getInventory().getType() == InventoryType.ENDER_CHEST
+                || event.getInventory().getType() == InventoryType.CARTOGRAPHY
+                || event.getInventory().getType() == InventoryType.CRAFTING
+                || event.getInventory().getType() == InventoryType.GRINDSTONE
+                || event.getInventory().getType() == InventoryType.LOOM
+                || event.getInventory().getType() == InventoryType.SMITHING
+                || event.getInventory().getType() == InventoryType.STONECUTTER
+                || event.getInventory().getLocation() == null) return;
         if (isClaimed(event.getInventory().getLocation(), (Player) event.getPlayer())) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(Component.text("§cDu kannst dies hier nicht öffnen!"));

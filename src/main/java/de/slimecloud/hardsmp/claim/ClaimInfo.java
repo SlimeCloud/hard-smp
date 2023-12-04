@@ -24,6 +24,7 @@ public class ClaimInfo {
             player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast zu lange gebraucht!\nClaim-Modus beendet!")));
             player.getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + player.getUniqueId()) || sb.getScoreboardTags().contains("marker2" + player.getUniqueId())).forEach(Entity::remove);
             stopTasks();
+            ClaimCommand.claimingPlayers.remove(player.getUniqueId());
         }, 5, TimeUnit.MINUTES);
 
         this.particles = Bukkit.getAsyncScheduler().runAtFixedRate(HardSMP.getInstance(), x -> {

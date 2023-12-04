@@ -36,7 +36,7 @@ public class ClaimProtectionHandler implements Listener {
 
     @EventHandler
     private void onChest(InventoryOpenEvent event) {
-        if(event.getInventory().getType() != InventoryType.CHEST && event.getInventory().getType() != InventoryType.BARREL || event.getInventory().getLocation() == null) return;
+        if(event.getInventory().getType() == InventoryType.WORKBENCH || event.getInventory().getType() == InventoryType.PLAYER || event.getInventory().getType() == InventoryType.CREATIVE || event.getInventory().getType() == InventoryType.ENDER_CHEST || event.getInventory().getLocation() == null) return;
         if (isClaimed(event.getInventory().getLocation(), (Player) event.getPlayer())) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(Component.text("§cDu kannst hier keine Kisten öffnen"));

@@ -46,7 +46,7 @@ public class RegisterSchematicCommand implements CommandExecutor, TabCompleter {
                 try (FileOutputStream fos = new FileOutputStream(file)) {
                     fos.write(build.getBytes());
                 }
-                replika.registerSchematic(build);
+                replika.registerSchematic(name, build);
             } catch (IOException e) {
                 e.printStackTrace();
                 sender.sendMessage(Component.text("Es ist ein fehler aufgetreten:\n" + e.getMessage(), NamedTextColor.RED));

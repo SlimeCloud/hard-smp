@@ -33,7 +33,7 @@ public class Replika implements SubEvent {
     private final int topBorderHeight;
     private final int plotSpacing;
     private final Build plotSchematic;
-    private final Set<Build> schematics;
+    private final Map<String, Build> schematics;
 
     private final List<Player> players;
 
@@ -65,7 +65,7 @@ public class Replika implements SubEvent {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.schematics = new HashSet<>();
+        this.schematics = new HashMap<>();
         this.players = new ArrayList<>();
         this.plots = new HashMap<>();
         directory.mkdirs();
@@ -74,7 +74,8 @@ public class Replika implements SubEvent {
                     .filter(f -> f.getName().endsWith(".build"))
                     .forEach(f -> {
                         try {
-                            schematics.add(Build.load(f));
+                            String name = f.getName();
+                            schematics.put(name.substring(0, name.length() - ".build".length()), Build.load(f));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -82,8 +83,8 @@ public class Replika implements SubEvent {
         }
     }
 
-    public void registerSchematic(Build build) {
-        schematics.add(build);
+    public void registerSchematic(String name, Build build) {
+        schematics.put(name, build);
     }
 
     public File getFile(String name) {

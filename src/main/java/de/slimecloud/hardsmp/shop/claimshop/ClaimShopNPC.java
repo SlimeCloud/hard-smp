@@ -17,6 +17,7 @@ public class ClaimShopNPC {
         shop.getPersistentDataContainer().set(HardSMP.getInstance().CLAIM_SHOP_KEY, PersistentDataType.STRING, "claimshop");
         shop.setCustomNameVisible(true);
         shop.setPersistent(true);
+        shop.setInvulnerable(true);
         shop.setAI(false);
         shop.setBodyYaw(location.getYaw());
     }

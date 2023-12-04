@@ -171,6 +171,7 @@ public final class HardSMP extends JavaPlugin {
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
 
         SlimeHandler.setupOffers(getConfig());
+        claimShopHandler.addItemsToShop();
 
         AdvancementHandler.register(this, this::registerEvent);
 

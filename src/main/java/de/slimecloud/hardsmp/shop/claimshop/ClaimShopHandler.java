@@ -81,7 +81,7 @@ public class ClaimShopHandler implements Listener {
             }
             ItemStack firstPrice = new ItemStack(mat, firstPriceAmount);
 
-            currentItem.addLore(List.of("", "§6Preis: ", mat.toString().replace('_', ' ') + " " + firstPriceAmount + "x"));
+            currentItem.addLore(List.of("", "§6Preis: ", "§b" + mat.toString().replace('_', ' ') + " " + firstPriceAmount + "x"));
 
 
             if (secondPriceItem == null) {
@@ -101,7 +101,7 @@ public class ClaimShopHandler implements Listener {
             }
             ItemStack secondPrice = new ItemStack(mat2, secondPriceAmount);
 
-            currentItem.addLore(List.of(mat2.toString().replace('_', ' ') + " " + secondPriceAmount + "x", ""));
+            currentItem.addLore(List.of("§b" + mat2.toString().replace('_', ' ') + " " + secondPriceAmount + "x", ""));
 
             List<ItemStack> list = new ArrayList<>();
             list.add(firstPrice);

@@ -172,7 +172,7 @@ public class ClaimProtectionHandler implements Listener {
     //ToDo: Find a workaround for fireballs being thrown into a claim
     @EventHandler
     private void onRide(PlayerInteractEntityEvent event) {
-        if (!isClaimed(event.getPlayer().getLocation(), event.getPlayer())) {
+        if (isClaimed(event.getPlayer().getLocation(), event.getPlayer())) {
             event.setCancelled(true);
         }
     }

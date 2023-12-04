@@ -214,4 +214,4 @@ leaderboard:
   playersPerPage: 9
 
 claim:
-  maxblocks: 200
+  maxblocks: 15000

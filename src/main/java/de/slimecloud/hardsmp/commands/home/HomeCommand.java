@@ -31,23 +31,13 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
             HomeData.load(player.getUniqueId(), args[0]).ifPresentOrElse(
                     homeData -> teleport(homeData, player),
 
-                    () -> player.sendMessage(HardSMP.getPrefix().append(Component.text("Das Home ", NamedTextColor.RED)
-                            .append(Component.text(args[0], NamedTextColor.RED, TextDecoration.BOLD)
-                                    .append(Component.text(" konnte nicht gefunden werden!", NamedTextColor.RED)))))
+                    () -> player.sendMessage(HardSMP.getPrefix().append(Component.text("Das Home \"", NamedTextColor.RED)
+                            .append(Component.text(args[0], NamedTextColor.RED)
+                                    .append(Component.text("\" konnte nicht gefunden werden!", NamedTextColor.RED)))))
             );
-        } else {
-            if (HomeData.load(player.getUniqueId()).toArray().length > 1) {
-                player.sendMessage(HardSMP.getPrefix().append(
-                        Component.text("Du hast mehr als ein Home! Bitte gebe den namen eines Homes an.", NamedTextColor.RED)
-                ));
-                return true;
-            }
-            HomeData home = HomeData.loadOne(player.getUniqueId());
-            teleport(home, player);
+        } else return false;
 
-        }
-
-        return false;
+        return true;
     }
 
     @Override

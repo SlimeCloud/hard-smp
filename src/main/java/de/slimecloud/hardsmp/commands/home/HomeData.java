@@ -43,11 +43,6 @@ public class HomeData extends DataClass {
         return load(HomeData::new, Map.of("uuid", uuid.toString(), "homeName", name));
     }
 
-    public static HomeData loadOne(UUID uuid) {
-        return DataClass.load(HomeData::new, Map.of("uuid", uuid))
-                .orElseGet(HomeData::new);
-    }
-
     public Location getLocation() {
         return new Location(Bukkit.getWorld(worldName), xPos, yPos, zPos);
     }

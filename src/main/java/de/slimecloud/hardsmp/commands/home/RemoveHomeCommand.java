@@ -33,15 +33,7 @@ public class RemoveHomeCommand implements CommandExecutor, TabCompleter {
                             .append(Component.text(args[0], NamedTextColor.RED, TextDecoration.BOLD)
                                     .append(Component.text(" konnte nicht gefunden werden!", NamedTextColor.RED)))))
             );
-        } else {
-            if (HomeData.load(player.getUniqueId()).toArray().length > 1) {
-                player.sendMessage(HardSMP.getPrefix().append(
-                        Component.text("Du hast mehr als ein Home! Bitte gebe den namen eines Homes an.", NamedTextColor.RED)
-                ));
-                return true;
-            }
-            remove(HomeData.loadOne(player.getUniqueId()), player);
-        }
+        } else return false;
 
         return true;
     }

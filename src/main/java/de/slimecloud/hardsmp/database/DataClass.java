@@ -161,14 +161,10 @@ public abstract class DataClass {
     }
 
     private static <T extends DataClass> T setFields(T instance, ResultSet rs) throws SQLException {
-        System.out.println("before: " + instance);
         for (Field field : instance.getClass().getDeclaredFields()) {
-            System.out.println(field.getName());
 
             if (!isValid(field)) continue;
             field.setAccessible(true);
-
-            System.out.println("update");
 
             try {
                 field.set(instance, field.getType().isEnum() ? field.getType().getEnumConstants()[rs.getInt(field.getName().toLowerCase())] : get(field.getType(), rs, field.getName().toLowerCase()));
@@ -176,7 +172,6 @@ public abstract class DataClass {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("after: " + instance);
         instance.updateCache();
         return instance;
     }

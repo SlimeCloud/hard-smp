@@ -263,7 +263,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
             ClaimRights rights = ClaimRights.load(event.getPlayer().getUniqueId());
             if (!event.getPlayer().hasPermission("hardsmp.claim.bypass") && getBlocks(event.getPlayer()) > rights.getTotalClaimSize() - rights.getTotalClaimed()) {
                 info.loc2 = old;
-                event.getPlayer().sendMessage(Component.text("§cDu kannst nicht so viele Blöcke claimen!\nKaufe dir mehr Blöcke im §äShop§c!"));
+                event.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§cDu kannst nicht so viele Blöcke claimen!\n    Kaufe dir mehr Blöcke im §äShop§c!")));
                 return;
             }
 

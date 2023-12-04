@@ -16,6 +16,7 @@ import de.slimecloud.hardsmp.listener.DeathPointHandler;
 import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
+import de.slimecloud.hardsmp.shop.claimshop.ClaimShopHandler;
 import de.slimecloud.hardsmp.ui.*;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;

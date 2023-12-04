@@ -13,11 +13,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerTakeLecternBookEvent;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.event.player.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -175,10 +171,9 @@ public class ClaimProtectionHandler implements Listener {
 
     //ToDo: Find a workaround for fireballs being thrown into a claim
     @EventHandler
-    private void onVehicleMove(VehicleMoveEvent event) {
-        Collection<Claim> claims = Claim.allClaims.values();
-        if (claims.stream().anyMatch(claim -> claim.contains(event.getTo()) && !claim.contains(event.getFrom()))) {
-            event.getVehicle().setVelocity(event.getVehicle().getVelocity().multiply(-1));
+    private void onRide(PlayerInteractEntityEvent event) {
+        if (!isClaimed(event.getPlayer().getLocation(), event.getPlayer())) {
+            event.setCancelled(true);
         }
     }
 }

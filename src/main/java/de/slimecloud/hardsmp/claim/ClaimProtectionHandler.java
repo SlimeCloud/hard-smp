@@ -109,16 +109,8 @@ public class ClaimProtectionHandler implements Listener {
     }
 
     @EventHandler
-    private void onButtonPress(PlayerInteractEvent event) {
-        if (event.getAction().isRightClick() && event.getClickedBlock() != null && event.getClickedBlock().getBlockData().getMaterial().toString().contains("BUTTON") && isClaimed(event.getClickedBlock().getLocation(), event.getPlayer())) {
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));
-        }
-    }
-
-    @EventHandler
-    private void  onLeaver(PlayerInteractEvent event) {
-        if (event.getAction().isRightClick() && event.getClickedBlock() != null && event.getClickedBlock().getBlockData().getMaterial().toString().contains("LEVER") && isClaimed(event.getClickedBlock().getLocation(), event.getPlayer())){
+    private void onInteract(PlayerInteractEvent event) {
+        if (event.getAction().isRightClick() && event.getClickedBlock() != null && isClaimed(event.getClickedBlock().getLocation(), event.getPlayer())) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));
         }

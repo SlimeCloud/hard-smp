@@ -43,6 +43,9 @@ public interface Build {
 
     Map<Vector, EntityData> getEntities();
 
+    //starts with the corner that has the smallest coordinates
+    // -> fv1 = 0 0 0 = location
+    //all block-coord are subtracted with the fv1, so you get the relativ coods in the Schematic
     void build(Location location);
 
     byte[] getBytes();

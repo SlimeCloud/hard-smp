@@ -154,6 +154,10 @@ public final class HardSMP extends JavaPlugin {
         return command;
     }
 
+    //register Event:
+    // 1. create field with getter
+    // 2. add to map "getEvents"
+    // 3. register Events and Commands in Constructor
     public class SubEvents {
 
         @Getter

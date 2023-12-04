@@ -95,8 +95,10 @@ public class Replika implements SubEvent {
         plots.put(uuid, new Plot(this, new Location(world, currentPlotX, 0, currentPlotZ)));
     }
 
+
+    //buggy: gerate a diagonally instead of a Square
     private void generatePlot(UUID uuid) {
-        if (nextDirection) {
+        if (nextDirection) { // set which direction comes next
             currentPlotX += plotWidth + plotSpacing;
             putPlot(uuid);
             if (currentPlotX>=maxPlotX) {
@@ -129,6 +131,8 @@ public class Replika implements SubEvent {
         return getWorld(false);
     }
 
+
+    //todo: reset old world
     private World getWorld(boolean regenerate) {
         World world = Bukkit.getWorld("replika");
         if (regenerate && world!=null) world.getWorldFolder().delete();

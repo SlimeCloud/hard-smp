@@ -18,6 +18,8 @@ public class Plot {
 
     public void build() {
         replika.getPlotSchematic().build(position);
+
+        //only require for Barriers
         World world = position.getWorld();
         for (int y = position.getBlockY(); y <= position.getBlockY()+replika.getTopBorderHeight(); y++) {
             for (int x = position.getBlockX(); x <= position.getBlockX()+replika.getPlotWidth(); x++) {

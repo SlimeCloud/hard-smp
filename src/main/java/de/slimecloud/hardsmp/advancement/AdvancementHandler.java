@@ -48,17 +48,12 @@ public class AdvancementHandler implements Listener {
                 new CaveAdvancement(plugin),
                 new DiamondAdvancement(plugin),
                 new FireworkAdvancement(plugin),
-                new FishAdvancement(plugin),
-                new FrogAdvancement(plugin),
-                new GardenAdvancement(plugin),
                 new GhastAdvancement(plugin),
                 new GoldAdvancement.Gold1(plugin),
                 new GoldAdvancement.Gold2(plugin),
                 new GoldAdvancement.Gold3(plugin),
                 new LightningAdvancement(plugin),
                 new LumberjackAdvancement(plugin),
-                new MusicAdvancement(plugin),
-                new PotteryAdvancement(plugin),
                 new RootAdvancement(plugin)
         ).forEach(c);
     }

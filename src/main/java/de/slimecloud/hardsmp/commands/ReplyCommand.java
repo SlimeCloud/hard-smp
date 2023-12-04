@@ -45,10 +45,12 @@ public class ReplyCommand implements CommandExecutor, EmptyTabCompleter {
 
         tPlayer.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.receive"))
                 .append(HardSMP.getInstance().getChat().formatName(player))
+                .append(Component.text(": "))
                 .append(message)
         );
         sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.outgoing"))
                 .append(HardSMP.getInstance().getChat().formatName(tPlayer))
+                .append(Component.text(": "))
                 .append(message)
         );
 

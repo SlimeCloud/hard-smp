@@ -7,12 +7,12 @@
     "description": "Fahre während eines Gewitters auf einem Boot mit Kiste",
     "frame": "goal",
     "show_toast": true,
-    "announce_to_chat": false,
+    "announce_to_chat": true,
     "hidden": false
   },
   "parent": "hard-smp:hard-smp/fish",
   "criteria": {
-    "requirement": {
+    "boat": {
       "trigger": "minecraft:location",
       "conditions": {
         "player": [

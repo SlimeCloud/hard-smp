@@ -3,6 +3,7 @@ package de.slimecloud.hardsmp.claim;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -120,6 +121,8 @@ public class ClaimProtectionHandler implements Listener {
 
     @EventHandler
     private void onInteract(PlayerInteractEvent event) {
+        if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock() != null && event.getClickedBlock().getType().equals(Material.FARMLAND))
+            event.setCancelled(true);
         if (event.getAction().isRightClick() && event.getClickedBlock() != null && isClaimed(event.getClickedBlock().getLocation(), event.getPlayer())) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));

@@ -161,11 +161,15 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(chestKey = new ChestKey(this));
         registerEvent(lockPick = new LockPick(chestKey));
 
-        registerEvent(plotBuyer25 = new PlotBuyer(25, 100, 4, 3));
-        registerEvent(plotBuyer100 = new PlotBuyer(100, 500, 5, 4));
-        registerEvent(plotBuyer500 = new PlotBuyer(500, 1500, 3, 5));
-        registerEvent(plotBuyer1000 = new PlotBuyer(1000, 3000, 2, 6));
-        registerEvent(plotBuyer5000 = new PlotBuyer(5000, 10000, 2, 7));
+        ConfigurationSection section = getConfig().getConfigurationSection("claimshop.offers");
+        if (section == null) getLogger().warning("Could not initialize claimshop, config misconfigured!");
+        else {
+            registerEvent(plotBuyer25 = new PlotBuyer(section.getInt("plot-buyer-25.blocks"), section.getInt("plot-buyer-25.price.required-points"), section.getInt("plot-buyer-25.quantity"), section.getInt("plot-buyer-25.index")));
+            registerEvent(plotBuyer100 = new PlotBuyer(section.getInt("plot-buyer-100.blocks"), section.getInt("plot-buyer-100.price.required-points"), section.getInt("plot-buyer-100.quantity"), section.getInt("plot-buyer-100.index")));
+            registerEvent(plotBuyer500 = new PlotBuyer(section.getInt("plot-buyer-500.blocks"), section.getInt("plot-buyer-500.price.required-points"), section.getInt("plot-buyer-500.quantity"), section.getInt("plot-buyer-500.index")));
+            registerEvent(plotBuyer1000 = new PlotBuyer(section.getInt("plot-buyer-1000.blocks"), section.getInt("plot-buyer-1000.price.required-points"), section.getInt("plot-buyer-1000.quantity"), section.getInt("plot-buyer-1000.index")));
+            registerEvent(plotBuyer5000 = new PlotBuyer(section.getInt("plot-buyer-5000.blocks"), section.getInt("plot-buyer-5000.price.required-points"), section.getInt("plot-buyer-5000.quantity"), section.getInt("plot-buyer-5000.index")));
+        }
 
         CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());

@@ -79,7 +79,7 @@ commands:
     usage: "§cUsage: /leaderboard <Page>"
     permission: hardsmp.command.leaderboard
   claim:
-    usage: "§cUsage: /claim <start/cancel/finish/remove>"
+    usage: "§cUsage: /claim <start/cancel/finish/remove/info>"
     permission: hardsmp.command.claim
   info:
     usage: "§cUsage: /info discord/minecraft <id or name>"

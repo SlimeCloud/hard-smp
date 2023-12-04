@@ -163,10 +163,20 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
                     return true;
                 }
+                case "info" -> {
+                    ClaimRights rights = ClaimRights.load(player.getUniqueId());
+                    player.sendMessage(HardSMP.getPrefix()
+                            .append(Component.text("Du kannst noch ", color(0x88D657)))
+                            .append(Component.text("§6" + (rights.getTotalClaimSize() - rights.getTotalClaimed())))
+                            .append(Component.text(" Blöcke claimen.\nDu hast schon ", color(0x88D657)))
+                            .append(Component.text("§6" + rights.getTotalClaimed()))
+                            .append(Component.text(" Blöcke geclaimt.", color(0x88D657)))
+                    );
+                }
                 default ->
-                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove]!")));
+                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove/info]!")));
             }
-        } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove]!")));
+        } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove/info]!")));
 
         return true;
     }
@@ -198,8 +208,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
             }
 
             event.getPlayer().sendMessage(HardSMP.getPrefix()
-                    .append(Component.text("§9Erste ")
-                    .append(Component.text("Ecke: " + info.loc1.getX() + ", " + info.loc1.getZ(), color(0x88D657))))
+                    .append(Component.text("§9Erste "))
+                    .append(Component.text("Ecke: " + info.loc1.getX() + ", " + info.loc1.getZ(), color(0x88D657)))
             );
 
             event.getPlayer().getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + event.getPlayer().getUniqueId())).forEach(Entity::remove);
@@ -228,9 +238,10 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                 return;
             }
 
-            event.getPlayer().sendMessage(HardSMP.getPrefix().append(
-                    Component.text("§cZweite §aEcke: " + info.loc2.getX() + ", " + info.loc2.getZ())
-            ));
+            event.getPlayer().sendMessage(HardSMP.getPrefix()
+                    .append(Component.text("§9Zweite "))
+                    .append(Component.text("Ecke: " + info.loc2.getX() + ", " + info.loc2.getZ(), color(0x88D657)))
+            );
 
             event.getPlayer().getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker2" + event.getPlayer().getUniqueId())).forEach(Entity::remove);
 
@@ -323,7 +334,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return Stream.of("start", "cancel", "finish", "remove")
+        return Stream.of("start", "cancel", "finish", "remove", "info")
                 .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
                 .toList();
     }

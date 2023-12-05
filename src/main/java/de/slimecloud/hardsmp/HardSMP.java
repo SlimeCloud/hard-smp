@@ -144,6 +144,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("sethome", new SetHomeCommand());
         registerCommand("removehome", new RemoveHomeCommand());
         registerCommand("listhome", new ListHomeCommand());
+        registerCommand("invsee", new InvseeCommand());
 
         registerCommand("info", new MinecraftInfoCommand());
         //Events

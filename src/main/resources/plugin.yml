@@ -57,6 +57,8 @@ permissions:
     default: true
   hardsmp.command.claim:
     default: true
+  hardsmp.command.invsee:
+    default: false
 
 commands:
   formatting:
@@ -126,3 +128,7 @@ commands:
   removehome:
     usage: "§cBenutzung: /removehome <Name>"
     permission: hardsmp.command.home.remove
+  invsee:
+    aliases: ["inv"]
+    usage: "§cBenutzung: /invsee <Spieler>"
+    permission: hardsmp.command.invsee

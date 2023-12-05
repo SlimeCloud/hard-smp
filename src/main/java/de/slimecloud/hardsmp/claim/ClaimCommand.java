@@ -12,11 +12,13 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
@@ -111,6 +113,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                     .anyMatch(c -> c.overlaps(task.loc1, task.loc2))
                             ) {
                                 player.sendMessage(Component.text("§cDein Gebiet überschneidet sich mit einem anderen Claim!\nBitte suche dir ein anderes Grundstück!"));
+                                return true;
+                            }
+
+                            if (overlapsWithClaimFree(task.loc1, task.loc2)) {
+                                player.sendMessage(Component.text("§cDein Gebiet überschneidet sich mit Claim-freier Zone!\nBitte suche dir ein anderes Grundstück!"));
                                 return true;
                             }
 
@@ -409,6 +416,25 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     Math.abs(player.getTargetBlock(null, 5).getLocation().getZ() - info.loc2.getZ()) + 1 :
                     Math.abs(player.getTargetBlock(null, 5).getLocation().getZ() - info.loc1.getZ()) + 1));
         } else return 0;
+    }
+
+    public boolean overlapsWithClaimFree(Location loc1, Location loc2) {
+        ConfigurationSection section = HardSMP.getInstance().getConfig().getConfigurationSection("claim.claim-free");
+        ConfigurationSection claimFreeArea;
+
+        if (section == null) return false;
+
+        for (int i = 1; true; i++) {
+            claimFreeArea = section.getConfigurationSection("rect" + i);
+            if(claimFreeArea == null) break;
+
+            if (Math.min(section.getInt("x1"), section.getInt("x2")) <= Math.max(loc1.getX(), loc2.getX())
+                    && Math.min(section.getInt("z1"), section.getInt("z2")) <= Math.max(loc1.getZ(), loc2.getZ())
+                    && Math.min(loc1.getX(), loc2.getX()) <= Math.max(section.getInt("x1"), section.getInt("x2"))
+                    && Math.min(loc1.getZ(), loc2.getZ()) <= Math.max(section.getInt("z1"), section.getInt("z2"))) return true;
+
+        }
+        return false;
     }
 
     @EventHandler

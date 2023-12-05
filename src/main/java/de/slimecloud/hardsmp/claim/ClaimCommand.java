@@ -64,7 +64,6 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-
         if (!(commandSender instanceof Player player)) return false;
         if (!player.hasPermission("hardsmp.command.claim")) {
             player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu darfst das nicht!")));
@@ -211,13 +210,12 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                     .append(Component.text("§6" + rights.getTotalClaimed()))
                                     .append(Component.text(" Blöcke geclaimt.", color(0x88D657)))
                             );
-                        } else player.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove/info]!")));
-                    } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove/info]!")));
+                        } else return false;
+                    } else return false;
                 }
-                default ->
-                        commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove/info]!")));
+                default -> { return false; }
             }
-        } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /claim [start/cancel/finish/remove/info]!")));
+        } else return false;
 
         return true;
     }
@@ -378,17 +376,12 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         double points = PlayerController.getPlayer((OfflinePlayer) event.getPlayer()).getActualPoints();
         ClaimRights rights = ClaimRights.load(event.getPlayer().getUniqueId());
 
-        if(points >= 30000) {
-            rights.setClaimCount(5);
-        } else if(points >= 20000) {
-            rights.setClaimCount(4);
-        } else if(points >= 10000) {
-            rights.setClaimCount(3);
-        } else if(points >= 5000) {
-            rights.setClaimCount(2);
-        } else if(points >= 500) {
-            rights.setClaimCount(1);
-        }
+        if(points >= 30000) rights.setClaimCount(5);
+        else if(points >= 20000) rights.setClaimCount(4);
+        else if(points >= 10000) rights.setClaimCount(3);
+        else if(points >= 5000) rights.setClaimCount(2);
+        else if(points >= 500) rights.setClaimCount(1);
+
         rights.save();
     }
 

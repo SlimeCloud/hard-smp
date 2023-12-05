@@ -26,7 +26,7 @@ public class Claim extends DataClass {
 
     public static Map<Integer, Claim> allClaims = loadAll(Claim::new, Collections.emptyMap()).stream().collect(Collectors.toMap(Claim::getId, c -> c));
     private String uuid;
-    private int x1, z1, x2, z2;
+    private Integer x1, z1, x2, z2;
 
     @Key
     @Autoincrement

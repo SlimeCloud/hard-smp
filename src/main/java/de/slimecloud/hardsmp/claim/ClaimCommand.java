@@ -12,9 +12,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,6 +32,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -386,15 +385,15 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     .filter(c -> c.containsPlayer(event.getTo()))
                     .findAny();
 
-            if(to.isEmpty()) {
-                if(from.isPresent()) {
+            if (to.isEmpty()) {
+                if (from.isPresent()) {
                     event.getPlayer().sendActionBar(Component.text("Du betrittst ", NamedTextColor.DARK_AQUA)
                             .append(Component.text("Wildnis", TextColor.color(0xF6ED82)))
                     );
                 }
             }
 
-            else if(from.isEmpty() || (from.get().getId() != to.get().getId() && !from.get().getUuid().equals(to.get().getUuid()))) {
+            else if (from.isEmpty() || (from.get().getId() != to.get().getId() && !from.get().getUuid().equals(to.get().getUuid()))) {
                 Component name;
                 try {
                     name = Chat.getName(Bukkit.getOfflinePlayer(UUID.fromString(to.get().getUuid())));
@@ -405,6 +404,21 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                 if (name == null) name = Component.text("Unbekannt", TextColor.color(0x88D657), TextDecoration.ITALIC);
 
                 event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", NamedTextColor.DARK_AQUA).append(name));
+            }
+            if (to.isPresent() && (from.isEmpty() || from.get().getId() != to.get().getId())) {
+                Player player = event.getPlayer();
+                Particle.DustOptions extraCorner = new Particle.DustOptions(Color.WHITE, 1.0F);
+
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (to.get().getX1() + to.get().getX2()) / 2.0, player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getX1() - to.get().getX2()) * 5, Math.abs(to.get().getX1() - to.get().getX2()) / 4.0, 0.0, 0.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (to.get().getX1() + to.get().getX2()) / 2.0, player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getX1() - to.get().getX2()) * 5, Math.abs(to.get().getX1() - to.get().getX2()) / 4.0, 0.0, 0.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), (to.get().getZ1() + to.get().getZ2()) / 2.0).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getZ1() - to.get().getZ2()) * 5, 0.0, 0.0, Math.abs(to.get().getZ1() - to.get().getZ2()) / 4.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), (to.get().getZ1() + to.get().getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getZ1() - to.get().getZ2()) * 5, 0.0, 0.0, Math.abs(to.get().getZ1() - to.get().getZ2()) / 4.0, extraCorner);
             }
 
             return;

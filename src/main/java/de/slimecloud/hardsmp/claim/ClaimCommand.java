@@ -229,15 +229,24 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     } else return false;
                 }
                 case "list" -> {
+                    OfflinePlayer target = player;
+                    if (args.length == 2) {
+                        if (player.hasPermission("hardsmp.command.claim.list.others")) {
+                            target = Bukkit.getOfflinePlayer(args[1]);
+                        } else {
+                            player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu darfst das nicht!")));
+                            return true;
+                        }
+                    }
                     Component claims = Component.text("Claims von ", TextColor.color(0x88d657))
-                            .append(Chat.getName(player))
+                            .append(Chat.getName(target))
                             .append(Component.text(":", TextColor.color(0x88d657)))
                             .appendNewline();
 
-                    List<HomeData> homes = HomeData.load(player.getUniqueId());
+                    List<HomeData> homes = HomeData.load(target.getUniqueId());
 
                     for (Claim claim : Claim.allClaims.values()) {
-                        if(!claim.getUuid().equals(player.getUniqueId().toString())) continue;
+                        if(!claim.getUuid().equals(target.getUniqueId().toString())) continue;
 
                         var c = Component.text("   - Gebiet bei x: ")
                                 .append(Component.text(claim.getX1(), TextColor.color(0xF6ED82)))
@@ -470,7 +479,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         if (args.length == 1) return Stream.of("start", "cancel", "finish", "remove", "info", "list")
                 .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
                 .toList();
-        if (args.length == 2 && args[0].equals("info") && commandSender.hasPermission("hardsmp.command.claim.info.others")) return Arrays.stream(Bukkit.getOfflinePlayers()).map(OfflinePlayer::getName).toList();
+        if ((args.length == 2 && args[0].equals("info") || args.length == 2 && args[0].equals("list")) && commandSender.hasPermission("hardsmp.command.claim.info.others")) return Arrays.stream(Bukkit.getOfflinePlayers()).map(OfflinePlayer::getName).toList();
         return Collections.emptyList();
     }
 }

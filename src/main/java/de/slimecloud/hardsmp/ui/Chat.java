@@ -102,11 +102,15 @@ public class Chat implements Listener {
                 .clickEvent(ClickEvent.suggestCommand("/msg " + sender.getName()))
                 .hoverEvent(HoverEvent.showText(
                         Component.text("Punkte: ", TextColor.color(0xF6ED82))
-                                .append(Component.text((int) PlayerController.getPlayer((OfflinePlayer) sender).getActualPoints(), TextColor.color(0x88D657))
+                                .append(Component.text((int) PlayerController.getPlayer(sender).getActualPoints(), TextColor.color(0x88D657))
                 )))).append(Component.empty()).clickEvent(null).hoverEvent(null);
     }
 
     public static Component getName(Player player) {
+        return HardSMP.getInstance().getChat().formatName(player);
+    }
+
+    public static Component getName(OfflinePlayer player) {
         return HardSMP.getInstance().getChat().formatName(player);
     }
 }

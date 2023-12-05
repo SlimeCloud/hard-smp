@@ -1,7 +1,6 @@
 package de.slimecloud.hardsmp.claim;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,7 +20,8 @@ import java.util.List;
 public class ClaimProtectionHandler implements Listener {
 
     private boolean isClaimed(Location loc, Player player) {
-        return Claim.allClaims.values().stream().anyMatch(claim -> claim.getUuid().contains("-") && claim.contains(loc) && !claim.getUuid().equals(player.getUniqueId().toString()));
+        if(player.hasPermission("hardsmp.claim.bypass")) return false;
+        return Claim.allClaims.values().stream().anyMatch(claim -> claim.contains(loc) && !claim.getUuid().equals(player.getUniqueId().toString()));
     }
 
     @EventHandler

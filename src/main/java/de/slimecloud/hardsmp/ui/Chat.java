@@ -6,6 +6,7 @@ import de.slimecloud.hardsmp.player.PlayerController;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.Verification;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import lombok.SneakyThrows;
 import me.leoko.advancedban.manager.PunishmentManager;
 import me.leoko.advancedban.manager.UUIDManager;
 import net.kyori.adventure.text.Component;
@@ -70,13 +71,18 @@ public class Chat implements Listener {
         Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(message));
     }
 
+    @SneakyThrows
     public Component formatName(OfflinePlayer sender) {
-        User user = HardSMP.getInstance().getLuckPerms().getUserManager().getUser(sender.getUniqueId());
+        User user = HardSMP.getInstance().getLuckPerms().getUserManager().loadUser(sender.getUniqueId()).get();
         String prefix;
         if (user == null) prefix = null;
         else prefix = user.getCachedData().getMetaData().getPrefix();
 
-        prefix = prefix == null ? "" : this.prefix.replace("%prefix", prefix.replace("&", "§").replace("#88D657", "ä").replace("#F6ED82", "ö"));
+        prefix = prefix == null ? "" : this.prefix.replace("%prefix", prefix
+                .replace("&", "§")
+                .replace("#88D657", "ä")
+                .replace("#F6ED82", "ö")
+        );
         String rank = ScoreboardManager.STATS.get(sender.getUniqueId()).first().toString();
         String nameColor = this.nameColor.getOrDefault(Integer.valueOf(rank), this.nameColor.get(-1));
 
@@ -87,7 +93,7 @@ public class Chat implements Listener {
             default -> "§7#" + rank;
         };
 
-        if(sender.getPlayer() != null && sender.getPlayer().hasPermission("hardsmp.chat.highlight")) {
+        if(user != null && user.getCachedData().getPermissionData().checkPermission("hardsmp.chat.highlight").asBoolean()) {
             rank = "";
             nameColor = HardSMP.getInstance().getConfig().getString("ui.chat.color.team");
         } else rank += " ";
@@ -102,11 +108,11 @@ public class Chat implements Listener {
                 .clickEvent(ClickEvent.suggestCommand("/msg " + sender.getName()))
                 .hoverEvent(HoverEvent.showText(
                         Component.text("Punkte: ", TextColor.color(0xF6ED82))
-                                .append(Component.text((int) PlayerController.getPlayer((OfflinePlayer) sender).getActualPoints(), TextColor.color(0x88D657))
+                                .append(Component.text((int) PlayerController.getPlayer(sender).getActualPoints(), TextColor.color(0x88D657))
                 )))).append(Component.empty()).clickEvent(null).hoverEvent(null);
     }
 
-    public static Component getName(Player player) {
+    public static Component getName(OfflinePlayer player) {
         return HardSMP.getInstance().getChat().formatName(player);
     }
 }

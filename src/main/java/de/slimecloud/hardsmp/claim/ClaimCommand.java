@@ -11,12 +11,13 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
@@ -24,12 +25,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -114,6 +117,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                 return true;
                             }
 
+                            if (overlapsWithClaimFree(task.loc1, task.loc2)) {
+                                player.sendMessage(Component.text("§cDein Gebiet überschneidet sich mit Claim-freier Zone!\nBitte suche dir ein anderes Grundstück!"));
+                                return true;
+                            }
+
                             ClaimRights rights = ClaimRights.load(uuid);
                             rights.setTotalClaimed(getBlocks(player));
                             rights.save();
@@ -121,7 +129,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             actionbarColor.invalidate(uuid.toString());
                             claimingPlayers.remove(uuid);
                             task.stopTasks();
-                            new Claim(uuid.toString(), (int) task.loc1.getX(), (int) task.loc1.getZ(), (int) task.loc2.getX(), (int) task.loc2.getZ(), 0).save();
+                            new Claim(uuid.toString(), (int) task.loc1.getX(), (int) task.loc1.getZ(), (int) task.loc2.getX(), (int) task.loc2.getZ(), 0, player.getWorld().getName()).save();
 
                             player.getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + uuid) || sb.getScoreboardTags().contains("marker2" + uuid)).forEach(Entity::remove);
 
@@ -133,7 +141,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                     .append(Component.text("Hinweis: ").color(NamedTextColor.RED))
                                     .append(Component.text("Du kannst jetzt in diesem Claim ein Home mit "))
                                     .append(Component.text("§6/sethome <name>").clickEvent(ClickEvent.suggestCommand("/sethome ")))
-                                    .append(Component.text("setzen!").color(NamedTextColor.GRAY)));
+                                    .append(Component.text(" setzen!").color(NamedTextColor.GRAY)));
                         } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast nicht alle Ecken gesetzt!")));
                     } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist nicht im Claim-Modus!")));
                 }
@@ -205,7 +213,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         );
                     } else if(args.length == 2) {
                         if (player.hasPermission("hardsmp.command.claim.info.others")) {
-                            Player target = (Player) Bukkit.getOfflinePlayer(args[1]);
+                            OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                             ClaimRights rights = ClaimRights.load(target.getUniqueId());
 
                             player.sendMessage(HardSMP.getPrefix()
@@ -222,15 +230,29 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     } else return false;
                 }
                 case "list" -> {
+                    OfflinePlayer target = player;
+                    if (args.length == 2) {
+                        if (player.hasPermission("hardsmp.command.claim.list.others")) {
+                            target = Bukkit.getOfflinePlayer(args[1]);
+                        } else {
+                            player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu darfst das nicht!")));
+                            return true;
+                        }
+                    }
+
                     Component claims = Component.text("Claims von ", TextColor.color(0x88d657))
-                            .append(Chat.getName(player))
+                            .append(Chat.getName(target))
                             .append(Component.text(":", TextColor.color(0x88d657)))
                             .appendNewline();
 
-                    List<HomeData> homes = HomeData.load(player.getUniqueId());
+                    List<HomeData> homes = HomeData.load(target.getUniqueId());
+
+                    boolean found = false;
 
                     for (Claim claim : Claim.allClaims.values()) {
-                        if(!claim.getUuid().equals(player.getUniqueId().toString())) continue;
+                        if(!claim.getUuid().equals(target.getUniqueId().toString())) continue;
+
+                        found = true;
 
                         var c = Component.text("   - Gebiet bei x: ")
                                 .append(Component.text(claim.getX1(), TextColor.color(0xF6ED82)))
@@ -251,7 +273,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         claims = claims.append(c).appendNewline();
                     }
 
-                    player.sendMessage(claims);
+                    player.sendMessage(found ? claims : Component.text("Spieler hat keine Claims!", NamedTextColor.RED));
                 }
                 default -> { return false; }
             }
@@ -355,23 +377,50 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event) {
         if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) {
-            Claim.allClaims.values().forEach(c -> {
-                if (!c.containsPlayer(event.getFrom())) {
-                    if (c.containsPlayer(event.getTo())) {
-                        String name;
-                        try {
-                            name = Bukkit.getOfflinePlayer(UUID.fromString(c.getUuid())).getName();
-                        } catch (IllegalArgumentException e) {
-                            name = c.getUuid();
-                        }
-                        if (name == null) name = "Unbekannt";
-                        event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", color(0x88D657)).append(Component.text(name, NamedTextColor.BLUE)));
-                    }
-                } else {
-                    if (!c.containsPlayer(event.getTo()))
-                        event.getPlayer().sendActionBar(Component.text("Du betrittst ", color(0x88D657)).append(Component.text("Wildnis", NamedTextColor.GRAY)));
+            var from = Claim.allClaims.values().stream()
+                    .filter(c -> c.containsPlayer(event.getFrom()))
+                    .findAny();
+
+            var to = Claim.allClaims.values().stream()
+                    .filter(c -> c.containsPlayer(event.getTo()))
+                    .findAny();
+
+            if (to.isEmpty()) {
+                if (from.isPresent()) {
+                    event.getPlayer().sendActionBar(Component.text("Du betrittst ", NamedTextColor.DARK_AQUA)
+                            .append(Component.text("Wildnis", TextColor.color(0xF6ED82)))
+                    );
                 }
-            });
+            }
+
+            else if (from.isEmpty() || (from.get().getId() != to.get().getId() && !from.get().getUuid().equals(to.get().getUuid()))) {
+                Component name;
+                try {
+                    name = Chat.getName(Bukkit.getOfflinePlayer(UUID.fromString(to.get().getUuid())));
+                } catch (IllegalArgumentException e) {
+                    name = Component.text(to.get().getUuid(), TextColor.color(0x88D657));
+                }
+
+                if (name == null) name = Component.text("Unbekannt", TextColor.color(0x88D657), TextDecoration.ITALIC);
+
+                event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", NamedTextColor.DARK_AQUA).append(name));
+            }
+            if (to.isPresent() && (from.isEmpty() || from.get().getId() != to.get().getId())) {
+                Player player = event.getPlayer();
+                Particle.DustOptions extraCorner = new Particle.DustOptions(Color.WHITE, 1.0F);
+
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (to.get().getX1() + to.get().getX2()) / 2.0, player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getX1() - to.get().getX2()) * 5, Math.abs(to.get().getX1() - to.get().getX2()) / 4.0, 0.0, 0.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (to.get().getX1() + to.get().getX2()) / 2.0, player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getX1() - to.get().getX2()) * 5, Math.abs(to.get().getX1() - to.get().getX2()) / 4.0, 0.0, 0.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), (to.get().getZ1() + to.get().getZ2()) / 2.0).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getZ1() - to.get().getZ2()) * 5, 0.0, 0.0, Math.abs(to.get().getZ1() - to.get().getZ2()) / 4.0, extraCorner);
+                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), (to.get().getZ1() + to.get().getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getZ1() - to.get().getZ2()) * 5, 0.0, 0.0, Math.abs(to.get().getZ1() - to.get().getZ2()) / 4.0, extraCorner);
+            }
+
             return;
         }
 
@@ -397,6 +446,25 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         } else return 0;
     }
 
+    public boolean overlapsWithClaimFree(Location loc1, Location loc2) {
+        ConfigurationSection section = HardSMP.getInstance().getConfig().getConfigurationSection("claim.claim-free");
+        ConfigurationSection claimFreeArea;
+
+        if (section == null) return false;
+
+        for (int i = 1; true; i++) {
+            claimFreeArea = section.getConfigurationSection("rect" + i);
+            if(claimFreeArea == null) break;
+
+            if (Math.min(section.getInt("x1"), section.getInt("x2")) <= Math.max(loc1.getX(), loc2.getX())
+                    && Math.min(section.getInt("z1"), section.getInt("z2")) <= Math.max(loc1.getZ(), loc2.getZ())
+                    && Math.min(loc1.getX(), loc2.getX()) <= Math.max(section.getInt("x1"), section.getInt("x2"))
+                    && Math.min(loc1.getZ(), loc2.getZ()) <= Math.max(section.getInt("z1"), section.getInt("z2"))) return true;
+
+        }
+        return false;
+    }
+
     @EventHandler
     private void onBreak(BlockBreakEvent event) {
         if (claimingPlayers.containsKey(event.getPlayer().getUniqueId())) {
@@ -416,18 +484,41 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         double points = PlayerController.getPlayer((OfflinePlayer) event.getPlayer()).getActualPoints();
         ClaimRights rights = ClaimRights.load(event.getPlayer().getUniqueId());
 
-        if(points >= 30000) rights.setClaimCount(5);
-        else if(points >= 20000) rights.setClaimCount(4);
-        else if(points >= 10000) rights.setClaimCount(3);
-        else if(points >= 5000) rights.setClaimCount(2);
-        else if(points >= 500) rights.setClaimCount(1);
+        if (points >= 30000) rights.setClaimCount(5);
+        else if (points >= 20000) rights.setClaimCount(4);
+        else if (points >= 10000) rights.setClaimCount(3);
+        else if (points >= 5000) rights.setClaimCount(2);
+        else if (points >= 500) rights.setClaimCount(1);
 
         rights.save();
     }
 
+    @EventHandler
+    private void onDimensionChange(PlayerChangedWorldEvent event) {
+        if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) return;
+
+        ClaimInfo task = claimingPlayers.remove(event.getPlayer().getUniqueId());
+        if (task == null) return;
+        task.stopTasks();
+
+        actionbarColor.invalidate(event.getPlayer().getUniqueId().toString());
+        event.getFrom().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + event.getPlayer().getUniqueId()) || sb.getScoreboardTags().contains("marker2" + event.getPlayer().getUniqueId())).forEach(Entity::remove);
+
+        event.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§cDurch den Dimensionswechsel wurde der Claim-Modus beendet!")));
+    }
+
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length == 1) return Stream.of("start", "cancel", "finish", "remove", "info", "list")
+        if (args.length == 1) return Stream.of("start", "cancel", "finish", "remove", "info", "list")
+                .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                .toList();
+        if (
+                args.length == 2 &&
+                ((args[0].equals("info") &&
+                        commandSender.hasPermission("hardsmp.command.claim.info.others")) ||
+                        (args[0].equals("list") && commandSender.hasPermission("hardsmp.command.claim.list.others"))
+                )
+        ) return Arrays.stream(Bukkit.getOfflinePlayers()).map(OfflinePlayer::getName)
                 .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
                 .toList();
         return Collections.emptyList();

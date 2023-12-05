@@ -20,6 +20,8 @@ public class ClaimInfo {
     public final ScheduledTask particles;
     public Location loc1, loc2;
 
+    public int maxClaimSize;
+
     public ClaimInfo(Player player) {
         this.task = Bukkit.getScheduler().runTaskLater(HardSMP.getInstance(), () -> {
             ClaimCommand.claimingPlayers.remove(player.getUniqueId());
@@ -52,6 +54,9 @@ public class ClaimInfo {
 
 
         }, 0L, 500L, TimeUnit.MILLISECONDS);
+
+        ClaimRights rights = ClaimRights.load(player.getUniqueId());
+        maxClaimSize = rights.getTotalClaimSize() - rights.getTotalClaimed();
     }
 
     public void stopTasks() {

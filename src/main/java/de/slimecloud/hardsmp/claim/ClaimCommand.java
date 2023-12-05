@@ -268,7 +268,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
             ClaimRights rights = ClaimRights.load(event.getPlayer().getUniqueId());
             if (!event.getPlayer().hasPermission("hardsmp.claim.bypass") && getBlocks(event.getPlayer()) > rights.getTotalClaimSize() - rights.getTotalClaimed()) {
                 info.loc2 = old;
-                event.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§cDu kannst nicht so viele Blöcke claimen!\n    Kaufe dir mehr Blöcke im §äShop§c!")));
+                event.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§cDu kannst nicht so viele Blöcke claimen!\nKaufe dir mehr Blöcke im §äShop§c!")));
                 return;
             }
 
@@ -334,7 +334,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         if (blocks == 0) return;
 
         Boolean valid = actionbarColor.getIfPresent(event.getPlayer().getUniqueId().toString());
-        event.getPlayer().sendActionBar(Component.text(((valid != null && valid) ? "§a" : "§c") + blocks + (blocks == 1 ? " Block" : " Blöcke") + " ausgewählt"));
+        event.getPlayer().sendActionBar(Component.text(((valid != null && valid) ? "§a" : "§c") + blocks + "/" + claimingPlayers.get(event.getPlayer().getUniqueId()).maxClaimSize + " Blöcke" + " ausgewählt"));
     }
 
     private int getBlocks(Player player) {

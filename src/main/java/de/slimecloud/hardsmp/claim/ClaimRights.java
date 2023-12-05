@@ -54,7 +54,7 @@ public class ClaimRights extends DataClass {
                 .append(Component.text(" zusätzliche Blöcke claimen,\n", color(0x88D657)))
                 .append(Component.text("also insgesamt ", color(0x88D657)))
                 .append(Component.text("§6" + totalClaimSize))
-                .append(Component.text("Blöcke!", color(0x88D657)))
+                .append(Component.text(" Blöcke!", color(0x88D657)))
         );
     }
 

@@ -385,6 +385,8 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         .append(Component.text(name, NamedTextColor.BLUE))
                 );
             }
+
+            return;
         }
 
         int blocks = getBlocks(event.getPlayer());

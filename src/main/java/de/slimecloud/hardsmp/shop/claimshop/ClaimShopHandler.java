@@ -85,7 +85,7 @@ public class ClaimShopHandler implements Listener {
 
 
             if (secondPriceItem == null) {
-                currentItem.addLore(List.of("", ""));
+                currentItem.addLore(List.of("", "", ""));
                 List<ItemStack> list = new ArrayList<>();
                 list.add(firstPrice);
                 offers.add(new ClaimOffer(currentItem, quantity, list, requiredPoints, index, blocks));
@@ -93,7 +93,7 @@ public class ClaimShopHandler implements Listener {
             }
             Material mat2 = Material.getMaterial(secondPriceItem.toUpperCase());
             if (mat2 == null) {
-                currentItem.addLore(List.of("", ""));
+                currentItem.addLore(List.of("", "", ""));
                 List<ItemStack> list = new ArrayList<>();
                 list.add(firstPrice);
                 offers.add(new ClaimOffer(currentItem, quantity, list, requiredPoints, index, blocks));
@@ -101,7 +101,7 @@ public class ClaimShopHandler implements Listener {
             }
             ItemStack secondPrice = new ItemStack(mat2, secondPriceAmount);
 
-            currentItem.addLore(List.of("§b" + mat2.toString().replace('_', ' ') + " " + secondPriceAmount + "x", "", ""));
+            currentItem.addLore(List.of("§b" + mat2.toString().replace('_', ' ') + " " + secondPriceAmount + "x", "", "", ""));
 
             List<ItemStack> list = new ArrayList<>();
             list.add(firstPrice);
@@ -124,7 +124,12 @@ public class ClaimShopHandler implements Listener {
         shopinv.setItem(7, defaultItem);
         shopinv.setItem(8, defaultItem);
         for (ClaimOffer co : offers) {
-            shopinv.addItem(co.item.removeLore(Objects.requireNonNull(co.item.build().lore()).size() - 1).addLore(List.of((PlayerController.getPlayer((OfflinePlayer) player).getActualPoints() >= co.pointsRequired ? "§a" : "§c") + "Benötige Punkte: " + Math.round(co.pointsRequired))).setAmount((co.maxAmount - claimRights.getBought(co.blocks) == 0) ? 1 : co.maxAmount - claimRights.getBought(co.blocks)).build());
+            shopinv.addItem(co.item
+                    .removeLore(Objects.requireNonNull(co.item.build().lore()).size() - 1)
+                    .removeLore(Objects.requireNonNull(co.item.build().lore()).size() - 1)
+                    .addLore(List.of((PlayerController.getPlayer((OfflinePlayer) player).getActualPoints() >= co.pointsRequired ? "§a" : "§c") + "Benötige Punkte: " + Math.round(co.pointsRequired)))
+                    .addLore(List.of(((co.maxAmount - claimRights.getBought(co.blocks)) == 0 ? "§c" : "§e") + (co.maxAmount - claimRights.getBought(co.blocks)) + " übrig"))
+                    .setAmount((co.maxAmount - claimRights.getBought(co.blocks) == 0) ? 1 : co.maxAmount - claimRights.getBought(co.blocks)).build());
         }
     }
 

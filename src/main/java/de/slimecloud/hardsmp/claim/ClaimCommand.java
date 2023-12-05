@@ -229,7 +229,9 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
                     List<HomeData> homes = HomeData.load(player.getUniqueId());
 
-                    for (Claim claim : Claim.load(player.getUniqueId())) {
+                    for (Claim claim : Claim.allClaims.values()) {
+                        if(!claim.getUuid().equals(player.getUniqueId().toString())) continue;
+
                         var c = Component.text("   - Gebiet bei x: ")
                                 .append(Component.text(claim.getX1(), TextColor.color(0xF6ED82)))
                                 .append(Component.text(", z: "))

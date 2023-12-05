@@ -41,9 +41,7 @@ public class SetHomeCommand implements CommandExecutor, EmptyTabCompleter {
                 .filter(c -> c.getUuid().equals(player.getUniqueId().toString()) && c.containsPlayer(player.getLocation()))
                 .findAny().isEmpty()
         ) {
-            player.sendMessage(HardSMP.getPrefix().append(
-                    Component.text("Du kannst homes nur in deinem eigenen geclaimten Gebiet setzten!")
-            ));
+            player.sendMessage(HardSMP.getPrefix().append(Component.text("Du kannst homes nur in deinem eigenen geclaimten Gebiet setzten!", NamedTextColor.RED)));
             return true;
         }
 
@@ -56,7 +54,7 @@ public class SetHomeCommand implements CommandExecutor, EmptyTabCompleter {
                         .appendNewline()
                         .append(Component.text("Du kannst dich mit "))
                         .append(Component.text("§6/home " + args[0]).clickEvent(ClickEvent.suggestCommand("/home " + args[0])))
-                        .append(Component.text(" dort hin teleportieren oder das Home mit "))
+                        .append(Component.text(" dorthin teleportieren oder das Home mit "))
                         .append(Component.text("§6/removehome " + args[0]).clickEvent(ClickEvent.suggestCommand("/removehome " + args[0])))
                         .append(Component.text(" wieder entfernen"))
         ));

@@ -479,7 +479,15 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         if (args.length == 1) return Stream.of("start", "cancel", "finish", "remove", "info", "list")
                 .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
                 .toList();
-        if ((args.length == 2 && args[0].equals("info") || args.length == 2 && args[0].equals("list")) && commandSender.hasPermission("hardsmp.command.claim.info.others")) return Arrays.stream(Bukkit.getOfflinePlayers()).map(OfflinePlayer::getName).toList();
+        if (
+                args.length == 2 &&
+                ((args[0].equals("info") &&
+                        commandSender.hasPermission("hardsmp.command.claim.info.others")) ||
+                        (args[0].equals("list") && commandSender.hasPermission("hardsmp.command.claim.list.others"))
+                )
+        ) return Arrays.stream(Bukkit.getOfflinePlayers()).map(OfflinePlayer::getName)
+                .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                .toList();
         return Collections.emptyList();
     }
 }

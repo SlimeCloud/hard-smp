@@ -355,24 +355,36 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event) {
         if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) {
-            Claim.allClaims.values().forEach(c -> {
-                if (!c.containsPlayer(event.getFrom())) {
-                    if (c.containsPlayer(event.getTo())) {
-                        String name;
-                        try {
-                            name = Bukkit.getOfflinePlayer(UUID.fromString(c.getUuid())).getName();
-                        } catch (IllegalArgumentException e) {
-                            name = c.getUuid();
-                        }
-                        if (name == null) name = "Unbekannt";
-                        event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", color(0x88D657)).append(Component.text(name, NamedTextColor.BLUE)));
-                    }
-                } else {
-                    if (!c.containsPlayer(event.getTo()))
-                        event.getPlayer().sendActionBar(Component.text("Du betrittst ", color(0x88D657)).append(Component.text("Wildnis", NamedTextColor.GRAY)));
+            var from = Claim.allClaims.values().stream()
+                    .filter(c -> c.containsPlayer(event.getFrom()))
+                    .findAny();
+
+            var to = Claim.allClaims.values().stream()
+                    .filter(c -> c.containsPlayer(event.getTo()))
+                    .findAny();
+
+            if(to.isEmpty()) {
+                if(from.isPresent()) {
+                    event.getPlayer().sendActionBar(Component.text("Du betrittst ", color(0x88D657))
+                            .append(Component.text("Wildnis", NamedTextColor.GRAY))
+                    );
                 }
-            });
-            return;
+            }
+
+            else if(from.isEmpty() || (from.get().getId() != to.get().getId() && !from.get().getUuid().equals(to.get().getUuid()))) {
+                String name;
+                try {
+                    name = Bukkit.getOfflinePlayer(UUID.fromString(to.get().getUuid())).getName();
+                } catch (IllegalArgumentException e) {
+                    name = to.get().getUuid();
+                }
+
+                if (name == null) name = "Unbekannt";
+
+                event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", color(0x88D657))
+                        .append(Component.text(name, NamedTextColor.BLUE))
+                );
+            }
         }
 
         int blocks = getBlocks(event.getPlayer());

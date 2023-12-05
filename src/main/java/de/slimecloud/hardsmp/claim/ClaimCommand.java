@@ -11,6 +11,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -381,25 +382,23 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
             if(to.isEmpty()) {
                 if(from.isPresent()) {
-                    event.getPlayer().sendActionBar(Component.text("Du betrittst ", color(0x88D657))
-                            .append(Component.text("Wildnis", NamedTextColor.GRAY))
+                    event.getPlayer().sendActionBar(Component.text("Du betrittst ", NamedTextColor.DARK_AQUA)
+                            .append(Component.text("Wildnis", TextColor.color(0xF6ED82)))
                     );
                 }
             }
 
             else if(from.isEmpty() || (from.get().getId() != to.get().getId() && !from.get().getUuid().equals(to.get().getUuid()))) {
-                String name;
+                Component name;
                 try {
-                    name = Bukkit.getOfflinePlayer(UUID.fromString(to.get().getUuid())).getName();
+                    name = Chat.getName(Bukkit.getOfflinePlayer(UUID.fromString(to.get().getUuid())));
                 } catch (IllegalArgumentException e) {
-                    name = to.get().getUuid();
+                    name = Component.text(to.get().getUuid(), TextColor.color(0x88D657));
                 }
 
-                if (name == null) name = "Unbekannt";
+                if (name == null) name = Component.text("Unbekannt", TextColor.color(0x88D657), TextDecoration.ITALIC);
 
-                event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", color(0x88D657))
-                        .append(Component.text(name, NamedTextColor.BLUE))
-                );
+                event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", NamedTextColor.DARK_AQUA).append(name));
             }
 
             return;

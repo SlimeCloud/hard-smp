@@ -115,14 +115,14 @@ commands:
   spawn:
     permission: hardsmp.command.spawn
   home:
-    usage: "§cUsage: /home [<home Name>]"
+    usage: "§cBenutzung: /home <Name>"
     permission: hardsmp.command.home
   sethome:
-    usage: "§cUsage: /sethome [<home Name>]"
+    usage: "§cBenutzung: /sethome <Name>"
     permission: hardsmp.command.home.set
   listhome:
-    usage: "§cUsage: /listhome [<Player>]"
+    usage: "§cBenutzung: /listhome"
     permission: hardsmp.command.home.list
   removehome:
-    usage: "§cUsage: /removehome [<home Name>]"
+    usage: "§cBenutzung: /removehome <Name>"
     permission: hardsmp.command.home.remove

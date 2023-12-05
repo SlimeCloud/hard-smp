@@ -5,6 +5,7 @@ import de.slimecloud.hardsmp.claim.Claim;
 import de.slimecloud.hardsmp.claim.ClaimRights;
 import de.slimecloud.hardsmp.commands.EmptyTabCompleter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.Command;
@@ -52,6 +53,12 @@ public class SetHomeCommand implements CommandExecutor, EmptyTabCompleter {
                 Component.text("Dein Home ", TextColor.color(0x88d657))
                         .append(Component.text(args[0], TextColor.color(0xF6ED82)))
                         .append(Component.text(" wurde gesetzt!", TextColor.color(0x88d657)))
+                        .appendNewline()
+                        .append(Component.text("Du kannst dich mit "))
+                        .append(Component.text("§6/home " + args[0]).clickEvent(ClickEvent.suggestCommand("/home " + args[0])))
+                        .append(Component.text(" dort hin teleportieren oder das Home mit "))
+                        .append(Component.text("§6/removehome " + args[0]).clickEvent(ClickEvent.suggestCommand("/removehome " + args[0])))
+                        .append(Component.text(" wieder entfernen"))
         ));
 
         return true;

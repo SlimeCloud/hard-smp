@@ -5,6 +5,9 @@ import com.google.common.cache.CacheBuilder;
 import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -41,7 +44,9 @@ public class ReplyCommand implements CommandExecutor, EmptyTabCompleter {
             return true;
         }
 
-        Component message = Formatter.parseText("&", "&r&7&o " + String.join(" ", args));
+        Component message = Formatter.parseText("&", "&r&7&o " + String.join(" ", args))
+                .clickEvent(ClickEvent.suggestCommand("/r "))
+                .hoverEvent(HoverEvent.showText(Component.text("Antworten", TextColor.color(0xF6ED82))));;
 
         tPlayer.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.receive"))
                 .append(HardSMP.getInstance().getChat().formatName(player))

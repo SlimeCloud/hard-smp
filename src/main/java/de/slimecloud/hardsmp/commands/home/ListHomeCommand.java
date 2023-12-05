@@ -4,7 +4,6 @@ import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.ui.Chat;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,17 +19,26 @@ import java.util.List;
 
 public class ListHomeCommand implements CommandExecutor, TabCompleter {
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        Player target = Bukkit.getPlayer(commandSender.getName());
-        Player sender = target;
-        if (args.length > 0) {
-            target = Bukkit.getPlayer(args[0]);
-            if (target == null){
-                sender.sendMessage(HardSMP.getPrefix().append(
-                        Component.text("Spieler konnte nicht gefunden werden", NamedTextColor.RED)
-                ));
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        Player target;
+
+        if (args.length == 1) {
+            if(!sender.hasPermission("hardsmp.command.home.other")) {
+                sender.sendMessage("§cFehlende Berechtigung");
                 return true;
             }
+
+            target = Bukkit.getPlayer(args[0]);
+
+            if (target == null){
+                sender.sendMessage(HardSMP.getPrefix().append(Component.text("§cSpieler konnte nicht gefunden werden")));
+                return true;
+            }
+        }
+        else if(sender instanceof Player player) target = player;
+        else {
+            sender.sendMessage("§cCommand kann nur von einem Spieler ausgeführt werden!");
+            return true;
         }
 
         Component homes = Component.text("Homes von ", TextColor.color(0x88d657))
@@ -46,7 +54,6 @@ public class ListHomeCommand implements CommandExecutor, TabCompleter {
 
         sender.sendMessage(homes);
         return true;
-
     }
 
     @Override

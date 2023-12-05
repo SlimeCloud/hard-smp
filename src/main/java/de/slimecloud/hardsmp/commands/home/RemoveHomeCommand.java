@@ -24,7 +24,7 @@ public class RemoveHomeCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (args.length > 0) {
+        if (args.length == 1) {
             HomeData.load(player.getUniqueId(), args[0]).ifPresentOrElse(
                     homeData -> remove(homeData, player),
                     () -> player.sendMessage(HardSMP.getPrefix()
@@ -32,9 +32,8 @@ public class RemoveHomeCommand implements CommandExecutor, TabCompleter {
                             .append(Component.text(args[0], NamedTextColor.RED))
                             .append(Component.text(" konnte nicht gefunden werden!", NamedTextColor.RED)))
             );
+            return true;
         } else return false;
-
-        return true;
     }
 
     private void remove(HomeData home, Player player) {

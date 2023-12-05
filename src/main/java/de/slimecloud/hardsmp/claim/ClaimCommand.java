@@ -133,7 +133,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                     .append(Component.text("Hinweis: ").color(NamedTextColor.RED))
                                     .append(Component.text("Du kannst jetzt in diesem Claim ein Home mit "))
                                     .append(Component.text("§6/sethome <name>").clickEvent(ClickEvent.suggestCommand("/sethome ")))
-                                    .append(Component.text("setzen!").color(NamedTextColor.GRAY)));
+                                    .append(Component.text(" setzen!").color(NamedTextColor.GRAY)));
                         } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast nicht alle Ecken gesetzt!")));
                     } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist nicht im Claim-Modus!")));
                 }

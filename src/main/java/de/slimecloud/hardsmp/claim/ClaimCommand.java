@@ -456,20 +456,21 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         double points = PlayerController.getPlayer((OfflinePlayer) event.getPlayer()).getActualPoints();
         ClaimRights rights = ClaimRights.load(event.getPlayer().getUniqueId());
 
-        if(points >= 30000) rights.setClaimCount(5);
-        else if(points >= 20000) rights.setClaimCount(4);
-        else if(points >= 10000) rights.setClaimCount(3);
-        else if(points >= 5000) rights.setClaimCount(2);
-        else if(points >= 500) rights.setClaimCount(1);
+        if (points >= 30000) rights.setClaimCount(5);
+        else if (points >= 20000) rights.setClaimCount(4);
+        else if (points >= 10000) rights.setClaimCount(3);
+        else if (points >= 5000) rights.setClaimCount(2);
+        else if (points >= 500) rights.setClaimCount(1);
 
         rights.save();
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length == 1) return Stream.of("start", "cancel", "finish", "remove", "info", "list")
+        if (args.length == 1) return Stream.of("start", "cancel", "finish", "remove", "info", "list")
                 .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
                 .toList();
+        if (args.length == 2 && args[0].equals("info") && commandSender.hasPermission("hardsmp.command.claim.info.others")) return Arrays.stream(Bukkit.getOfflinePlayers()).map(OfflinePlayer::getName).toList();
         return Collections.emptyList();
     }
 }

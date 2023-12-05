@@ -4,6 +4,9 @@ import de.cyklon.spigotutils.adventure.Formatter;
 import de.cyklon.spigotutils.item.ItemBuilder;
 import de.cyklon.spigotutils.ui.scoreboard.ScoreboardUI;
 import de.slimecloud.hardsmp.advancement.AdvancementHandler;
+import de.slimecloud.hardsmp.claim.ClaimCommand;
+import de.slimecloud.hardsmp.claim.ClaimInfo;
+import de.slimecloud.hardsmp.claim.ClaimProtectionHandler;
 import de.slimecloud.hardsmp.commands.*;
 import de.slimecloud.hardsmp.commands.home.HomeCommand;
 import de.slimecloud.hardsmp.commands.home.ListHomeCommand;
@@ -12,14 +15,12 @@ import de.slimecloud.hardsmp.commands.home.SetHomeCommand;
 import de.slimecloud.hardsmp.commands.info.MinecraftInfoCommand;
 import de.slimecloud.hardsmp.commands.SpawnCommand;
 import de.slimecloud.hardsmp.database.Database;
-import de.slimecloud.hardsmp.item.ChestKey;
-import de.slimecloud.hardsmp.item.CustomItem;
-import de.slimecloud.hardsmp.item.ItemManager;
-import de.slimecloud.hardsmp.item.LockPick;
+import de.slimecloud.hardsmp.item.*;
 import de.slimecloud.hardsmp.listener.DeathPointHandler;
 import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
+import de.slimecloud.hardsmp.shop.claimshop.ClaimShopHandler;
 import de.slimecloud.hardsmp.ui.*;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
@@ -31,18 +32,21 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.luckperms.api.LuckPerms;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Shulker;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class HardSMP extends JavaPlugin {
 
     public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
+    public final NamespacedKey CLAIM_SHOP_KEY = new NamespacedKey(this, "claimshop");
 
     @Getter
     private static HardSMP instance;
@@ -63,10 +67,24 @@ public final class HardSMP extends JavaPlugin {
     private DiscordBot discordBot;
 
     @Getter
+    private ClaimShopHandler claimShopHandler;
+
+    @Getter
     private ChestKey chestKey;
 
     @Getter
     private LockPick lockPick;
+
+    @Getter
+    private PlotBuyer plotBuyer25;
+    @Getter
+    private PlotBuyer plotBuyer100;
+    @Getter
+    private PlotBuyer plotBuyer500;
+    @Getter
+    private PlotBuyer plotBuyer1000;
+    @Getter
+    private PlotBuyer plotBuyer5000;
 
     @Getter
     private Chat chat;
@@ -98,7 +116,9 @@ public final class HardSMP extends JavaPlugin {
             getLogger().info("registered \"" + format + "\" as color code for " + formattings.getString(format));
         }
 
-        RulesCommand rules;
+        ClaimCommand claim = new ClaimCommand();
+        claimShopHandler = new ClaimShopHandler();
+        RulesCommand rules = new RulesCommand();
         KeyChainCommand keyChain;
 
         //commands
@@ -108,7 +128,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("verify", new VerifyCommand());
         registerCommand("unverify", new UnverifyCommand());
         registerCommand("help", new HelpCommand());
-        registerCommand("rules", rules = new RulesCommand());
+        registerCommand("rules", rules);
         registerCommand("teamchat", new TeamChatCommand());
         registerCommand("enderchest", new EnderchestCommand());
         registerCommand("keys", keyChain = new KeyChainCommand(this));
@@ -117,6 +137,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("leaderboard", new LeaderboardCommand());
         registerCommand("msg", new MsgCommand());
         registerCommand("reply", new ReplyCommand());
+        registerCommand("claim", claim);
         registerCommand("hatitem", new HatItemCommand());
         registerCommand("spawn", new SpawnCommand());
         registerCommand("home", new HomeCommand());
@@ -128,10 +149,13 @@ public final class HardSMP extends JavaPlugin {
         //Events
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
+        registerEvent(claimShopHandler);
         registerEvent(new PointsListener());
         registerEvent(rules);
         registerEvent(keyChain);
         registerEvent(new DeathPointHandler());
+        registerEvent(claim);
+        registerEvent(new ClaimProtectionHandler());
         registerEvent(new PunishmentListener(this));
 
         //UI
@@ -145,11 +169,21 @@ public final class HardSMP extends JavaPlugin {
         registerEvent(chestKey = new ChestKey(this));
         registerEvent(lockPick = new LockPick(chestKey));
 
+        ConfigurationSection section = getConfig().getConfigurationSection("claimshop.offers");
+        if (section == null) getLogger().warning("Could not initialize claimshop, config misconfigured!");
+        else {
+            registerEvent(plotBuyer25 = new PlotBuyer(section.getInt("plot-buyer-25.blocks"), section.getInt("plot-buyer-25.price.required-points"), section.getInt("plot-buyer-25.quantity"), section.getInt("plot-buyer-25.index")));
+            registerEvent(plotBuyer100 = new PlotBuyer(section.getInt("plot-buyer-100.blocks"), section.getInt("plot-buyer-100.price.required-points"), section.getInt("plot-buyer-100.quantity"), section.getInt("plot-buyer-100.index")));
+            registerEvent(plotBuyer500 = new PlotBuyer(section.getInt("plot-buyer-500.blocks"), section.getInt("plot-buyer-500.price.required-points"), section.getInt("plot-buyer-500.quantity"), section.getInt("plot-buyer-500.index")));
+            registerEvent(plotBuyer1000 = new PlotBuyer(section.getInt("plot-buyer-1000.blocks"), section.getInt("plot-buyer-1000.price.required-points"), section.getInt("plot-buyer-1000.quantity"), section.getInt("plot-buyer-1000.index")));
+            registerEvent(plotBuyer5000 = new PlotBuyer(section.getInt("plot-buyer-5000.blocks"), section.getInt("plot-buyer-5000.price.required-points"), section.getInt("plot-buyer-5000.quantity"), section.getInt("plot-buyer-5000.index")));
+        }
 
         CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
 
         SlimeHandler.setupOffers(getConfig());
+        claimShopHandler.addItemsToShop();
 
         AdvancementHandler.register(this, this::registerEvent);
 
@@ -164,15 +198,23 @@ public final class HardSMP extends JavaPlugin {
     public void onDisable() {
         ScoreboardUI.getScoreboards().forEach(ScoreboardUI::delete);
 
+        Bukkit.getWorlds().forEach(world -> world.getEntitiesByClass(Shulker.class).stream()
+                .filter(shulker -> shulker.getScoreboardTags().stream().anyMatch(s -> s.contains("marker1") || s.contains("marker2")))
+                .forEach(Shulker::remove)
+        );
+
+        ClaimCommand.claimingPlayers.values().forEach(ClaimInfo::stopTasks);
+        ClaimCommand.claimingPlayers.clear();
+
         this.discordBot.shutdown();
     }
 
     public static TextComponent getPrefix() {
-        return Component.text("[", NamedTextColor.DARK_GRAY)
+        return Component.empty().append(Component.text("[", NamedTextColor.DARK_GRAY)
                 .append(Component.text("Hard", TextColor.color(0x88D657)))
                 .append(Component.text("SMP", TextColor.color(0xF6ED82)))
                 .append(Component.text("] ", NamedTextColor.DARK_GRAY))
-                .color(NamedTextColor.GRAY);
+        ).color(NamedTextColor.GRAY);
     }
 
     private void registerEvent(Listener listener) {

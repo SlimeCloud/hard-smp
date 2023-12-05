@@ -1,6 +1,7 @@
 package de.slimecloud.hardsmp.player;
 
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.claim.ClaimRights;
 import de.slimecloud.hardsmp.player.data.PointCategory;
 import de.slimecloud.hardsmp.player.data.Points;
 import de.slimecloud.hardsmp.verify.Verification;
@@ -51,6 +52,27 @@ public class PlayerController {
             HardSMP.getInstance().getLogger().info("Added " + direct + " [" + points + "] points to player " + player.getName());
 
             if(points > 50 && player.getPlayer() != null) player.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("Dir wurden ").append(Component.text((int) points).color(NamedTextColor.RED)).append(Component.text(" Punkte hinzugefügt"))));
+
+            double current = getActualPoints();
+            ClaimRights rights = ClaimRights.load(getUniqueId());
+
+            if(current < 500 && current + points >= 500) {
+                getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §61 §aClaim platzieren!")));
+                rights.setClaimCount(1);
+            } else if(current < 5000 && current + points >= 5000) {
+                getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §62 §aClaims platzieren!")));
+                rights.setClaimCount(2);
+            } else if(current < 10000 && current + points >= 10000) {
+                getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §63 §aClaims platzieren!")));
+                rights.setClaimCount(3);
+            } else if(current < 20000 && current + points >= 20000) {
+                getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §64 §aClaims platzieren!")));
+                rights.setClaimCount(4);
+            } else if(current < 30000 && current + points >= 30000) {
+                getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §65 §aClaims platzieren!")));
+                rights.setClaimCount(5);
+            }
+            rights.save();
 
             Points p = getData();
             p.setPoints(p.getPoints() + points);

@@ -47,4 +47,8 @@ public class ItemManager {
         return new ItemBuilder(getStack(id));
     }
 
+    public ItemBuilder getBuilder(Material item) {
+        return new ItemBuilder(item);
+    }
+
 }

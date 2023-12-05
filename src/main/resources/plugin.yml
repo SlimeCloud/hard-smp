@@ -31,6 +31,8 @@ permissions:
     default: false
   hardsmp.verify.bypass:
     default: false
+  hardsmp.claim.bypass:
+    default: false
   hardsmp.chat.highlight:
     default: false
   hardsmp.command.hatitem:
@@ -53,6 +55,8 @@ permissions:
     default: true
   hardsmp.command.home.remove:
     default: true
+  hardsmp.command.claim:
+    default: true
 
 commands:
   formatting:
@@ -61,6 +65,7 @@ commands:
     usage: "§cUsage: /point <Player> add/set/remove/get"
     permission: hardsmp.command.point
   spawn-shop-npc:
+    usage: "§cUsage: /spawn-shop-npc general/claimshop"
     permission: hardsmp.command.spawn-shop
   help:
     permission: hardsmp.command.help
@@ -93,6 +98,9 @@ commands:
   leaderboard:
     usage: "§cUsage: /leaderboard <Page>"
     permission: hardsmp.command.leaderboard
+  claim:
+    usage: "§cUsage: /claim <start/cancel/finish/remove/info>"
+    permission: hardsmp.command.claim
   info:
     usage: "§cUsage: /info discord/minecraft <id or name>"
     permission: hardsmp.command.discord

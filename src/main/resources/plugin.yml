@@ -62,10 +62,10 @@ commands:
   formatting:
     permission: hardsmp.command.formatting
   point:
-    usage: "§cUsage: /point <Player> add/set/remove/get"
+    usage: "§cBenutzung: /point <Spieler> [add/set/remove/get]"
     permission: hardsmp.command.point
   spawn-shop-npc:
-    usage: "§cUsage: /spawn-shop-npc general/claimshop"
+    usage: "§cBenutzung: /spawn-shop-npc [general/claimshop]"
     permission: hardsmp.command.spawn-shop
   help:
     permission: hardsmp.command.help
@@ -73,44 +73,44 @@ commands:
     permission: hardsmp.command.rules
   msg:
     aliases: ["whisper", "dm", "w"]
-    usage: "§cUsage: /msg <Player> <Message>"
+    usage: "§cBenutzung: /msg <Spieler> <Nachricht>"
     permission: hardsmp.command.msg
   reply:
     aliases: ["r"]
     permission: hardsmp.command.msg
   teamchat:
     aliases: ["tc"]
-    usage: "§cUsage: /teamchat <Message>"
+    usage: "§cBenutzung: /teamchat <Nachricht>"
     permission: hardsmp.teamchat.send
   unverify:
-    usage: "§cUsage: /unverify <Player>"
+    usage: "§cBenutzung: /unverify <Spieler>"
     permission: hardsmp.command.unverify
   verify:
-    usage: "§cUsage: /verify <Player>"
+    usage: "§cBenutzung: /verify <Spieler>"
     permission: hardsmp.command.verify
   keys:
-    usage: "§cUsage: /keys"
+    usage: "§cBenutzung: /keys"
     permission: hardsmp.command.keys
   feedback:
     permission: hardsmp.command.feedback
   bug:
     permission: hardsmp.command.bug
   leaderboard:
-    usage: "§cUsage: /leaderboard <Page>"
+    usage: "§cBenutzung: /leaderboard (<Seite>)"
     permission: hardsmp.command.leaderboard
   claim:
-    usage: "§cUsage: /claim <start/cancel/finish/remove/info>"
+    usage: "§cBenutzung: /claim [start/cancel/finish/remove/info]"
     permission: hardsmp.command.claim
   info:
-    usage: "§cUsage: /info discord/minecraft <id or name>"
+    usage: "§cBenutzung: /info [discord/minecraft] <Name>"
     permission: hardsmp.command.discord
   hatitem:
     aliases: ["hat"]
-    usage: "§cUsage: /hatitem [<Player>]"
+    usage: "§cBenutzung: /hatitem (<Spieler>)"
     permission: hardsmp.command.hatitem
   enderchest:
     aliases: ["ec"]
-    usage: "§cUsage: /enderchest [<Player>]"
+    usage: "§cBenutzung: /enderchest (<Player>)"
     permission: hardsmp.command.enderchest
   spawn:
     permission: hardsmp.command.spawn

@@ -27,6 +27,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -129,7 +130,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             actionbarColor.invalidate(uuid.toString());
                             claimingPlayers.remove(uuid);
                             task.stopTasks();
-                            new Claim(uuid.toString(), (int) task.loc1.getX(), (int) task.loc1.getZ(), (int) task.loc2.getX(), (int) task.loc2.getZ(), 0).save();
+                            new Claim(uuid.toString(), (int) task.loc1.getX(), (int) task.loc1.getZ(), (int) task.loc2.getX(), (int) task.loc2.getZ(), 0, player.getWorld().getName()).save();
 
                             player.getWorld().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + uuid) || sb.getScoreboardTags().contains("marker2" + uuid)).forEach(Entity::remove);
 
@@ -471,6 +472,20 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         else if (points >= 500) rights.setClaimCount(1);
 
         rights.save();
+    }
+
+    @EventHandler
+    private void onDimensionChange(PlayerChangedWorldEvent event) {
+        if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) return;
+
+        ClaimInfo task = claimingPlayers.remove(event.getPlayer().getUniqueId());
+        if (task == null) return;
+        task.stopTasks();
+
+        actionbarColor.invalidate(event.getPlayer().getUniqueId().toString());
+        event.getFrom().getEntitiesByClass(Shulker.class).stream().filter(sb -> sb.getScoreboardTags().contains("marker1" + event.getPlayer().getUniqueId()) || sb.getScoreboardTags().contains("marker2" + event.getPlayer().getUniqueId())).forEach(Entity::remove);
+
+        event.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§cDurch den Dimensionswechsel wurde der Claim-Modus beendet!")));
     }
 
     @Override

@@ -32,6 +32,8 @@ public class Claim extends DataClass {
     @Autoincrement
     private int id;
 
+    private String worldName;
+
     public static Set<Claim> load(UUID uuid) {
         return loadAll(Claim::new, Map.of("uuid", uuid.toString())).stream().peek(c -> allClaims.put(c.id, c)).collect(Collectors.toSet());
     }
@@ -44,7 +46,7 @@ public class Claim extends DataClass {
     }
 
     public boolean contains(Location loc) {
-        return Math.min(x1, x2) <= loc.x() && loc.x() <= Math.max(x1, x2) && Math.min(z1, z2) <= loc.z() && loc.z() <= Math.max(z1, z2);
+        return loc.getWorld().getName().equals(worldName) && Math.min(x1, x2) <= loc.x() && loc.x() <= Math.max(x1, x2) && Math.min(z1, z2) <= loc.z() && loc.z() <= Math.max(z1, z2);
     }
 
     public boolean containsPlayer(Location loc) {

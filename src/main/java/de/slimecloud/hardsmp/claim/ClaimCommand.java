@@ -393,7 +393,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                 try {
                     name = Chat.getName(Bukkit.getOfflinePlayer(UUID.fromString(to.get().getUuid())));
                 } catch (IllegalArgumentException e) {
-                    name = Component.text(to.get().getUuid(), TextColor.color(0x88D657), TextDecoration.ITALIC);
+                    name = Component.text(to.get().getUuid(), TextColor.color(0x88D657));
                 }
 
                 if (name == null) name = Component.text("Unbekannt", TextColor.color(0x88D657), TextDecoration.ITALIC);

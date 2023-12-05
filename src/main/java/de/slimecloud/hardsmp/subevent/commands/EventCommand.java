@@ -29,6 +29,7 @@ public class EventCommand implements CommandExecutor, TabCompleter {
 
             }
             case "setup" -> {
+                sender.sendMessage(Component.text("Lade Event!", NamedTextColor.GREEN));
                 SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);
                 if (event == null) {
                     sender.sendMessage(Component.text("SubEvent '" + args[1] + "' wurde nicht gefunden!", NamedTextColor.RED));
@@ -61,6 +62,7 @@ public class EventCommand implements CommandExecutor, TabCompleter {
             case 1 -> {
                 System.out.println("case 1");
                 list.add("start");
+                list.add("setup");
                 list.add("stop");
             }
             case 2 -> {

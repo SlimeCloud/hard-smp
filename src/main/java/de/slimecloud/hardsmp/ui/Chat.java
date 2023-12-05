@@ -70,7 +70,7 @@ public class Chat implements Listener {
         Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(message));
     }
 
-    public Component formatName(Player sender) {
+    public Component formatName(OfflinePlayer sender) {
         User user = HardSMP.getInstance().getLuckPerms().getUserManager().getUser(sender.getUniqueId());
         String prefix;
         if (user == null) prefix = null;
@@ -87,7 +87,7 @@ public class Chat implements Listener {
             default -> "§7#" + rank;
         };
 
-        if(sender.getPlayer().hasPermission("hardsmp.chat.highlight")) {
+        if(sender.getPlayer() != null && sender.getPlayer().hasPermission("hardsmp.chat.highlight")) {
             rank = "";
             nameColor = HardSMP.getInstance().getConfig().getString("ui.chat.color.team");
         } else rank += " ";

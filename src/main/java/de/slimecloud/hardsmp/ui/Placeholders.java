@@ -1,7 +1,9 @@
 package de.slimecloud.hardsmp.ui;
 
+import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.player.PlayerController;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,9 +38,8 @@ public class Placeholders extends PlaceholderExpansion {
 
     @Override
     public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
-        if(params.equalsIgnoreCase("points")) {
-            return "" + (int) PlayerController.getPlayer(player).getActualPoints();
-        }
+        if(params.equalsIgnoreCase("points")) return "" + (int) PlayerController.getPlayer(player).getActualPoints();
+        else if(params.equalsIgnoreCase("name")) return LegacyComponentSerializer.legacySection().serialize(HardSMP.getInstance().getChat().formatName(player));
 
         return null;
     }

@@ -5,67 +5,227 @@ database:
 
 shop:
   offers:
+    lock-pick:
+      item: "lock-pick"
+      amount: 1
+      price:
+        item: "iron_ingot"
+        amount: 32
+        second-item: "gold_ingot"
+        second-amount: 1
+        required-points: 1500
     chest-key:
       item: "chest-key"
       amount: 1
       price:
+        required-points: 100
         item: "iron_ingot"
         amount: 2
         second-item: "gold_ingot"
         second-amount: 1
+    mending-Infinity-bow:
+      item: "mending-Infinity-bow"
+      amount: 1
+      price:
+        required-points: 3000
+        item: "bow"
+        amount: 1
+        second-item: "netherite_ingot"
+        second-amount: 3
+
+claimshop:
+  offers:
+    plot-buyer-25:
+      item: "plot-buyer-25"
+      amount: 1
+      quantity: 4
+      blocks: 25
+      index: 3
+      price:
+        required-points: 500
+        item: "iron_ingot"
+        amount: 10
+    plot-buyer-100:
+      item: "plot-buyer-100"
+      amount: 1
+      quantity: 5
+      blocks: 100
+      index: 4
+      price:
+        required-points: 3000
+        item: "diamond"
+        amount: 5
+    plot-buyer-500:
+      item: "plot-buyer-500"
+      amount: 1
+      quantity: 3
+      blocks: 500
+      index: 5
+      price:
+        required-points: 7500
+        item: "diamond"
+        amount: 17
+    plot-buyer-1000:
+      item: "plot-buyer-1000"
+      amount: 1
+      quantity: 2
+      blocks: 1000
+      index: 6
+      price:
+        required-points: 15000
+        item: "netherite_ingot"
+        amount: 3
+    plot-buyer-5000:
+      item: "plot-buyer-5000"
+      amount: 1
+      quantity: 2
+      blocks: 5000
+      index: 7
+      price:
+        required-points: 25000
+        item: "netherite_ingot"
+        amount: 10
+        second-item: "diamond"
+        second-amount: 32
+
+chest-key:
+  lockable: ["CHEST", "TRAPPED_CHEST", "BARREL", "SHULKER_BOX"]
+  no-key: "§cVerschlossen"
+  lockpick:
+    #probability to crack a container in % per try
+    probability: 0.4
+  success:
+    lock: "§2Erfolgreich verschlossen"
+    unlock: "§2Erfolgreich geöffnet"
+    crack: "§2Erfolgreich geknackt"
+    crack-msg: |-
+      §2Erfolgreich geknackt!\n
+      §6Du kannst die Kiste jetzt einmal öffnen, oder Abbauen.
+    
+
 
 help:
-  root: "Das ist der help command"
-  event-info: "event infos..."
-  support-info: "support infos..."
+  root: "§ä----- §öHilfe §ä----- \n\n§äNutze §ö/help event §äfür kommende Events \n§äNutze §ö/help command §äfür eine Command-Übersicht \n§äNutze §ö/help support §äfür Infos zum Support \n\n§ä----- §öHilfe §ä-----"
+  event-info: |-
+    §ä----- §öEvents §ä-----
+    §äEs wird an jedem Wochenende ein Event geben, in dem du zusätzliche Punkte bekommen kannst.
+
+    §7- §äEvent am §ö10.12§r§8: §äReplika
+    §7- §äEvent am §ö17.12§r§8: §äPvE Waves
+    §7- §äEvent am §ö23.12§r§8: §äRätsel-Labyrinth
+    §ä----- §öEvents §ä-----
+  support-info: |-
+    §ä----- §öSupport §ä-----
+    §äWenn du support erhalten möchtest, kannst du dich jeder Zeit an das Server-Team melden.
+    §äDu kannst entweder im Minecraft-Chat mit einem Team-Mitglied Kontakt aufnehmen oder dich auf dem §öSlimecloud Discord§ä an uns wenden.
+    §äZusätzlich kannst du §ö/bug§ä und §ö/feedback§ä verwenden, um auf ein jeweiliges Formular weitergeleitet zu werden.
+    §ä----- §öSupport §ä-----
   command-info:
-    rules: "Zeigt dir die Server regeln an."
+    rules: "Zeigt die Regeln des Hard-SMP Events an"
+    spawn: "Teleportiert dich zum Spawn-Dorf"
+    msg: "Sende eine private Nachricht zu einem anderen Spieler"
+    formatting: "Zeige verfügbare Formations-Zeichen für den Chat an"
+    help: "Zeigt die Hilfe zu Kategorien oder Befehlen an"
+    feedback: "Zeigt den Link zum Feedback-Formular"
+    bug: "Zeigt den Link zum Bugreport-Formular"
+    leaderboard: "Zeigt das aktuelle Punkte-Leaderboard an"
+    claim: "Claimt Grundstücke und schützt sie gegen andere Spieler"
+  claim: |-
+    §ä----- §öClaim-System §ä-----
+    §äMit dem Claim-System kannst du Grundstücke claimen, die dann gegen den Einfluss von anderen Spielern geschützt sind.
+
+    §7- §äZuerst musst du beim Bauamt am Spawn Claims erwerben
+    §7- §äStarte den Claim-Modus mit §ö/claim start §äund wähle dein Gebiet aus (folge den Anweisungen im Chat)
+    §7- §äClaime dein ausgewähltes Gebiet mit §ö/claim finish
+    §7- §äWenn du ein Claim löschen möchtest, stell dich in das Gebiet und nutze §ö/claim remove
+    §7- §äMit §ö/claim info §äkannst du dir die aktuell verfügbaren Blöcke anzeigen lassen
+    
+    §cHINWEIS: §7Um ein Claim zu erweitern, musst du aktuell das Claim löschen und das größere Claim neu platzieren!
+    §ä----- §öClaim-System §ä-----
+    
 
 rules:
-  1: "test"
+  Discord Regeln: "§äAuf dem Minecraft Server gelten die gleichen regeln wie auf dem Slimecloud Discord Server. Verwarnung in Minecraft führen auch zu Verwarnungen in Discord!"
+  Allgemeine Chatregeln:
+    1: "Keine Beleidigungen"
+    2: "Kein Mobbing"
+    3: "Kein Spammen"
+    4: "..."
+  Fairness: "Unfaires Spielen wie Griefing oder Hacking ist nicht erlaubt. Als Client-Modifikationen sind nur Optifine oder ähnliche (z.B. Sodium) zulässig!"
+  Lags: "Das bewusste verursachen von Server-Lags ist verboten! Redstone-Mechanismen sollten ausgeleuchtet und performant gebaut werden"
+  Teaming: "Teaming is grundsätzlich verboten, um das Event für alle Spieler fair zu halten. §l§cKURZE§r§ä Zweck-Allianzen und Tauschgeschäfte sind erlaubt"
+  Fehler: "Das aktive suchen und ausnutzen von Bugs ist verboten. Solltest du einen Fehler finden, melde ihn bitte mit /bug"
+  Unwissenheit: "Unwissenheit schützt nicht vor Strafe! Jeder Spieler ist für seinen Account verantwortlich!"
+  Team: "Das Team behält sich das Recht vor, die Regeln jederzeit anzupassen und unangemessenes Verhalten zu ahnden"
 
 ui:
   custom-formatting:
+    #rank #1
     v: "#fcd217"
+    #rank #2
     w: "#bdbdbd"
+    #rank #3
     z: "#bf8970"
+    #better green (slime green) main color
+    ä: "#88D657"
+    #contrast color
+    ö: "#F6ED82"
 
   scoreboard:
-    title: "§2Hard-SMP"
+    title: "\uE001"
     text:
-      default: "%rank. %name   §u%points"
-      rank_1: "§l§6%rank. %name   §r§u%points"
-      rank_2: "§l§i%rank. %name   §r§u%points"
-      rank_3: "§l§y%rank. %name   §r§u%points"
+      default: "%rank%name §ä%points"
+      rank_1: "\uE002§l§v %name §r§ä%points"
+      rank_2: "\uE003§l§w %name §r§ä%points"
+      rank_3: "\uE004§l§z %name §r§ä%points"
+      rank_4: "§i%rank. %name §r§ä%points"
+      rank_5: "§i%rank. %name §r§ä%points"
 
   tablist:
-    header: "§j-----  §2Hard-SMP  §j-----"
-    prefix: "§8[§7%prefix§8]"
-    name: "%prefix §r%name  §p%points"
-    footer: "§j---  §7[%tps §8TPS§7]  §j---"
+    header: "\uE005"
+    footer: "§j---  §7[%tps §öTPS§r | §ö%players Spieler§7]  §j---"
 
   chat:
+    msgPrefix:
+      receive: "§öPrivate Nachricht von§r "
+      outgoing: "§öPrivate Nachricht an§r "
+    replyPrefix:
+      receive: "§öAntwort von§r "
+      outgoing: "§öAntwort an§r "
     prefix: "§7[%prefix§7]"
     #colr = color rank
     #coln = color name
-    format: "%colr#%rank %prefix %coln%name: "
+    format: "%rank%prefix %coln%name"
     color:
-      name_default: "§a"
+      name_default: "§ä"
+      team: '§9'
       name_1: "§v"
       name_2: "§w"
       name_3: "§z"
 
-      rank_default: "§7"
-      rank_1: "§v"
-      rank_2: "§w"
-      rank_3: "§z"
-
 verify:
   code-length: 5
+  pre-verify: false
 
 discord:
   token: xxx
+  console-channel: 123
+  netrunner-role: 123
+  guild: 123
+  mod-log-channel: 123
 
 teamchat:
-  messageFormat: "§8[§aTeam§bChat§8] §c%player§7:"
+  messageFormat: "§8[§äTeam§öChat§8] §c%player§7:"
   messageColor: "§6"
+
+feedback:
+  link: "google.com"
+
+bugform:
+  link: "google.com"
+
+leaderboard:
+  playersPerPage: 9
+
+claim:
+  maxblocks: 15000

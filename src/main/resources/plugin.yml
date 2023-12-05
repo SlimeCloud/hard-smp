@@ -7,6 +7,7 @@ authors: [SlimeCloud Netrunner]
 depend:
   - LuckPerms
   - spark
+  - PlaceholderAPI
 description: HardSMP (Das 'S' steht für "Slime")
 website: https://discord.gg/slimecloud
 
@@ -18,30 +19,125 @@ permissions:
     default: true
   hardsmp.command.rules:
     default: true
+  hardsmp.command.keys:
+    default: true
+  hardsmp.command.feedback:
+    default: true
+  hardsmp.command.bug:
+    default: true
+  hardsmp.command.msg:
+    default: true
+  hardsmp.command.info:
+    default: false
+  hardsmp.verify.bypass:
+    default: false
+  hardsmp.claim.bypass:
+    default: false
+  hardsmp.chat.highlight:
+    default: false
+  hardsmp.command.hatitem:
+    default: true
+  hardsmp.command.hatitem.other:
+    default: false
+  hardsmp.command.enderchest:
+    default: true
+  hardsmp.command.enderchest.other:
+    default: false
+  hardsmp.command.home.multiple:
+    default: false
+  hardsmp.command.home.other:
+    default: false
+  hardsmp.command.home:
+    default: true
+  hardsmp.command.home.set:
+    default: true
+  hardsmp.command.home.list:
+    default: true
+  hardsmp.command.home.remove:
+    default: true
+  hardsmp.command.claim:
+    default: true
+  hardsmp.command.invsee:
+    default: false
 
 commands:
   formatting:
     permission: hardsmp.command.formatting
   point:
-    usage: "§cUsage: /point <Player> add/set/remove/get"
+    usage: "§cBenutzung: /point <Spieler> [add/set/remove/get]"
     permission: hardsmp.command.point
   spawn-shop-npc:
+    usage: "§cBenutzung: /spawn-shop-npc [general/claimshop]"
     permission: hardsmp.command.spawn-shop
   help:
     permission: hardsmp.command.help
   rules:
     permission: hardsmp.command.rules
+  msg:
+    aliases: ["whisper", "dm", "w"]
+    usage: "§cBenutzung: /msg <Spieler> <Nachricht>"
+    permission: hardsmp.command.msg
+  reply:
+    aliases: ["r"]
+    permission: hardsmp.command.msg
   teamchat:
     aliases: ["tc"]
-    usage: "§cUsage: /teamcaht <Message>"
+    usage: "§cBenutzung: /teamchat <Nachricht>"
     permission: hardsmp.teamchat.send
-  start-event:
-    usage: "§cUsage: /event <start/stop> <event-name>"
-    permission: hardsmp.command.start-event
   register-schematic:
     usage: "§cUsage: /register-schematic <name> <pos1> <pos2>"
     permission: hardsmp.schematic.register
   build-schematic:
     usage: "§cUsage: /build-schematic <name>"
     permission: hardsmp.schematic.build
-
+  unverify:
+    usage: "§cBenutzung: /unverify <Spieler>"
+    permission: hardsmp.command.unverify
+  verify:
+    usage: "§cBenutzung: /verify <Spieler>"
+    permission: hardsmp.command.verify
+  keys:
+    usage: "§cBenutzung: /keys"
+    permission: hardsmp.command.keys
+  feedback:
+    permission: hardsmp.command.feedback
+  bug:
+    permission: hardsmp.command.bug
+  leaderboard:
+    usage: "§cBenutzung: /leaderboard (<Seite>)"
+    permission: hardsmp.command.leaderboard
+  claim:
+    usage: "§cBenutzung: /claim [start/cancel/finish/remove/info]"
+    permission: hardsmp.command.claim
+  info:
+    usage: "§cBenutzung: /info [discord/minecraft] <Name>"
+    permission: hardsmp.command.discord
+  hatitem:
+    aliases: ["hat"]
+    usage: "§cBenutzung: /hatitem (<Spieler>)"
+    permission: hardsmp.command.hatitem
+  enderchest:
+    aliases: ["ec"]
+    usage: "§cBenutzung: /enderchest (<Player>)"
+    permission: hardsmp.command.enderchest
+  spawn:
+    permission: hardsmp.command.spawn
+  home:
+    usage: "§cBenutzung: /home <Name>"
+    permission: hardsmp.command.home
+  sethome:
+    usage: "§cBenutzung: /sethome <Name>"
+    permission: hardsmp.command.home.set
+  listhome:
+    usage: "§cBenutzung: /listhome"
+    permission: hardsmp.command.home.list
+  removehome:
+    usage: "§cBenutzung: /removehome <Name>"
+    permission: hardsmp.command.home.remove
+  invsee:
+    aliases: ["inv"]
+    usage: "§cBenutzung: /invsee <Spieler>"
+    permission: hardsmp.command.invsee
+  event:
+    usage: "§cUsage: /event <start/stop> <event-name>"
+    permission: hardsmp.command.start-event

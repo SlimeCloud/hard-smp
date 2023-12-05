@@ -7,12 +7,12 @@
     "description": "Werde von einem Blitz getroffen, aber überlebe",
     "frame": "challenge",
     "show_toast": true,
-    "announce_to_chat": false,
+    "announce_to_chat": true,
     "hidden": false
   },
   "parent": "hard-smp:hard-smp/boat",
   "criteria": {
-    "requirement": {
+    "lightning": {
       "trigger": "minecraft:impossible"
     }
   },

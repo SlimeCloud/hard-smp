@@ -11,7 +11,7 @@
     "hidden": false
   },
   "criteria": {
-    "requirement": {
+    "verify": {
       "trigger": "minecraft:impossible"
     }
   }

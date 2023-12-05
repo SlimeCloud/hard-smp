@@ -1,5 +1,6 @@
 package de.slimecloud.hardsmp.event;
 
+import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -7,6 +8,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 
+@Getter
 public class PlayerVerifyEvent extends PlayerEvent {
     private static final HandlerList handlers = new HandlerList();
 
@@ -21,20 +23,8 @@ public class PlayerVerifyEvent extends PlayerEvent {
         this.message = message;
     }
 
-    public Member getMember() {
-        return member;
-    }
-
-    public Component getActionbarMessage() {
-        return actionbarMessage;
-    }
-
     public void setActionbarMessage(Component actionbarMessage) {
         this.actionbarMessage = actionbarMessage;
-    }
-
-    public Component getMessage() {
-        return message;
     }
 
     public void setMessage(Component message) {

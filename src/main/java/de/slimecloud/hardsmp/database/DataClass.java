@@ -41,19 +41,27 @@ public abstract class DataClass {
             String name = field.getName().toLowerCase();
             if (field.isAnnotationPresent(Key.class)) primaryKeys.add('"' + name + '"');
 
-            keyTypes.add('"' + name + "\" " + getDataType(field.getType()));
+            keyTypes.add('"' + name + "\" " + getDataType(field));
         }
 
-        String sql = "create table if not exists %s(%s, primary key(%s))"
+        String sql = "create table if not exists %s(%s%s)"
                 .formatted(
                         getTableName(),
                         String.join(", ", keyTypes),
-                        String.join(", ", primaryKeys)
+                        primaryKeys.isEmpty() ? "" : ", primary key(" + String.join(", ", primaryKeys) + ")"
                 );
         HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate(sql).execute());
     }
 
-    private @Nullable String getDataType(@NotNull Class<?> clazz) {
+    private @Nullable String getDataType(@NotNull Field field) {
+        Class<?> clazz = field.getType();
+
+        if(field.isAnnotationPresent(Autoincrement.class)) {
+            if (clazz.isAssignableFrom(int.class) || clazz.equals(Integer.class)) return "serial";
+            if (clazz.isAssignableFrom(long.class) || clazz.equals(Long.class)) return "bigserial";
+            throw new IllegalStateException("Autoincrement can only be applied to int and long");
+        }
+
         if (clazz.isEnum() || clazz.isAssignableFrom(EnumSet.class)) return "int";
         if (clazz.equals(byte.class) || clazz.equals(Byte.class) || clazz.equals(short.class) || clazz.equals(Short.class))
             return "smallint";
@@ -86,18 +94,20 @@ public abstract class DataClass {
             String name = field.getName().toLowerCase();
             if (field.isAnnotationPresent(Key.class)) keys.add(name);
 
-            try {
-                Object newVal = field.get(this);
-                if (newVal.equals(field.get(cacheObj)) && !field.isAnnotationPresent(Key.class)) continue;
-                updatedValues.put(name, field.getType().isEnum() ? ((Enum<?>) newVal).ordinal() : newVal);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
+            if (!field.isAnnotationPresent(Autoincrement.class)) {
+                try {
+                    Object newVal = field.get(this);
+                    if (newVal.equals(field.get(cacheObj)) && !field.isAnnotationPresent(Key.class)) continue;
+                    updatedValues.put(name, field.getType().isEnum() ? ((Enum<?>) newVal).ordinal() : newVal);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
         if (keys.containsAll(updatedValues.keySet())) return this;
 
-        String sql = "insert into %s(%s) values(%s) on conflict(%s) do update set %s"
+        String sql = "insert into %s(%s) values(%s)"
                 .formatted(
                         getTableName(),
                         updatedValues.keySet().stream()
@@ -106,28 +116,45 @@ public abstract class DataClass {
 
                         updatedValues.keySet().stream()
                                 .map(n -> ":" + n)
-                                .collect(Collectors.joining(", ")),
-
-                        keys.stream()
-                                .map(n -> '"' + n + '"')
-                                .collect(Collectors.joining(", ")),
-
-                        updatedValues.keySet().stream()
-                                .filter(n -> !keys.contains(n))
-                                .map(n -> '"' + n + "\" = :" + n)
                                 .collect(Collectors.joining(", "))
                 );
-        HardSMP.getInstance().getDatabase().run(handle -> handle.createUpdate(sql).bindMap(updatedValues).execute());
+
+        if(!keys.isEmpty()) sql += " on conflict(%s) do update set %s".formatted(
+                keys.stream()
+                        .map(n -> '"' + n + '"')
+                        .collect(Collectors.joining(", ")),
+
+                updatedValues.keySet().stream()
+                        .filter(n -> !keys.contains(n))
+                        .map(n -> '"' + n + "\" = :" + n)
+                        .collect(Collectors.joining(", "))
+        );
+
+        final String fSql = sql;
+        var generatedKeys = HardSMP.getInstance().getDatabase().handle(handle -> handle.createUpdate(fSql).bindMap(updatedValues).executeAndReturnGeneratedKeys().mapToMap().one());
+        generatedKeys.forEach((name, value) -> {
+            try {
+                for (Field f : getClass().getDeclaredFields()) {
+                    if (f.getName().equalsIgnoreCase(name)) {
+                        f.setAccessible(true);
+                        f.set(this, value);
+                    }
+                }
+
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         updateCache();
         return this;
     }
 
     private static String buildSQL(String tableName, Map<String, Object> keys) {
-        return "select * from %s where %s"
+        return "select * from %s%s"
                 .formatted(
                         tableName,
-                        keys.keySet().stream()
+                        keys.isEmpty() ? "" : " where " + keys.keySet().stream()
                                 .map(n -> '"' + n.toLowerCase() + "\" = :" + n)
                                 .collect(Collectors.joining(" and "))
                 );
@@ -135,8 +162,10 @@ public abstract class DataClass {
 
     private static <T extends DataClass> T setFields(T instance, ResultSet rs) throws SQLException {
         for (Field field : instance.getClass().getDeclaredFields()) {
+
             if (!isValid(field)) continue;
             field.setAccessible(true);
+
             try {
                 field.set(instance, field.getType().isEnum() ? field.getType().getEnumConstants()[rs.getInt(field.getName().toLowerCase())] : get(field.getType(), rs, field.getName().toLowerCase()));
             } catch (IllegalAccessException e) {

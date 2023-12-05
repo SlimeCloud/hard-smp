@@ -2,8 +2,10 @@ package de.slimecloud.hardsmp.shop;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.event.PlayerShopEvent;
 import de.slimecloud.hardsmp.player.EventPlayer;
 import de.slimecloud.hardsmp.player.PlayerController;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -91,12 +93,20 @@ public class SlimeHandler implements Listener {
         Inventory inv = event.getInventory();
         ItemStack item = inv.getItem(event.getSlot());
         Offer offer = Offer.byItem(item, offers);
-        if (offer.price().requiredPoints() > ep.getPoints()) {
-            event.getWhoClicked().sendMessage(ChatColor.RED + "Fehler\nFür den kauf dieses Items sind %s punkte erforderlich, du hast aber erst %s.\nBitte versuche es später erneut.".formatted(offer.price().requiredPoints(), ep.getPoints()));
+        double points = ep.getActualPoints();
+        item = new ItemBuilder(item).removeLore(".*benötige punkte.*").build();
+        PlayerShopEvent e = new PlayerShopEvent(ep.getPlayer(), offer, item);
+        Bukkit.getPluginManager().callEvent(e);
+        if (e.isCancelled()) {
             event.setCancelled(true);
             return;
         }
-        item = new ItemBuilder(item).removeLore(".*benötige punkte.*").build();
+        item = e.getItem();
+        if (offer.price().requiredPoints() > points) {
+            event.getWhoClicked().sendMessage(ChatColor.RED + "Fehler\nFür den kauf dieses Items sind %s punkte erforderlich, du hast aber erst %s.\nBitte versuche es später erneut.".formatted(offer.price().requiredPoints(), points));
+            event.setCancelled(true);
+            return;
+        }
         inv.setItem(event.getSlot(), new ItemBuilder(item).removeLore(item.getItemMeta().getLore().size() - 1).build());
     }
 }

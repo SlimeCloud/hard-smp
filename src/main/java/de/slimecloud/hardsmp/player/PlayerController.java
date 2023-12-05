@@ -1,8 +1,14 @@
 package de.slimecloud.hardsmp.player;
 
+import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.claim.ClaimRights;
 import de.slimecloud.hardsmp.player.data.PointCategory;
 import de.slimecloud.hardsmp.player.data.Points;
+import de.slimecloud.hardsmp.verify.Verification;
 import lombok.RequiredArgsConstructor;
+import net.dv8tion.jda.api.entities.User;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
@@ -13,13 +19,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class PlayerController {
-
     public static EventPlayer getPlayer(HumanEntity player) {
         return getPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
     }
 
     public static EventPlayer getPlayer(OfflinePlayer player) {
         return new EventPlayerImpl(player);
+    }
+
+    public static double applyFormula(double points, OfflinePlayer player) {
+        int hours = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (20 * 3600);
+        return points * 0.01 * (Math.pow(0.5, (hours / 70.0 - 6.5)) + 10);
     }
 
     @RequiredArgsConstructor
@@ -34,6 +44,36 @@ public class PlayerController {
 
         @Override
         public void addPoints(double points) {
+            if(getPlayer() == null || getPlayer().hasPermission("hardsmp.points.bypass")) return;
+
+            double direct = points;
+            points = applyFormula(points, player);
+
+            HardSMP.getInstance().getLogger().info("Added " + direct + " [" + points + "] points to player " + player.getName());
+
+            if(points > 50 && player.getPlayer() != null) player.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("Dir wurden ").append(Component.text((int) points).color(NamedTextColor.RED)).append(Component.text(" Punkte hinzugefügt"))));
+
+            double current = getActualPoints();
+            ClaimRights rights = ClaimRights.load(getUniqueId());
+
+            if(current < 500 && current + points >= 500) {
+                getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §61 §aClaim platzieren!")));
+                rights.setClaimCount(1);
+            } else if(current < 5000 && current + points >= 5000) {
+                getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §62 §aClaims platzieren!")));
+                rights.setClaimCount(2);
+            } else if(current < 10000 && current + points >= 10000) {
+                getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §63 §aClaims platzieren!")));
+                rights.setClaimCount(3);
+            } else if(current < 20000 && current + points >= 20000) {
+                getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §64 §aClaims platzieren!")));
+                rights.setClaimCount(4);
+            } else if(current < 30000 && current + points >= 30000) {
+                getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§aDu kannst jetzt §65 §aClaims platzieren!")));
+                rights.setClaimCount(5);
+            }
+            rights.save();
+
             Points p = getData();
             p.setPoints(p.getPoints() + points);
             p.save();
@@ -41,13 +81,16 @@ public class PlayerController {
 
         @Override
         public void setPoints(double points) {
+            HardSMP.getInstance().getLogger().info("Set " + player.getName() + "'s points to " + points);
+
             Points p = getData();
-            p.setPoints(points);
+            p.setPoints(applyFormula(points, player));
             p.save();
         }
 
         @Override
         public void removePoints(double points) {
+            HardSMP.getInstance().getLogger().info("Removed " + points + " points to player " + player.getName());
             addPoints(points * -1);
         }
 
@@ -58,23 +101,25 @@ public class PlayerController {
 
         @Override
         public double getActualPoints() {
-            double points = getPoints();
-            points += PointCategory.CROUCH_ONE_CM.calculate(player.getStatistic(Statistic.CROUCH_ONE_CM));
-            points += PointCategory.FLY_ONE_CM.calculate(player.getStatistic(Statistic.FLY_ONE_CM));
-            points += PointCategory.SPRINT_ONE_CM.calculate(player.getStatistic(Statistic.SPRINT_ONE_CM));
-            points += PointCategory.SWIM_ONE_CM.calculate(player.getStatistic(Statistic.SWIM_ONE_CM));
-            points += PointCategory.WALK_ONE_CM.calculate(player.getStatistic(Statistic.WALK_ONE_CM));
-            points += PointCategory.WALK_ON_WATER_ONE_CM.calculate(player.getStatistic(Statistic.WALK_ON_WATER_ONE_CM));
-            points += PointCategory.WALK_UNDER_WATER_ONE_CM.calculate(player.getStatistic(Statistic.WALK_UNDER_WATER_ONE_CM));
-            points += PointCategory.BOAT_ONE_CM.calculate(player.getStatistic(Statistic.BOAT_ONE_CM));
-            points += PointCategory.AVIATE_ONE_CM.calculate(player.getStatistic(Statistic.AVIATE_ONE_CM));
-            points += PointCategory.HORSE_ONE_CM.calculate(player.getStatistic(Statistic.HORSE_ONE_CM));
-            points += PointCategory.MINECART_ONE_CM.calculate(player.getStatistic(Statistic.MINECART_ONE_CM));
-            points += PointCategory.PIG_ONE_CM.calculate(player.getStatistic(Statistic.PIG_ONE_CM));
-            points += PointCategory.STRIDER_ONE_CM.calculate(player.getStatistic(Statistic.STRIDER_ONE_CM));
+            double statPoints = 0;
 
-            points *= 0.1 * (Math.pow(0.5, (player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (115 * 180d) - 6.5)) + 10);
-            return points;
+            if(getPlayer() == null || !getPlayer().hasPermission("hardsmp.points.bypass")) {
+                statPoints += PointCategory.CROUCH_ONE_CM.calculate(player.getStatistic(Statistic.CROUCH_ONE_CM));
+                statPoints += PointCategory.FLY_ONE_CM.calculate(player.getStatistic(Statistic.FLY_ONE_CM));
+                statPoints += PointCategory.SPRINT_ONE_CM.calculate(player.getStatistic(Statistic.SPRINT_ONE_CM));
+                statPoints += PointCategory.SWIM_ONE_CM.calculate(player.getStatistic(Statistic.SWIM_ONE_CM));
+                statPoints += PointCategory.WALK_ONE_CM.calculate(player.getStatistic(Statistic.WALK_ONE_CM));
+                statPoints += PointCategory.WALK_ON_WATER_ONE_CM.calculate(player.getStatistic(Statistic.WALK_ON_WATER_ONE_CM));
+                statPoints += PointCategory.WALK_UNDER_WATER_ONE_CM.calculate(player.getStatistic(Statistic.WALK_UNDER_WATER_ONE_CM));
+                statPoints += PointCategory.BOAT_ONE_CM.calculate(player.getStatistic(Statistic.BOAT_ONE_CM));
+                statPoints += PointCategory.AVIATE_ONE_CM.calculate(player.getStatistic(Statistic.AVIATE_ONE_CM));
+                statPoints += PointCategory.HORSE_ONE_CM.calculate(player.getStatistic(Statistic.HORSE_ONE_CM));
+                statPoints += PointCategory.MINECART_ONE_CM.calculate(player.getStatistic(Statistic.MINECART_ONE_CM));
+                statPoints += PointCategory.PIG_ONE_CM.calculate(player.getStatistic(Statistic.PIG_ONE_CM));
+                statPoints += PointCategory.STRIDER_ONE_CM.calculate(player.getStatistic(Statistic.STRIDER_ONE_CM));
+            }
+
+            return getPoints() + applyFormula(statPoints / 15, player);
         }
 
         @Override
@@ -91,6 +136,13 @@ public class PlayerController {
         @Override
         public UUID getUniqueId() {
             return getOfflinePlayer().getUniqueId();
+        }
+
+        @Override
+        public @Nullable User getDiscord() {
+            Verification verify = Verification.load(getOfflinePlayer().getUniqueId().toString());
+            long discordUserID = verify.getDiscordID();
+            return discordUserID == 0 ? null : HardSMP.getInstance().getDiscordBot().jdaInstance.getUserById(discordUserID);
         }
     }
 

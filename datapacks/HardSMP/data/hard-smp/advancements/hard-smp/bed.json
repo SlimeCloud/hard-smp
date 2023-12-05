@@ -7,12 +7,12 @@
     "description": "Bleibe 10 Nächte lang wach",
     "frame": "task",
     "show_toast": true,
-    "announce_to_chat": false,
+    "announce_to_chat": true,
     "hidden": false
   },
   "parent": "hard-smp:hard-smp/root",
   "criteria": {
-    "requirement": {
+    "sleep": {
       "trigger": "minecraft:impossible"
     }
   },

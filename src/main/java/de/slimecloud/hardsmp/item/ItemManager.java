@@ -27,6 +27,7 @@ public class ItemManager {
             return;
         }
         stackMap.put(id, stack);
+        main.getLogger().info("registered item '" + id + "'");
     }
 
     public void unregisterItem(String id) {
@@ -44,6 +45,10 @@ public class ItemManager {
 
     public ItemBuilder getBuilder(String id) {
         return new ItemBuilder(getStack(id));
+    }
+
+    public ItemBuilder getBuilder(Material item) {
+        return new ItemBuilder(item);
     }
 
 }

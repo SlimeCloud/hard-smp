@@ -205,7 +205,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         );
                     } else if(args.length == 2) {
                         if (player.hasPermission("hardsmp.command.claim.info.others")) {
-                            Player target = (Player) Bukkit.getOfflinePlayer(args[1]);
+                            OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                             ClaimRights rights = ClaimRights.load(target.getUniqueId());
 
                             player.sendMessage(HardSMP.getPrefix()

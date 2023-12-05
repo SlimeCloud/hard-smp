@@ -25,6 +25,10 @@ public class EventCommand implements CommandExecutor, TabCompleter {
 
         switch (args[0]) {
             case "start" -> {
+
+
+            }
+            case "setup" -> {
                 SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);
                 if (event == null) {
                     sender.sendMessage(Component.text("SubEvent '" + args[1] + "' wurde nicht gefunden!", NamedTextColor.RED));
@@ -33,7 +37,6 @@ public class EventCommand implements CommandExecutor, TabCompleter {
                 event.setup(Bukkit.getOnlinePlayers().stream().map(p -> (Player) p).toList());
                 sender.sendMessage(Component.text("SubEvent '" + args[1] + "' erfolgreich gestartet!", NamedTextColor.GREEN));
                 return true;
-
             }
             case "stop" -> {
                 SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);

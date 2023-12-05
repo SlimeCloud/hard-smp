@@ -7,7 +7,6 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,9 +39,8 @@ public class ListHomeCommand implements CommandExecutor, TabCompleter {
                 .appendNewline();
 
         for (HomeData home : HomeData.load(target.getUniqueId())) {
-            Location loc = home.getLocation();
             homes = homes.append(Component.text("   - " + home.getHomeName())
-                    .clickEvent(ClickEvent.suggestCommand("/tp " + sender.getName() + " " + loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ()))
+                    .clickEvent(ClickEvent.suggestCommand("/home " + home.getHomeName()))
                     .appendNewline());
         }
 

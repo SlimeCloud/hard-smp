@@ -35,6 +35,15 @@ public class HomeData extends DataClass {
     @Getter
     private String homeName;
 
+    public HomeData(Location location, World world, String name, UUID playerUuid) {
+        xPos = location.getX();
+        yPos = location.getY();
+        zPos = location.getZ();
+        worldName = world.getName();
+        homeName = name;
+        uuid = playerUuid.toString();
+    }
+
     public static List<HomeData> load(UUID uuid) {
         return loadAll(HomeData::new, Map.of("uuid", uuid.toString()));
     }
@@ -45,17 +54,6 @@ public class HomeData extends DataClass {
 
     public Location getLocation() {
         return new Location(Bukkit.getWorld(worldName), xPos, yPos, zPos);
-    }
-
-    public HomeData newHome(Location location, World world, String name, UUID playerUuid) {
-        xPos = location.getX();
-        yPos = location.getY();
-        zPos = location.getZ();
-        worldName = world.getName();
-        homeName = name;
-        uuid = playerUuid.toString();
-
-        return this;
     }
 
     public void delete() {

@@ -1,8 +1,9 @@
 package de.slimecloud.hardsmp.commands.home;
 
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.claim.Claim;
+import de.slimecloud.hardsmp.claim.ClaimRights;
 import de.slimecloud.hardsmp.commands.EmptyTabCompleter;
-import de.slimecloud.hardsmp.database.DataClass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -11,9 +12,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import javax.naming.Name;
-import javax.xml.crypto.Data;
 
 public class SetHomeCommand implements CommandExecutor, EmptyTabCompleter {
 
@@ -30,22 +28,25 @@ public class SetHomeCommand implements CommandExecutor, EmptyTabCompleter {
             ));
             return true;
         }
-                                                                                                            //ClaimRights.load(uuid).getClaimCount()
-        if (!player.hasPermission("hardsmp.command.home.multiple") && HomeData.load(player.getUniqueId()).toArray().length == 1) {
+
+        if (!player.hasPermission("hardsmp.command.home.multiple") && HomeData.load(player.getUniqueId()).toArray().length >= ClaimRights.load(player.getUniqueId()).getClaimCount()) {
             player.sendMessage(HardSMP.getPrefix().append(
                     Component.text("Du hast die maximale Anzahl an Homes erreicht!")
             ));
             return true;
         }
 
-        //if player is in his claim
-        //Claim.allClaims.values().stream()
-        //                            .filter(c -> c.getUuid().equals(uuid) && c.containsPlayer(player.getLocation()))
-        //                            .findAny()
+        if(Claim.allClaims.values().stream()
+                .filter(c -> c.getUuid().equals(player.getUniqueId().toString()) && c.containsPlayer(player.getLocation()))
+                .findAny().isEmpty()
+        ) {
+            player.sendMessage(HardSMP.getPrefix().append(
+                    Component.text("Du kannst homes nur in deinem eigenen geclaimten Gebiet setzten!")
+            ));
+            return true;
+        }
 
-        new HomeData()
-            .newHome(player.getLocation(), player.getWorld(), args[0], player.getUniqueId())
-            .save();
+        new HomeData(player.getLocation(), player.getWorld(), args[0], player.getUniqueId()).save();
 
         player.sendMessage(HardSMP.getPrefix().append(
                 Component.text("Dein Home ", TextColor.color(0x88d657))

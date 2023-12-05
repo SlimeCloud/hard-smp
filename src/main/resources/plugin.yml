@@ -117,12 +117,12 @@ commands:
   home:
     usage: "§cUsage: /home [<home Name>]"
     permission: hardsmp.command.home
-  homeset:
-    usage: "§cUsage: /homeset [<home Name>]"
+  sethome:
+    usage: "§cUsage: /sethome [<home Name>]"
     permission: hardsmp.command.home.set
-  homelist:
-    usage: "§cUsage: /homelist [<Player>]"
+  listhome:
+    usage: "§cUsage: /listhome [<Player>]"
     permission: hardsmp.command.home.list
-  homeremove:
-    usage: "§cUsage: /homeremove [<home Name>]"
+  removehome:
+    usage: "§cUsage: /removehome [<home Name>]"
     permission: hardsmp.command.home.remove

@@ -48,13 +48,14 @@ public class Claim extends DataClass {
     }
 
     public boolean containsPlayer(Location loc) {
-        Location newLoc = new Location(
-                loc.getWorld(),
-                loc.getX() < 0 ? (int) loc.getX() - 1 : (int) loc.getX(),
-                loc.getY(),
-                loc.getZ() < 0 ? (int) loc.getZ() - 1 : (int) loc.getZ()
+        return contains(
+                new Location(
+                        loc.getWorld(),
+                        loc.getX() < 0 ? (int) loc.getX() - 1 : (int) loc.getX(),
+                        loc.getY(),
+                        loc.getZ() < 0 ? (int) loc.getZ() - 1 : (int) loc.getZ()
+                )
         );
-        return Math.min(x1, x2) <= newLoc.x() && newLoc.x() <= Math.max(x1, x2) && Math.min(z1, z2) <= newLoc.z() && newLoc.z() <= Math.max(z1, z2);
     }
 
     public boolean overlaps(Location loc1, Location loc2) {

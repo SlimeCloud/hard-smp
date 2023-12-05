@@ -5,9 +5,6 @@ import de.mineking.discordutils.commands.ApplicationCommandMethod;
 import de.mineking.discordutils.commands.option.Option;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.event.PlayerVerifyEvent;
-import me.leoko.advancedban.manager.UUIDManager;
-import me.leoko.advancedban.utils.Punishment;
-import me.leoko.advancedban.utils.PunishmentType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.kyori.adventure.text.Component;
@@ -132,6 +129,7 @@ public class DiscordVerifyCommand {
                             .build()
             ).setEphemeral(true).queue();
 
+            event.getGuild().addRoleToMember(event.getUser(), event.getGuild().getRoleById(HardSMP.getInstance().getConfig().getLong("discord.verify-role"))).queue();
         });
     }
 }

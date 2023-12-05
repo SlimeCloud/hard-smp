@@ -47,9 +47,8 @@ public class ListHomeCommand implements CommandExecutor, TabCompleter {
                 .appendNewline();
 
         for (HomeData home : HomeData.load(target.getUniqueId())) {
-            homes = homes.append(Component.text("   - " + home.getHomeName())
-                    .clickEvent(ClickEvent.suggestCommand("/home " + home.getHomeName()))
-                    .appendNewline());
+            homes = homes.append(Component.text("   - " + home.getHomeName()).clickEvent(ClickEvent.suggestCommand("/home " + home.getHomeName())))
+                    .appendNewline();
         }
 
         sender.sendMessage(homes);

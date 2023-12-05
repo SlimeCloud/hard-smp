@@ -43,6 +43,18 @@ permissions:
     default: true
   hardsmp.command.enderchest.other:
     default: false
+  hardsmp.command.home.multiple:
+    default: false
+  hardsmp.command.home.other:
+    default: false
+  hardsmp.command.home:
+    default: true
+  hardsmp.command.home.set:
+    default: true
+  hardsmp.command.home.list:
+    default: true
+  hardsmp.command.home.remove:
+    default: true
   hardsmp.command.claim:
     default: true
 
@@ -102,4 +114,15 @@ commands:
     permission: hardsmp.command.enderchest
   spawn:
     permission: hardsmp.command.spawn
-
+  home:
+    usage: "§cBenutzung: /home <Name>"
+    permission: hardsmp.command.home
+  sethome:
+    usage: "§cBenutzung: /sethome <Name>"
+    permission: hardsmp.command.home.set
+  listhome:
+    usage: "§cBenutzung: /listhome"
+    permission: hardsmp.command.home.list
+  removehome:
+    usage: "§cBenutzung: /removehome <Name>"
+    permission: hardsmp.command.home.remove

@@ -3,10 +3,14 @@ package de.slimecloud.hardsmp.claim;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.commands.home.HomeData;
 import de.slimecloud.hardsmp.player.PlayerController;
+import de.slimecloud.hardsmp.ui.Chat;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -125,7 +129,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                                     "Der Bereich von (" + (int) task.loc1.getX() + ", " + (int) task.loc1.getZ() + ") bis (" + (int) task.loc2.getX() + ", " + task.loc2.getZ() + ")\nwurde erfolgreich geclaimt!", color(0x88D657)
                             )));
 
-                            commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("Hinweis: ").color(NamedTextColor.RED)).append(Component.text("Du kannst jetzt in diesem Claim ein Home mit /homeset setzen!").color(NamedTextColor.GRAY)));
+                            commandSender.sendMessage(HardSMP.getPrefix()
+                                    .append(Component.text("Hinweis: ").color(NamedTextColor.RED))
+                                    .append(Component.text("Du kannst jetzt in diesem Claim ein Home mit "))
+                                    .append(Component.text("§6/sethome <name>").clickEvent(ClickEvent.suggestCommand("/sethome ")))
+                                    .append(Component.text("setzen!").color(NamedTextColor.GRAY)));
                         } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast nicht alle Ecken gesetzt!")));
                     } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu bist nicht im Claim-Modus!")));
                 }
@@ -212,6 +220,38 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             );
                         } else return false;
                     } else return false;
+                }
+                case "list" -> {
+                    Component claims = Component.text("Claims von ", TextColor.color(0x88d657))
+                            .append(Chat.getName(player))
+                            .append(Component.text(":", TextColor.color(0x88d657)))
+                            .appendNewline();
+
+                    List<HomeData> homes = HomeData.load(player.getUniqueId());
+
+                    for (Claim claim : Claim.allClaims.values()) {
+                        if(!claim.getUuid().equals(player.getUniqueId().toString())) continue;
+
+                        var c = Component.text("   - Gebiet bei x: ")
+                                .append(Component.text(claim.getX1(), TextColor.color(0xF6ED82)))
+                                .append(Component.text(", z: "))
+                                .append(Component.text(claim.getZ1(), TextColor.color(0xF6ED82)));
+
+                        for(HomeData home : homes) {
+                            if(claim.contains(home.getLocation())) {
+                                c = c.append(Component.text(" | Enthält home "))
+                                        .append(Component.text(home.getHomeName(), TextColor.color(0xF6ED82))
+                                                .clickEvent(ClickEvent.suggestCommand("/home " + home.getHomeName()))
+                                                .hoverEvent(HoverEvent.showText(Component.text("[Teleport]", TextColor.color(0x88D657))))
+                                        );
+                                break;
+                            }
+                        }
+
+                        claims = claims.append(c).appendNewline();
+                    }
+
+                    player.sendMessage(claims);
                 }
                 default -> { return false; }
             }
@@ -387,8 +427,9 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return Stream.of("start", "cancel", "finish", "remove", "info")
+        if(args.length == 1) return Stream.of("start", "cancel", "finish", "remove", "info", "list")
                 .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
                 .toList();
+        return Collections.emptyList();
     }
 }

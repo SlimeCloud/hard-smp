@@ -8,6 +8,10 @@ import de.slimecloud.hardsmp.claim.ClaimCommand;
 import de.slimecloud.hardsmp.claim.ClaimInfo;
 import de.slimecloud.hardsmp.claim.ClaimProtectionHandler;
 import de.slimecloud.hardsmp.commands.*;
+import de.slimecloud.hardsmp.commands.home.HomeCommand;
+import de.slimecloud.hardsmp.commands.home.ListHomeCommand;
+import de.slimecloud.hardsmp.commands.home.RemoveHomeCommand;
+import de.slimecloud.hardsmp.commands.home.SetHomeCommand;
 import de.slimecloud.hardsmp.commands.info.MinecraftInfoCommand;
 import de.slimecloud.hardsmp.commands.SpawnCommand;
 import de.slimecloud.hardsmp.database.Database;
@@ -136,6 +140,10 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("claim", claim);
         registerCommand("hatitem", new HatItemCommand());
         registerCommand("spawn", new SpawnCommand());
+        registerCommand("home", new HomeCommand());
+        registerCommand("sethome", new SetHomeCommand());
+        registerCommand("removehome", new RemoveHomeCommand());
+        registerCommand("listhome", new ListHomeCommand());
 
         registerCommand("info", new MinecraftInfoCommand());
         //Events

@@ -162,8 +162,10 @@ public abstract class DataClass {
 
     private static <T extends DataClass> T setFields(T instance, ResultSet rs) throws SQLException {
         for (Field field : instance.getClass().getDeclaredFields()) {
+
             if (!isValid(field)) continue;
             field.setAccessible(true);
+
             try {
                 field.set(instance, field.getType().isEnum() ? field.getType().getEnumConstants()[rs.getInt(field.getName().toLowerCase())] : get(field.getType(), rs, field.getName().toLowerCase()));
             } catch (IllegalAccessException e) {

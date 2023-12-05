@@ -21,7 +21,7 @@ import java.util.List;
 public class ClaimProtectionHandler implements Listener {
 
     private boolean isClaimed(Location loc, Player player) {
-        return Claim.allClaims.values().stream().anyMatch(claim -> claim.getUuid().contains("-") && claim.contains(loc) && !claim.getUuid().equals(player.getUniqueId().toString()));
+        return Claim.allClaims.values().stream().anyMatch(claim -> claim.contains(loc) && !claim.getUuid().equals(player.getUniqueId().toString()));
     }
 
     @EventHandler

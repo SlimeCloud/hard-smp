@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.player.PlayerController;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -93,9 +94,9 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             .append(Component.keybind("key.use"))
                             .append(Component.text("!\n", color(0x88D657)))
                             .append(Component.text("Abbrechen mit ", color(0x88D657)))
-                            .append(Component.text("§6/claim cancel"))
+                            .append(Component.text("§6/claim cancel").clickEvent(ClickEvent.suggestCommand("/claim cancel")))
                             .append(Component.text(", Fertigstellen mit ", color(0x88D657)))
-                            .append(Component.text("§6/claim finish"))
+                            .append(Component.text("§6/claim finish").clickEvent(ClickEvent.suggestCommand("/claim finish")))
                     );
                 }
                 case "finish" -> {

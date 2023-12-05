@@ -6,18 +6,14 @@ import de.slimecloud.hardsmp.player.PlayerController;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Raid;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Cake;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerFishEvent;
@@ -187,14 +183,14 @@ public class PointsListener implements Listener {
         addPoints(player, PointCategory.DEATH);
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onEntityKill(EntityDeathEvent event) {
         if (event.getEntityType().equals(EntityType.PLAYER)) return;
         LivingEntity entity = event.getEntity();
         Player killer = entity.getKiller();
         if (killer != null)
             addPoints(killer, PointCategory.MOB_KILL, entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-    }
+    }*/
 
     @EventHandler
     public void onEnchant(EnchantItemEvent event) {

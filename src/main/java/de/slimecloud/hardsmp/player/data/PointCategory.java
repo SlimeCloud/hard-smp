@@ -32,7 +32,7 @@ public enum PointCategory {
     FISH_CAUGHT(5),
     ENCHANT_ITEM(10, (points, weight) -> points / weight), // points / enchant weight  (lower weight is better enchantment)
     JUMP(0.1),
-    MOB_KILL(0.1, (points, mob_hp) -> points * mob_hp), //  points*mob-hp
+    //MOB_KILL(0.1, (points, mob_hp) -> points * mob_hp), //  points*mob-hp
     DEATH(1),
     PLAYER_KILL(5, (points, hp) -> points * hp), // points * hp after kill
     RAID_WIN(20),

@@ -24,7 +24,7 @@ public class EventCommand implements CommandExecutor, TabCompleter {
             case "start" -> {
                 if (args.length >= 2) {
                     SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);
-                    if (event==null) {
+                    if (event == null) {
                         sender.sendMessage(Component.text("SubEvent '" + args[0] + "' wurde nicht gefunden!", NamedTextColor.RED));
                         return true;
                     }
@@ -38,7 +38,7 @@ public class EventCommand implements CommandExecutor, TabCompleter {
             }
             case "stop" -> {
                 SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);
-                if (event==null) {
+                if (event == null) {
                     sender.sendMessage(Component.text("SubEvent '" + args[0] + "' wurde nicht gefunden!", NamedTextColor.RED));
                     return true;
                 }
@@ -62,7 +62,7 @@ public class EventCommand implements CommandExecutor, TabCompleter {
             }
             case 2 -> list.addAll(HardSMP.getInstance().getSubEvents().getEvents().keySet());
         }
-        list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length-1].toLowerCase()));
+        list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()));
         return list;
     }
 }

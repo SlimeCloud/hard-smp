@@ -24,9 +24,9 @@ public class BuildFormat {
 
     private static Vector relativ(Vector relativPoint, Vector other) {
         return new Vector(
-                other.getX()-relativPoint.getX(),
-                other.getY()-relativPoint.getY(),
-                other.getZ()-relativPoint.getZ()
+                other.getX() - relativPoint.getX(),
+                other.getY() - relativPoint.getY(),
+                other.getZ() - relativPoint.getZ()
         );
     }
 
@@ -53,7 +53,7 @@ public class BuildFormat {
                         Block block = world.getBlockAt(v.toLocation(world));
                         BlockData blockData = block.getBlockData();
 
-                        String s = String.join(",", String.valueOf(vRelativ.getBlockX()), String.valueOf(vRelativ.getBlockY()), String.valueOf(vRelativ.getBlockZ())) + SEPERATOR + blockData.toString().substring(15, blockData.toString().length()-1);
+                        String s = String.join(",", String.valueOf(vRelativ.getBlockX()), String.valueOf(vRelativ.getBlockY()), String.valueOf(vRelativ.getBlockZ())) + SEPERATOR + blockData.toString().substring(15, blockData.toString().length() - 1);
                         if (!copyAir && block.getType().equals(Material.AIR)) continue;
                         writer.println(s);
                         build.putBlock(vRelativ, blockData);
@@ -64,7 +64,7 @@ public class BuildFormat {
             if (copyEntities) {
                 for (Entity e : world.getEntities()) {
                     Vector entityPosition = e.getLocation().toVector();
-                    if(entityPosition.getX() >= fV1.getX() && entityPosition.getX() <= fV2.getX() && entityPosition.getY() >= fV1.getY() && entityPosition.getY() <= fV2.getY() && entityPosition.getZ() >= fV1.getX() && entityPosition.getZ() <= fV2.getZ()) {
+                    if (entityPosition.getX() >= fV1.getX() && entityPosition.getX() <= fV2.getX() && entityPosition.getY() >= fV1.getY() && entityPosition.getY() <= fV2.getY() && entityPosition.getZ() >= fV1.getX() && entityPosition.getZ() <= fV2.getZ()) {
                         if (!(e instanceof Player)) {
                             writer.println("Entity"
                                     + SEPERATOR
@@ -91,9 +91,10 @@ public class BuildFormat {
     public static byte[] calculateBytes(Build build) {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); PrintWriter writer = new PrintWriter(bos, true, StandardCharsets.UTF_8)) {
             for (Map.Entry<Vector, BlockData> data : build.getBlocks().entrySet()) {
-                Vector vRelativ = data.getKey();;
+                Vector vRelativ = data.getKey();
+                ;
                 BlockData blockData = data.getValue();
-                String s = String.join(",", String.valueOf(vRelativ.getBlockX()), String.valueOf(vRelativ.getBlockY()), String.valueOf(vRelativ.getBlockZ())) + SEPERATOR + blockData.toString().substring(15, blockData.toString().length()-1);
+                String s = String.join(",", String.valueOf(vRelativ.getBlockX()), String.valueOf(vRelativ.getBlockY()), String.valueOf(vRelativ.getBlockZ())) + SEPERATOR + blockData.toString().substring(15, blockData.toString().length() - 1);
                 writer.println(s);
             }
 
@@ -108,7 +109,7 @@ public class BuildFormat {
                         + ed.getVelocity()
                         + SEPERATOR
                         + ed.getCustomName());
-                }
+            }
             return bos.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -118,9 +119,10 @@ public class BuildFormat {
     static Build load(byte[] data) {
         BuildImpl build = new BuildImpl();
         try (ByteArrayInputStream bis = new ByteArrayInputStream(data); BufferedReader br = new BufferedReader(new InputStreamReader(bis))) {
-            for (String line; (line = br.readLine()) != null;) {
+            for (String line; (line = br.readLine()) != null; ) {
                 String[] astring = line.split(SEPERATOR);
-                if (astring[0].equals("Entity")) build.putEntity(parseVector(astring[1]), new ImmutableEntityData(EntityType.valueOf(astring[2]), parseVector(astring[3]), astring[4]));
+                if (astring[0].equals("Entity"))
+                    build.putEntity(parseVector(astring[1]), new ImmutableEntityData(EntityType.valueOf(astring[2]), parseVector(astring[3]), astring[4]));
                 else build.putBlock(parseVector(astring[0]), Bukkit.createBlockData(astring[1]));
             }
         } catch (IOException e) {
@@ -156,7 +158,8 @@ public class BuildFormat {
     static void build(Build build, Location location) {
         World world = location.getWorld();
         Vector pos = location.toVector();
-        for (Map.Entry<Vector, BlockData> data : build.getBlocks().entrySet()) world.getBlockAt(data.getKey().add(pos).toLocation(world)).setBlockData(data.getValue());
+        for (Map.Entry<Vector, BlockData> data : build.getBlocks().entrySet())
+            world.getBlockAt(data.getKey().add(pos).toLocation(world)).setBlockData(data.getValue());
         for (Map.Entry<Vector, EntityData> data : build.getEntities().entrySet()) {
             EntityData ed = data.getValue();
             Entity e = world.spawnEntity(data.getKey().add(pos).toLocation(world), ed.getType());

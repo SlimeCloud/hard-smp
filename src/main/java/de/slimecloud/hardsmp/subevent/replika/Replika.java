@@ -69,7 +69,7 @@ public class Replika implements SubEvent {
         this.players = new ArrayList<>();
         this.plots = new HashMap<>();
         directory.mkdirs();
-        if (directory.listFiles()!=null) {
+        if (directory.listFiles() != null) {
             Arrays.stream(directory.listFiles())
                     .filter(f -> f.getName().endsWith(".build"))
                     .forEach(f -> {
@@ -101,7 +101,7 @@ public class Replika implements SubEvent {
         if (nextDirection) { // set which direction comes next
             currentPlotX += plotWidth + plotSpacing;
             putPlot(uuid);
-            if (currentPlotX>=maxPlotX) {
+            if (currentPlotX >= maxPlotX) {
                 nextDirection = false;
                 maxPlotX = currentPlotX;
                 currentPlotX = 0;
@@ -109,7 +109,7 @@ public class Replika implements SubEvent {
         } else {
             currentPlotZ += plotLength + plotSpacing;
             putPlot(uuid);
-            if (currentPlotZ>=maxPlotZ) {
+            if (currentPlotZ >= maxPlotZ) {
                 nextDirection = true;
                 maxPlotZ = currentPlotZ;
                 currentPlotZ = 0;
@@ -119,7 +119,7 @@ public class Replika implements SubEvent {
 
     public Plot getPlot(UUID uuid) {
         Plot plot = plots.get(uuid);
-        if (plot==null) {
+        if (plot == null) {
             generatePlot(uuid);
             plot = plots.get(uuid);
             plot.build();
@@ -135,10 +135,11 @@ public class Replika implements SubEvent {
     //todo: reset old world
     private World getWorld(boolean regenerate) {
         World world = Bukkit.getWorld("replika");
-        if (regenerate && world!=null) world.getWorldFolder().delete();
-        if (regenerate || world==null) {
+        if (regenerate && world != null) world.getWorldFolder().delete();
+        if (regenerate || world == null) {
             WorldCreator generator = new WorldCreator("replika");
-            generator.generator(new ChunkGenerator() {});
+            generator.generator(new ChunkGenerator() {
+            });
             world = generator.createWorld();
         }
         this.world = world;

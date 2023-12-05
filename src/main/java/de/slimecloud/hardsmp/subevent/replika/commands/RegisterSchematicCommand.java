@@ -2,13 +2,10 @@ package de.slimecloud.hardsmp.subevent.replika.commands;
 
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.build.Build;
-import de.slimecloud.hardsmp.build.BuildFormat;
-import de.slimecloud.hardsmp.build.ImmutableBuild;
 import de.slimecloud.hardsmp.subevent.replika.Replika;
 import de.slimecloud.hardsmp.util.ListLookingCords;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,13 +18,14 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisterSchematicCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Replika replika = HardSMP.getInstance().getSubEvents().getReplika();
-        if (sender instanceof Player player && args.length>=7) {
+        if (sender instanceof Player player && args.length >= 7) {
             Vector playerVec = player.getLocation().toVector();
             String name = args[0];
             File file = replika.getFile(name);
@@ -52,7 +50,7 @@ public class RegisterSchematicCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(Component.text("Es ist ein fehler aufgetreten:\n" + e.getMessage(), NamedTextColor.RED));
                 return true;
             }
-            sender.sendMessage(Component.text("Schematic '"  + name + "' erfolgreich registriert", NamedTextColor.GREEN));
+            sender.sendMessage(Component.text("Schematic '" + name + "' erfolgreich registriert", NamedTextColor.GREEN));
             return true;
         }
         return false;
@@ -61,7 +59,7 @@ public class RegisterSchematicCommand implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> list = new ArrayList<>();
-        if (args.length==0) return list;
+        if (args.length == 0) return list;
         if (sender instanceof Player player) {
             switch (args.length) {
                 case 2, 5 -> ListLookingCords.listAutomaticLoockingCoords(list, player, "x", true);
@@ -69,7 +67,7 @@ public class RegisterSchematicCommand implements CommandExecutor, TabCompleter {
                 case 4, 7 -> ListLookingCords.listAutomaticLoockingCoords(list, player, "z", true);
             }
         }
-        list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length-1].toLowerCase()));
+        list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()));
         return list;
     }
 

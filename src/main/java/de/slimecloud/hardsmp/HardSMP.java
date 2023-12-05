@@ -13,20 +13,19 @@ import de.slimecloud.hardsmp.commands.home.ListHomeCommand;
 import de.slimecloud.hardsmp.commands.home.RemoveHomeCommand;
 import de.slimecloud.hardsmp.commands.home.SetHomeCommand;
 import de.slimecloud.hardsmp.commands.info.MinecraftInfoCommand;
-import de.slimecloud.hardsmp.commands.SpawnCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.*;
 import de.slimecloud.hardsmp.listener.DeathPointHandler;
 import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
+import de.slimecloud.hardsmp.shop.claimshop.ClaimShopHandler;
 import de.slimecloud.hardsmp.subevent.SubEvent;
 import de.slimecloud.hardsmp.subevent.commands.EventCommand;
 import de.slimecloud.hardsmp.subevent.replika.Replika;
 import de.slimecloud.hardsmp.subevent.replika.commands.BuildSchematicCommand;
 import de.slimecloud.hardsmp.subevent.replika.commands.RegisterSchematicCommand;
 import de.slimecloud.hardsmp.ui.*;
-import de.slimecloud.hardsmp.shop.claimshop.ClaimShopHandler;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
 import lombok.Getter;
@@ -38,6 +37,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
@@ -117,11 +117,8 @@ public final class HardSMP extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
-
         this.database = new Database(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"));
-
         this.itemManager = new ItemManager();
-
 
         ClaimCommand claim = new ClaimCommand();
         claimShopHandler = new ClaimShopHandler();
@@ -185,38 +182,40 @@ public final class HardSMP extends JavaPlugin {
         ConfigurationSection formattings = getConfig().getConfigurationSection("ui.custom-formatting");
         if (formattings != null) for (String format : formattings.getKeys(false)) {
             Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
+        }
 
-            //Custom Items
-            registerEvent(chestKey = new ChestKey(this));
-            registerEvent(lockPick = new LockPick(chestKey));
 
-            ConfigurationSection section = getConfig().getConfigurationSection("claimshop.offers");
-            if (section == null) getLogger().warning("Could not initialize claimshop, config misconfigured!");
-            else {
-                registerEvent(plotBuyer25 = new PlotBuyer(section.getInt("plot-buyer-25.blocks"), section.getInt("plot-buyer-25.price.required-points"), section.getInt("plot-buyer-25.quantity"), section.getInt("plot-buyer-25.index")));
-                registerEvent(plotBuyer100 = new PlotBuyer(section.getInt("plot-buyer-100.blocks"), section.getInt("plot-buyer-100.price.required-points"), section.getInt("plot-buyer-100.quantity"), section.getInt("plot-buyer-100.index")));
-                registerEvent(plotBuyer500 = new PlotBuyer(section.getInt("plot-buyer-500.blocks"), section.getInt("plot-buyer-500.price.required-points"), section.getInt("plot-buyer-500.quantity"), section.getInt("plot-buyer-500.index")));
-                registerEvent(plotBuyer1000 = new PlotBuyer(section.getInt("plot-buyer-1000.blocks"), section.getInt("plot-buyer-1000.price.required-points"), section.getInt("plot-buyer-1000.quantity"), section.getInt("plot-buyer-1000.index")));
-                registerEvent(plotBuyer5000 = new PlotBuyer(section.getInt("plot-buyer-5000.blocks"), section.getInt("plot-buyer-5000.price.required-points"), section.getInt("plot-buyer-5000.quantity"), section.getInt("plot-buyer-5000.index")));
-            }
+        //Custom Items
+        registerEvent(chestKey = new ChestKey(this));
+        registerEvent(lockPick = new LockPick(chestKey));
 
-            CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
-            itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
+        ConfigurationSection section = getConfig().getConfigurationSection("claimshop.offers");
+        if (section == null) getLogger().warning("Could not initialize claimshop, config misconfigured!");
 
-            SlimeHandler.setupOffers(getConfig());
-            claimShopHandler.addItemsToShop();
+        else {
+            registerEvent(plotBuyer25 = new PlotBuyer(section.getInt("plot-buyer-25.blocks"), section.getInt("plot-buyer-25.price.required-points"), section.getInt("plot-buyer-25.quantity"), section.getInt("plot-buyer-25.index")));
+            registerEvent(plotBuyer100 = new PlotBuyer(section.getInt("plot-buyer-100.blocks"), section.getInt("plot-buyer-100.price.required-points"), section.getInt("plot-buyer-100.quantity"), section.getInt("plot-buyer-100.index")));
+            registerEvent(plotBuyer500 = new PlotBuyer(section.getInt("plot-buyer-500.blocks"), section.getInt("plot-buyer-500.price.required-points"), section.getInt("plot-buyer-500.quantity"), section.getInt("plot-buyer-500.index")));
+            registerEvent(plotBuyer1000 = new PlotBuyer(section.getInt("plot-buyer-1000.blocks"), section.getInt("plot-buyer-1000.price.required-points"), section.getInt("plot-buyer-1000.quantity"), section.getInt("plot-buyer-1000.index")));
+            registerEvent(plotBuyer5000 = new PlotBuyer(section.getInt("plot-buyer-5000.blocks"), section.getInt("plot-buyer-5000.price.required-points"), section.getInt("plot-buyer-5000.quantity"), section.getInt("plot-buyer-5000.index")));
+        }
 
-            AdvancementHandler.register(this, this::registerEvent);
+        CustomItem.getItems().forEach(i -> itemManager.registerItem(i.getName(), i::getItem));
+        itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
 
-            getLogger().info("initialize Sub Events");
-            this.subEvents = new SubEvents(this);
+        SlimeHandler.setupOffers(getConfig());
+        claimShopHandler.addItemsToShop();
 
-            getLogger().info("initialize Discord Bot");
-            try {
-                this.discordBot = new DiscordBot();
-            } catch (Exception e) {
-                getLogger().warning("Failed to init Discord bot: %s".formatted(e));
-            }
+        AdvancementHandler.register(this, this::registerEvent);
+
+        getLogger().info("initialize Sub Events");
+        this.subEvents = new SubEvents(this);
+
+        getLogger().info("initialize Discord Bot");
+        try {
+            this.discordBot = new DiscordBot();
+        } catch (Exception e) {
+            getLogger().warning("Failed to init Discord bot: %s".formatted(e));
         }
     }
 
@@ -263,7 +262,7 @@ public final class HardSMP extends JavaPlugin {
         private final Replika replika;
 
         public SubEvents(Plugin plugin) {
-            registerCommand("start-event", new EventCommand());
+            registerCommand("event", new EventCommand());
 
             this.replika = new Replika(plugin);
 

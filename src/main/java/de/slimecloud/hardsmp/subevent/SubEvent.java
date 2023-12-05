@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public interface SubEvent {
 
-    void start(Collection<Player> players);
+    void setup(Collection<Player> players);
 
     void stop();
 

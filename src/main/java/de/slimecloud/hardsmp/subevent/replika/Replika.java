@@ -135,7 +135,7 @@ public class Replika implements SubEvent {
     //todo: reset old world
     private World getWorld(boolean regenerate) {
         World world = Bukkit.getWorld("replika");
-        if (regenerate && world != null) world.getWorldFolder().delete();
+        if (regenerate && world != null) world.getWorldFolder().delete(); //return boolean but we do not need this!
         if (regenerate || world == null) {
             WorldCreator generator = new WorldCreator("replika");
             generator.generator(new ChunkGenerator() {
@@ -147,7 +147,7 @@ public class Replika implements SubEvent {
     }
 
     @Override
-    public void start(Collection<Player> players) {
+    public void setup(Collection<Player> players) {
         getWorld(true);
         this.players.addAll(players);
         this.players.forEach(p -> p.teleport(getPlot(p.getUniqueId()).getPosition().add(plotWidth, 0, plotLength)));

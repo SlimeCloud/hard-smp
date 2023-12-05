@@ -91,7 +91,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             .append(Component.keybind("key.attack"))
                             .append(Component.text( " und ", color(0x88D657)))
                             .append(Component.keybind("key.use"))
-                            .append(Component.text("!", color(0x88D657)))
+                            .append(Component.text("!\n", color(0x88D657)))
+                            .append(Component.text("Abbrechen mit ", color(0x88D657)))
+                            .append(Component.text("§6/claim cancel"))
+                            .append(Component.text(", Fertigstellen mit ", color(0x88D657)))
+                            .append(Component.text("§6/claim finish"))
                     );
                 }
                 case "finish" -> {

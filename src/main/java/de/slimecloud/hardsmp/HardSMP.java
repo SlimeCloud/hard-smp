@@ -10,7 +10,7 @@ import de.slimecloud.hardsmp.item.ItemManager;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
 import de.slimecloud.hardsmp.subevent.SubEvent;
-import de.slimecloud.hardsmp.subevent.commands.StartEventCommand;
+import de.slimecloud.hardsmp.subevent.commands.EventCommand;
 import de.slimecloud.hardsmp.subevent.replika.Replika;
 import de.slimecloud.hardsmp.subevent.replika.commands.BuildSchematicCommand;
 import de.slimecloud.hardsmp.subevent.replika.commands.RegisterSchematicCommand;
@@ -164,7 +164,7 @@ public final class HardSMP extends JavaPlugin {
         private final Replika replika;
 
         public SubEvents(Plugin plugin) {
-            registerCommand("start-event", new StartEventCommand());
+            registerCommand("start-event", new EventCommand());
 
             this.replika = new Replika(plugin);
 

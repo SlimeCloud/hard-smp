@@ -36,7 +36,7 @@ commands:
     usage: "§cUsage: /teamcaht <Message>"
     permission: hardsmp.teamchat.send
   start-event:
-    usage: "§cUsage: /start-event <event-name>"
+    usage: "§cUsage: /event <start/stop> <event-name>"
     permission: hardsmp.command.start-event
   register-schematic:
     usage: "§cUsage: /register-schematic <name> <pos1> <pos2>"

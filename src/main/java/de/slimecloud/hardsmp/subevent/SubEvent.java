@@ -8,6 +8,8 @@ public interface SubEvent {
 
     void start(Collection<Player> players);
 
+    void stop();
+
     void join(Player player);
 
     void leave(Player player);

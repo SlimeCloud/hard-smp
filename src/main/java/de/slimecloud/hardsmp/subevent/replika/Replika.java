@@ -167,4 +167,9 @@ public class Replika implements SubEvent {
     public Collection<Player> getPlayers() {
         return new ArrayList<>(players);
     }
+
+    @Override
+    public void stop() {
+
+    }
 }

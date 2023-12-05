@@ -240,6 +240,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                             return true;
                         }
                     }
+
                     Component claims = Component.text("Claims von ", TextColor.color(0x88d657))
                             .append(Chat.getName(target))
                             .append(Component.text(":", TextColor.color(0x88d657)))
@@ -247,8 +248,12 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
                     List<HomeData> homes = HomeData.load(target.getUniqueId());
 
+                    boolean found = false;
+
                     for (Claim claim : Claim.allClaims.values()) {
                         if(!claim.getUuid().equals(target.getUniqueId().toString())) continue;
+
+                        found = true;
 
                         var c = Component.text("   - Gebiet bei x: ")
                                 .append(Component.text(claim.getX1(), TextColor.color(0xF6ED82)))
@@ -269,7 +274,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                         claims = claims.append(c).appendNewline();
                     }
 
-                    player.sendMessage(claims);
+                    player.sendMessage(found ? claims : Component.text("Spieler hat keine Claims!", NamedTextColor.RED));
                 }
                 default -> { return false; }
             }

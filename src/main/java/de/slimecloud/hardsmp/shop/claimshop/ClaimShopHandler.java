@@ -163,13 +163,6 @@ public class ClaimShopHandler implements Listener {
     }
 
     public void shopBuy(ClaimOffer offer, Player player) {
-        /*Thread t = new Thread(() -> {
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });*/
         ClaimRights rights = ClaimRights.load(player.getUniqueId());
         if (rights.getBought(offer.blocks) >= offer.maxAmount) {
             player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast schon die maximale Anzahl gekauft!")));

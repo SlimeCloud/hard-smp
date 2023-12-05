@@ -49,9 +49,13 @@ public class ClaimRights extends DataClass {
         totalClaimSize = (bought25 * 25 + bought100 * 100 + bought500 * 500 + bought1000 * 1000 + bought5000 * 5000);
         this.save();
         player.sendMessage(HardSMP.getPrefix()
-                .append(Component.text("Du kannst jetzt ", color(0x88D657))
-                        .append(Component.text("§6" + blocks))
-                        .append(Component.text(" zusätzliche Blöcke claimen!", color(0x88D657)))));
+                .append(Component.text("Du kannst jetzt ", color(0x88D657)))
+                .append(Component.text("§6" + blocks))
+                .append(Component.text(" zusätzliche Blöcke claimen,\n", color(0x88D657)))
+                .append(Component.text("also insgesamt ", color(0x88D657)))
+                .append(Component.text("§6" + totalClaimSize))
+                .append(Component.text("Blöcke!", color(0x88D657)))
+        );
     }
 
     @SneakyThrows

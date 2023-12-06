@@ -376,6 +376,35 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event) {
+        int px = event.getTo().getBlockX();
+        int pz = event.getTo().getBlockZ();
+
+        Claim.allClaims.values().forEach(claim -> {
+            int x1 = claim.getX1();
+            int x2 = claim.getX2();
+            int z1 = claim.getZ1();
+            int z2 = claim.getZ2();
+
+            int dx = Math.min(Math.abs(x1 - px), Math.abs(x2 - px));
+            int dy = Math.min(Math.abs(z1 - pz), Math.abs(z2 - pz));
+
+            if(Math.sqrt(dx * dx + dy * dy) > 10) return;
+
+            Player player = event.getPlayer();
+            Particle.DustOptions extraCorner = new Particle.DustOptions(Color.fromRGB(0x88D657), 1.0F);
+
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (claim.getX1() + claim.getX2()) / 2.0, player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getX1() - claim.getX2()) * 5, Math.abs(claim.getX1() - claim.getX2()) / 4.0, 0.0, 0.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (claim.getX1() + claim.getX2()) / 2.0, player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getX1() - claim.getX2()) * 5, Math.abs(claim.getX1() - claim.getX2()) / 4.0, 0.0, 0.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), (claim.getZ1() + claim.getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getZ1() - claim.getZ2()) * 5, 0.0, 0.0, Math.abs(claim.getZ1() - claim.getZ2()) / 4.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), (claim.getZ1() + claim.getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getZ1() - claim.getZ2()) * 5, 0.0, 0.0, Math.abs(claim.getZ1() - claim.getZ2()) / 4.0, extraCorner);
+        });
+
         if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) {
             var from = Claim.allClaims.values().stream()
                     .filter(c -> c.containsPlayer(event.getFrom()))
@@ -404,21 +433,6 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                 if (name == null) name = Component.text("Unbekannt", TextColor.color(0x88D657), TextDecoration.ITALIC);
 
                 event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", NamedTextColor.DARK_AQUA).append(name));
-            }
-            if (to.isPresent() && (from.isEmpty() || from.get().getId() != to.get().getId())) {
-                Player player = event.getPlayer();
-                Particle.DustOptions extraCorner = new Particle.DustOptions(Color.WHITE, 1.0F);
-
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (to.get().getX1() + to.get().getX2()) / 2.0, player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getX1() - to.get().getX2()) * 5, Math.abs(to.get().getX1() - to.get().getX2()) / 4.0, 0.0, 0.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (to.get().getX1() + to.get().getX2()) / 2.0, player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getX1() - to.get().getX2()) * 5, Math.abs(to.get().getX1() - to.get().getX2()) / 4.0, 0.0, 0.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), (to.get().getZ1() + to.get().getZ2()) / 2.0).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getZ1() - to.get().getZ2()) * 5, 0.0, 0.0, Math.abs(to.get().getZ1() - to.get().getZ2()) / 4.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), (to.get().getZ1() + to.get().getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getZ1() - to.get().getZ2()) * 5, 0.0, 0.0, Math.abs(to.get().getZ1() - to.get().getZ2()) / 4.0, extraCorner);
             }
 
             return;

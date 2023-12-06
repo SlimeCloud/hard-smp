@@ -230,18 +230,15 @@ leaderboard:
 claim:
   maxblocks: 15000
   claim-free:
-    rect1:
-      x1: -89
+    - x1: -89
       z1: 190
       x2: 25
       z2: 50
-    rect2:
-      x1: 113
+    - x1: 113
       z1: 94
       x2: 26
       z2: 135
-    rect3:
-      x1: 114
+    - x1: 114
       z1: 81
       x2: 242
       z2: 209

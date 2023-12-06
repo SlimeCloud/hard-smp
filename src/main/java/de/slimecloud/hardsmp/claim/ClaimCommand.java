@@ -17,7 +17,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
@@ -109,10 +108,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     ClaimInfo task = claimingPlayers.get(uuid);
                     if (task != null) {
                         if (task.loc1 != null && task.loc2 != null) {
-                            if (Claim.allClaims.values().stream()
-                                    .filter(c -> !c.getUuid().equals(player.getUniqueId().toString()))
-                                    .anyMatch(c -> c.overlaps(task.loc1, task.loc2))
-                            ) {
+                            if (Claim.allClaims.values().stream().anyMatch(c -> c.overlaps(task.loc1, task.loc2))) {
                                 player.sendMessage(Component.text("§cDein Gebiet überschneidet sich mit einem anderen Claim!\nBitte suche dir ein anderes Grundstück!"));
                                 return true;
                             }
@@ -461,21 +457,19 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     }
 
     public boolean overlapsWithClaimFree(Location loc1, Location loc2) {
-        ConfigurationSection section = HardSMP.getInstance().getConfig().getConfigurationSection("claim.claim-free");
-        ConfigurationSection claimFreeArea;
+        for(Map<?, ?> a : HardSMP.getInstance().getConfig().getMapList("claim.claim-free")) {
+            int x1 = (int) a.get("x1");
+            int x2 = (int) a.get("x2");
+            int z1 = (int) a.get("z1");
+            int z2 = (int) a.get("z2");
 
-        if (section == null) return false;
-
-        for (int i = 1; true; i++) {
-            claimFreeArea = section.getConfigurationSection("rect" + i);
-            if(claimFreeArea == null) break;
-
-            if (Math.min(section.getInt("x1"), section.getInt("x2")) <= Math.max(loc1.getX(), loc2.getX())
-                    && Math.min(section.getInt("z1"), section.getInt("z2")) <= Math.max(loc1.getZ(), loc2.getZ())
-                    && Math.min(loc1.getX(), loc2.getX()) <= Math.max(section.getInt("x1"), section.getInt("x2"))
-                    && Math.min(loc1.getZ(), loc2.getZ()) <= Math.max(section.getInt("z1"), section.getInt("z2"))) return true;
-
+            if(Math.min(x1, x2) <= Math.max(loc1.getX(), loc2.getX())
+                    && Math.min(z1, z2) <= Math.max(loc1.getZ(), loc2.getZ())
+                    && Math.min(loc1.getX(), loc2.getX()) <= Math.max(x1, x2)
+                    && Math.min(loc1.getZ(), loc2.getZ()) <= Math.max(z1, z2)
+            ) return true;
         }
+
         return false;
     }
 

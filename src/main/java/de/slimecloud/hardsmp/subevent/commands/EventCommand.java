@@ -47,7 +47,7 @@ public class EventCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
             case "join" -> {
-                event.join(Bukkit.getPlayer(args[3]));
+                event.join(Bukkit.getPlayer(args[2]));
             }
         }
         System.out.println("retun end");

@@ -17,7 +17,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
@@ -109,10 +108,7 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
                     ClaimInfo task = claimingPlayers.get(uuid);
                     if (task != null) {
                         if (task.loc1 != null && task.loc2 != null) {
-                            if (Claim.allClaims.values().stream()
-                                    .filter(c -> !c.getUuid().equals(player.getUniqueId().toString()))
-                                    .anyMatch(c -> c.overlaps(task.loc1, task.loc2))
-                            ) {
+                            if (Claim.allClaims.values().stream().anyMatch(c -> c.overlaps(task.loc1, task.loc2))) {
                                 player.sendMessage(Component.text("§cDein Gebiet überschneidet sich mit einem anderen Claim!\nBitte suche dir ein anderes Grundstück!"));
                                 return true;
                             }
@@ -376,6 +372,35 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event) {
+        int px = event.getTo().getBlockX();
+        int pz = event.getTo().getBlockZ();
+
+        Claim.allClaims.values().forEach(claim -> {
+            int x1 = claim.getX1();
+            int x2 = claim.getX2();
+            int z1 = claim.getZ1();
+            int z2 = claim.getZ2();
+
+            int dx = Math.min(Math.abs(x1 - px), Math.abs(x2 - px));
+            int dy = Math.min(Math.abs(z1 - pz), Math.abs(z2 - pz));
+
+            if(Math.sqrt(dx * dx + dy * dy) > 10) return;
+
+            Player player = event.getPlayer();
+            Particle.DustOptions extraCorner = new Particle.DustOptions(Color.fromRGB(0x88D657), 1.0F);
+
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (claim.getX1() + claim.getX2()) / 2.0, player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getX1() - claim.getX2()) * 5, Math.abs(claim.getX1() - claim.getX2()) / 4.0, 0.0, 0.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (claim.getX1() + claim.getX2()) / 2.0, player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getX1() - claim.getX2()) * 5, Math.abs(claim.getX1() - claim.getX2()) / 4.0, 0.0, 0.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), (claim.getZ1() + claim.getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getZ1() - claim.getZ2()) * 5, 0.0, 0.0, Math.abs(claim.getZ1() - claim.getZ2()) / 4.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), (claim.getZ1() + claim.getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getZ1() - claim.getZ2()) * 5, 0.0, 0.0, Math.abs(claim.getZ1() - claim.getZ2()) / 4.0, extraCorner);
+        });
+
         if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) {
             var from = Claim.allClaims.values().stream()
                     .filter(c -> c.containsPlayer(event.getFrom()))
@@ -405,21 +430,6 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
                 event.getPlayer().sendActionBar(Component.text("Du betrittst das Gebiet von ", NamedTextColor.DARK_AQUA).append(name));
             }
-            if (to.isPresent() && (from.isEmpty() || from.get().getId() != to.get().getId())) {
-                Player player = event.getPlayer();
-                Particle.DustOptions extraCorner = new Particle.DustOptions(Color.WHITE, 1.0F);
-
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (to.get().getX1() + to.get().getX2()) / 2.0, player.getLocation().getY(), to.get().getZ1()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getX1() - to.get().getX2()) * 5, Math.abs(to.get().getX1() - to.get().getX2()) / 4.0, 0.0, 0.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (to.get().getX1() + to.get().getX2()) / 2.0, player.getLocation().getY(), to.get().getZ2()).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getX1() - to.get().getX2()) * 5, Math.abs(to.get().getX1() - to.get().getX2()) / 4.0, 0.0, 0.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX1(), player.getLocation().getY(), (to.get().getZ1() + to.get().getZ2()) / 2.0).add(new org.bukkit.util.Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getZ1() - to.get().getZ2()) * 5, 0.0, 0.0, Math.abs(to.get().getZ1() - to.get().getZ2()) / 4.0, extraCorner);
-                player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), to.get().getX2(), player.getLocation().getY(), (to.get().getZ1() + to.get().getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(to.get().getZ1() - to.get().getZ2()) * 5, 0.0, 0.0, Math.abs(to.get().getZ1() - to.get().getZ2()) / 4.0, extraCorner);
-            }
 
             return;
         }
@@ -447,21 +457,19 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
     }
 
     public boolean overlapsWithClaimFree(Location loc1, Location loc2) {
-        ConfigurationSection section = HardSMP.getInstance().getConfig().getConfigurationSection("claim.claim-free");
-        ConfigurationSection claimFreeArea;
+        for(Map<?, ?> a : HardSMP.getInstance().getConfig().getMapList("claim.claim-free")) {
+            int x1 = (int) a.get("x1");
+            int x2 = (int) a.get("x2");
+            int z1 = (int) a.get("z1");
+            int z2 = (int) a.get("z2");
 
-        if (section == null) return false;
-
-        for (int i = 1; true; i++) {
-            claimFreeArea = section.getConfigurationSection("rect" + i);
-            if(claimFreeArea == null) break;
-
-            if (Math.min(section.getInt("x1"), section.getInt("x2")) <= Math.max(loc1.getX(), loc2.getX())
-                    && Math.min(section.getInt("z1"), section.getInt("z2")) <= Math.max(loc1.getZ(), loc2.getZ())
-                    && Math.min(loc1.getX(), loc2.getX()) <= Math.max(section.getInt("x1"), section.getInt("x2"))
-                    && Math.min(loc1.getZ(), loc2.getZ()) <= Math.max(section.getInt("z1"), section.getInt("z2"))) return true;
-
+            if(Math.min(x1, x2) <= Math.max(loc1.getX(), loc2.getX())
+                    && Math.min(z1, z2) <= Math.max(loc1.getZ(), loc2.getZ())
+                    && Math.min(loc1.getX(), loc2.getX()) <= Math.max(x1, x2)
+                    && Math.min(loc1.getZ(), loc2.getZ()) <= Math.max(z1, z2)
+            ) return true;
         }
+
         return false;
     }
 

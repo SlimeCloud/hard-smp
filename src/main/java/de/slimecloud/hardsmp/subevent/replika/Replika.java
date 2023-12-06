@@ -3,10 +3,7 @@ package de.slimecloud.hardsmp.subevent.replika;
 import de.slimecloud.hardsmp.build.Build;
 import de.slimecloud.hardsmp.subevent.SubEvent;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
@@ -44,10 +41,11 @@ public class Replika implements SubEvent {
      */
     private boolean nextDirection = false;
 
-    private int currentPlotX = 0;
-    private int currentPlotZ = 0;
-    private int maxPlotX = 0;
-    private int maxPlotZ = 0;
+    private int currentPlotPosX = 0;
+    private int currentPlotPosZ = 0;
+    private int currentRow = 1;
+    private int currentCulum = 1;
+    private int plotsInRow = 0;
 
     private World world = null;
 
@@ -92,29 +90,35 @@ public class Replika implements SubEvent {
     }
 
     private void putPlot(UUID uuid) {
-        plots.put(uuid, new Plot(this, new Location(world, currentPlotX, 0, currentPlotZ)));
+        Location loc = new Location(world, currentPlotPosX, 0, currentPlotPosZ);
+        System.out.println("create new plot at:" + loc.toVector());
+        plots.put(uuid, new Plot(this, loc));
     }
 
 
-    //buggy: gerate a diagonally instead of a Square
     private void generatePlot(UUID uuid) {
-        if (nextDirection) { // set which direction comes next
-            currentPlotX += plotWidth + plotSpacing;
-            putPlot(uuid);
-            if (currentPlotX >= maxPlotX) {
-                nextDirection = false;
-                maxPlotX = currentPlotX;
-                currentPlotX = 0;
-            }
-        } else {
-            currentPlotZ += plotLength + plotSpacing;
-            putPlot(uuid);
-            if (currentPlotZ >= maxPlotZ) {
-                nextDirection = true;
-                maxPlotZ = currentPlotZ;
-                currentPlotZ = 0;
-            }
+        putPlot(uuid);
+        System.out.println("plotsInRow " + plotsInRow);
+        plotsInRow += 1;
+        System.out.println("after add plotsInRow " + plotsInRow);
+        if (plotsInRow >= 5) {
+            plotsInRow = 0;
+            System.out.println("currentRow " + currentRow);
+            currentRow += 1;
+            System.out.println("after add currentRow " + currentRow);
+            System.out.println("currentPlotPosZ " + currentPlotPosZ);
+            currentPlotPosZ = (currentRow - 1) * (plotLength +plotSpacing);
+            System.out.println("after add currentPlotPosZ " + currentPlotPosZ);
+            System.out.println("currentPlotPosX " + currentPlotPosX);
+            currentPlotPosX = 0;
+            System.out.println("after set currentPlotPosX " + currentPlotPosX);
+            return;
         }
+        System.out.println("outif currentPlotPosX " + currentPlotPosX);
+        currentPlotPosX += plotWidth+plotSpacing;
+        System.out.println("after add currentPlotPosX " + currentPlotPosX);
+
+
     }
 
     public Plot getPlot(UUID uuid) {
@@ -132,10 +136,13 @@ public class Replika implements SubEvent {
     }
 
 
-    //todo: reset old world
+    //todo: reset old world - manuell?
     private World getWorld(boolean regenerate) {
         World world = Bukkit.getWorld("replika");
-        if (regenerate && world != null) world.getWorldFolder().delete(); //return boolean but we do not need this!
+        if (regenerate && world != null) {
+            if (world.getWorldFolder().delete()) plugin.getLogger().info("world was del");
+            else plugin.getLogger().info("world was NOT del");
+        }
         if (regenerate || world == null) {
             WorldCreator generator = new WorldCreator("replika");
             generator.generator(new ChunkGenerator() {
@@ -150,13 +157,27 @@ public class Replika implements SubEvent {
     public void setup(Collection<Player> players) {
         getWorld(true);
         this.players.addAll(players);
-        this.players.forEach(p -> p.teleport(getPlot(p.getUniqueId()).getPosition().add(plotWidth, 0, plotLength)));
+
+        //this.players.forEach(player ->
+        for (int i = 0; i < 12; i++)
+        {
+            UUID uui = UUID.randomUUID();
+            Plot plot = getPlot(uui);
+            Location plotLoc = plot.getPosition();
+            System.out.println("plot loc: " + plotLoc);
+            Location teleportLoc = plotLoc.add((plotSpacing + (double) plotWidth /2), 1, (double) (plotLength / 2) /2);
+            //player.teleport(teleportLoc);
+            System.out.println("tp loc: " + teleportLoc);
+            Bukkit.getWorld("replika").setBlockData(teleportLoc, Material.RED_WOOL.createBlockData());
+        }
+        System.out.println("plots " + plots.toString());
     }
 
     @Override
     public void join(Player player) {
         this.players.add(player);
-        player.teleport(getPlot(player.getUniqueId()).getPosition().add(plotWidth, 0, plotLength));
+        Plot plot = getPlot(player.getUniqueId());
+        player.teleport(plot.getPosition().add(plotWidth, 0, plotLength));
     }
 
     @Override

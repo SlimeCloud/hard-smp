@@ -3,6 +3,14 @@ database:
   user: postgres
   password: pwd
 
+discord:
+  token: xxx
+  console-channel: 123
+  netrunner-role: 123
+  guild: 123
+  mod-log-channel: 123
+  verify-role: 123
+
 shop:
   offers:
     lock-pick:
@@ -206,13 +214,6 @@ ui:
 verify:
   code-length: 5
   pre-verify: false
-
-discord:
-  token: xxx
-  console-channel: 123
-  netrunner-role: 123
-  guild: 123
-  mod-log-channel: 123
 
 teamchat:
   messageFormat: "§8[§äTeam§öChat§8] §c%player§7:"

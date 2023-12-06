@@ -31,7 +31,7 @@ public class RegisterSchematicCommand implements CommandExecutor, TabCompleter {
             File file = replika.getFile(name);
 
             if (file.exists()) {
-                sender.sendMessage(Component.text("Schematic mit dem name '" + name + "' existiert bereits.", NamedTextColor.RED));
+                sender.sendMessage(HardSMP.getPrefix().append(Component.text("Schematic mit dem name '" + name + "' existiert bereits.", NamedTextColor.RED)));
                 return true;
             }
 
@@ -47,10 +47,10 @@ public class RegisterSchematicCommand implements CommandExecutor, TabCompleter {
                 replika.registerSchematic(name, build);
             } catch (IOException e) {
                 e.printStackTrace();
-                sender.sendMessage(Component.text("Es ist ein fehler aufgetreten:\n" + e.getMessage(), NamedTextColor.RED));
+                sender.sendMessage(HardSMP.getPrefix().append(Component.text("Es ist ein fehler aufgetreten:\n" + e.getMessage(), NamedTextColor.RED)));
                 return true;
             }
-            sender.sendMessage(Component.text("Schematic '" + name + "' erfolgreich registriert", NamedTextColor.GREEN));
+            sender.sendMessage(HardSMP.getPrefix().append(Component.text("Schematic '" + name + "' erfolgreich registriert", HardSMP.getInstance().getGreenColor())));
             return true;
         }
         return false;

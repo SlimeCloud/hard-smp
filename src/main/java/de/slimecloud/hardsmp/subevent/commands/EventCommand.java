@@ -25,28 +25,29 @@ public class EventCommand implements CommandExecutor, TabCompleter {
 
         switch (args[0]) {
             case "start" -> {
-
+                sender.sendMessage(HardSMP.getPrefix().append(Component.text("Starte Event!", HardSMP.getInstance().getGreenColor())));
+                SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);
 
             }
             case "setup" -> {
-                sender.sendMessage(Component.text("Lade Event!", NamedTextColor.GREEN));
+                sender.sendMessage(HardSMP.getPrefix().append(Component.text("Lade Event!", HardSMP.getInstance().getGreenColor())));
                 SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);
                 if (event == null) {
-                    sender.sendMessage(Component.text("SubEvent '" + args[1] + "' wurde nicht gefunden!", NamedTextColor.RED));
+                    sender.sendMessage(HardSMP.getPrefix().append(Component.text("SubEvent '" + args[1] + "' wurde nicht gefunden!", NamedTextColor.RED)));
                     return true;
                 }
                 event.setup(Bukkit.getOnlinePlayers().stream().map(p -> (Player) p).toList());
-                sender.sendMessage(Component.text("SubEvent '" + args[1] + "' erfolgreich gestartet!", NamedTextColor.GREEN));
+                sender.sendMessage(HardSMP.getPrefix().append(Component.text("SubEvent '" + args[1] + "' erfolgreich gestartet!", HardSMP.getInstance().getGreenColor())));
                 return true;
             }
             case "stop" -> {
                 SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);
                 if (event == null) {
-                    sender.sendMessage(Component.text("SubEvent '" + args[1] + "' wurde nicht gefunden!", NamedTextColor.RED));
+                    sender.sendMessage(HardSMP.getPrefix().append(Component.text("SubEvent '" + args[1] + "' wurde nicht gefunden!", NamedTextColor.RED)));
                     return true;
                 }
                 event.stop();
-                sender.sendMessage(Component.text("SubEvent '" + args[1] + "' erfolgreich beendet!", NamedTextColor.GREEN));
+                sender.sendMessage(HardSMP.getPrefix().append(Component.text("SubEvent '" + args[1] + "' erfolgreich beendet!", HardSMP.getInstance().getGreenColor())));
                 return true;
             }
         }
@@ -57,20 +58,14 @@ public class EventCommand implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> list = new ArrayList<>();
-        System.out.println("start tabcompleat");
         switch (args.length) {
             case 1 -> {
-                System.out.println("case 1");
                 list.add("start");
                 list.add("setup");
                 list.add("stop");
             }
-            case 2 -> {
-                System.out.println("case 2");
-                list.addAll(HardSMP.getInstance().getSubEvents().getEvents().keySet());
-            }
+            case 2 -> list.addAll(HardSMP.getInstance().getSubEvents().getEvents().keySet());
         }
-        System.out.println("tab end");
         list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()));
         return list;
     }

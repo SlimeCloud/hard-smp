@@ -1,5 +1,6 @@
 package de.slimecloud.hardsmp.ui;
 
+import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.player.PlayerController;
 import de.slimecloud.hardsmp.player.data.PointCategory;
 import de.slimecloud.hardsmp.player.data.PointsListener;
@@ -24,7 +25,7 @@ public class AdvancementMessage implements Listener {
                 .append(event.getAdvancement().getDisplay().displayName())
                 .append(Component.text(" bekommen ").color(NamedTextColor.GRAY))
                 .append(Component.text("[").color(NamedTextColor.DARK_GRAY))
-                .append(Component.text(PointCategory.ADVANCEMENT.calculate(rarity)).color(NamedTextColor.GREEN).hoverEvent(HoverEvent.showText(
+                .append(Component.text(PointCategory.ADVANCEMENT.calculate(rarity)).color(HardSMP.getInstance().getGreenColor()).hoverEvent(HoverEvent.showText(
                         Component.text((int) PlayerController.applyFormula(PointCategory.ADVANCEMENT.calculate(rarity), event.getPlayer()))
                                 .color(TextColor.color(0xF6ED82))
                 )))

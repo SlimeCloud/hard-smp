@@ -25,7 +25,7 @@ public class BuildSchematicCommand implements CommandExecutor, TabCompleter {
             Replika replika = HardSMP.getInstance().getSubEvents().getReplika();
             File file = replika.getFile(args[0]);
             if (!file.exists()) {
-                sender.sendMessage(Component.text("Schematic '" + args[0] + "' wurde nicht gefunden", NamedTextColor.RED));
+                sender.sendMessage(HardSMP.getPrefix().append(Component.text("Schematic '" + args[0] + "' wurde nicht gefunden", NamedTextColor.RED)));
                 return true;
             }
             Build build;
@@ -34,14 +34,14 @@ public class BuildSchematicCommand implements CommandExecutor, TabCompleter {
                 build.build(player.getLocation());
             } catch (IOException e) {
                 e.printStackTrace();
-                sender.sendMessage(Component.text("Es ist ein fehler aufgetreten:\n" + e.getMessage(), NamedTextColor.RED));
+                sender.sendMessage(HardSMP.getPrefix().append(Component.text("Es ist ein fehler aufgetreten:\n" + e.getMessage(), NamedTextColor.RED)));
                 return true;
             }
-            sender.sendMessage(Component.text(build.getBlocks().size(), NamedTextColor.LIGHT_PURPLE)
+            sender.sendMessage(HardSMP.getPrefix().append(Component.text(build.getBlocks().size(), NamedTextColor.LIGHT_PURPLE))
                     .appendSpace()
-                    .append(Component.text("Blöcke platziert", NamedTextColor.GREEN))
+                    .append(Component.text("Blöcke platziert", HardSMP.getInstance().getGreenColor()))
                     .appendNewline()
-                    .append(Component.text("'" + args[0] + "' erfolgreich gebaut.", NamedTextColor.GREEN)));
+                    .append(Component.text("'" + args[0] + "' erfolgreich gebaut.", HardSMP.getInstance().getGreenColor())));
             return true;
         }
         return false;

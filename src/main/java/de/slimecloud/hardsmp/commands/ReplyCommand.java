@@ -45,7 +45,7 @@ public class ReplyCommand implements CommandExecutor, EmptyTabCompleter {
             return true;
         }
 
-        Component message = Formatter.parseText("&", "&r&7&o " + String.join(" ", args))
+        Component message = Formatter.parseText("&", "&r&7&o" + String.join(" ", args))
                 .clickEvent(ClickEvent.suggestCommand("/r "))
                 .hoverEvent(HoverEvent.showText(Component.text("Antworten", TextColor.color(0xF6ED82))));;
 

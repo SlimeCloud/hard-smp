@@ -25,6 +25,7 @@ public class EventCommand implements CommandExecutor, TabCompleter {
         switch (args[0]) {
             case "start" -> {
                 sender.sendMessage(HardSMP.getPrefix().append(Component.text("Starte Event!", HardSMP.getInstance().getGreenColor())));
+                event.start();
 
             }
             case "setup" -> {

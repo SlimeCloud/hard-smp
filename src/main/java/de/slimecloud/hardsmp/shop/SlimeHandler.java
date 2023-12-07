@@ -92,6 +92,7 @@ public class SlimeHandler implements Listener {
         EventPlayer ep = PlayerController.getPlayer(event.getWhoClicked());
         Inventory inv = event.getInventory();
         ItemStack item = inv.getItem(event.getSlot());
+        if (!item.getItemMeta().hasLocalizedName() || item.getItemMeta().getLocalizedName().isBlank()) return;
         Offer offer = Offer.byItem(item, offers);
         double points = ep.getActualPoints();
         item = new ItemBuilder(item).removeLore(".*benötige punkte.*").build();

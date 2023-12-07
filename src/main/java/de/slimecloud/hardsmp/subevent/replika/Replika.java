@@ -44,7 +44,6 @@ public class Replika implements SubEvent {
     private int currentPlotPosX = 0;
     private int currentPlotPosZ = 0;
     private int currentRow = 1;
-    private int currentCulum = 1;
     private int plotsInRow = 0;
 
     private World world = null;
@@ -91,33 +90,21 @@ public class Replika implements SubEvent {
 
     private void putPlot(UUID uuid) {
         Location loc = new Location(world, currentPlotPosX, 0, currentPlotPosZ);
-        System.out.println("create new plot at:" + loc.toVector());
         plots.put(uuid, new Plot(this, loc));
     }
 
 
     private void generatePlot(UUID uuid) {
         putPlot(uuid);
-        System.out.println("plotsInRow " + plotsInRow);
         plotsInRow += 1;
-        System.out.println("after add plotsInRow " + plotsInRow);
         if (plotsInRow >= 5) {
             plotsInRow = 0;
-            System.out.println("currentRow " + currentRow);
             currentRow += 1;
-            System.out.println("after add currentRow " + currentRow);
-            System.out.println("currentPlotPosZ " + currentPlotPosZ);
             currentPlotPosZ = (currentRow - 1) * (plotLength +plotSpacing);
-            System.out.println("after add currentPlotPosZ " + currentPlotPosZ);
-            System.out.println("currentPlotPosX " + currentPlotPosX);
             currentPlotPosX = 0;
-            System.out.println("after set currentPlotPosX " + currentPlotPosX);
             return;
         }
-        System.out.println("outif currentPlotPosX " + currentPlotPosX);
         currentPlotPosX += plotWidth+plotSpacing;
-        System.out.println("after add currentPlotPosX " + currentPlotPosX);
-
 
     }
 
@@ -164,13 +151,10 @@ public class Replika implements SubEvent {
             UUID uui = UUID.randomUUID();
             Plot plot = getPlot(uui);
             Location plotLoc = plot.getPosition();
-            System.out.println("plot loc: " + plotLoc);
             Location teleportLoc = plotLoc.add((plotSpacing + (double) plotWidth /2), 1, (double) (plotLength / 2) /2);
             //player.teleport(teleportLoc);
-            System.out.println("tp loc: " + teleportLoc);
             Bukkit.getWorld("replika").setBlockData(teleportLoc, Material.RED_WOOL.createBlockData());
         }
-        System.out.println("plots " + plots.toString());
     }
 
     @Override

@@ -50,7 +50,6 @@ public class EventCommand implements CommandExecutor, TabCompleter {
                 event.join(Bukkit.getPlayer(args[2]));
             }
         }
-        System.out.println("retun end");
         return false;
     }
 

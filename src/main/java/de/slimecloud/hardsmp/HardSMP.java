@@ -25,6 +25,7 @@ import de.slimecloud.hardsmp.subevent.commands.EventCommand;
 import de.slimecloud.hardsmp.subevent.replika.Replika;
 import de.slimecloud.hardsmp.subevent.replika.commands.BuildSchematicCommand;
 import de.slimecloud.hardsmp.subevent.replika.commands.RegisterSchematicCommand;
+import de.slimecloud.hardsmp.subevent.replika.commands.ReplikaCommand;
 import de.slimecloud.hardsmp.ui.*;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
@@ -273,6 +274,7 @@ public final class HardSMP extends JavaPlugin {
 
             registerCommand("register-schematic", new RegisterSchematicCommand());
             registerCommand("build-schematic", new BuildSchematicCommand());
+            registerCommand("replika", new ReplikaCommand());
         }
 
         public Map<String, SubEvent> getEvents() {

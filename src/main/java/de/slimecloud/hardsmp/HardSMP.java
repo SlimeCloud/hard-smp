@@ -161,6 +161,9 @@ public final class HardSMP extends JavaPlugin {
         getLogger().info("initialize Custom Items");
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());
 
+        ConfigurationSection section = getConfig().getConfigurationSection("claimshop.offers");
+        if (section == null) getLogger().warning("Could not initialize claimshop, config misconfigured!");
+
         getLogger().info("initialize Shop Orders");
         SlimeHandler.setupOffers(getConfig());
 
@@ -189,14 +192,6 @@ public final class HardSMP extends JavaPlugin {
         if (formattings != null) for (String format : formattings.getKeys(false)) {
             Formatter.registerCustomFormatting(format.charAt(0), TextColor.fromHexString(formattings.getString(format)));
         }
-
-
-        //Custom Items
-        registerEvent(chestKey = new ChestKey(this));
-        registerEvent(lockPick = new LockPick(chestKey));
-
-        ConfigurationSection section = getConfig().getConfigurationSection("claimshop.offers");
-        if (section == null) getLogger().warning("Could not initialize claimshop, config misconfigured!");
 
         else {
             registerEvent(plotBuyer25 = new PlotBuyer(section.getInt("plot-buyer-25.blocks"), section.getInt("plot-buyer-25.price.required-points"), section.getInt("plot-buyer-25.quantity"), section.getInt("plot-buyer-25.index")));
@@ -274,7 +269,7 @@ public final class HardSMP extends JavaPlugin {
 
             registerCommand("register-schematic", new RegisterSchematicCommand());
             registerCommand("build-schematic", new BuildSchematicCommand());
-            registerCommand("replika", new ReplikaCommand());
+            registerCommand("replika", new ReplikaCommand(getInstance()));
         }
 
         public Map<String, SubEvent> getEvents() {

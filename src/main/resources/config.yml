@@ -229,3 +229,7 @@ leaderboard:
 
 claim:
   maxblocks: 15000
+
+events:
+  replika:
+    max-levels: 10

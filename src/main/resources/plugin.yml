@@ -135,7 +135,7 @@ commands:
     usage: "§cBenutzung: /invsee <Spieler>"
     permission: hardsmp.command.invsee
   register-schematic:
-    usage: "§cUsage: /register-schematic <name> <pos1> <pos2>"
+    usage: "§cUsage: /register-schematic <name> <pos1> <pos2> <copyAir> <copyEntities>"
     permission: hardsmp.schematic.register
   build-schematic:
     usage: "§cUsage: /build-schematic <name>"

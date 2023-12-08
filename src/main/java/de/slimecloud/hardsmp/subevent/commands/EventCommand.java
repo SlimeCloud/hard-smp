@@ -49,6 +49,7 @@ public class EventCommand implements CommandExecutor, TabCompleter {
             }
             case "join" -> {
                 event.join(Bukkit.getPlayer(args[2]));
+                return true;
             }
         }
         return false;

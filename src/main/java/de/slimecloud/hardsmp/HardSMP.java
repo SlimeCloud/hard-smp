@@ -102,9 +102,9 @@ public final class HardSMP extends JavaPlugin {
     private Chat chat;
 
     @Getter
-    public TextColor greenColor = TextColor.color(0x88d657);
+    public final static TextColor greenColor = TextColor.color(0x88d657);
     @Getter
-    public TextColor yellowColor = TextColor.color(0xF6ED82);
+    public final static TextColor yellowColor = TextColor.color(0xF6ED82);
 
     @Override
     @SuppressWarnings({"deprecation", "ConstantConditions"})

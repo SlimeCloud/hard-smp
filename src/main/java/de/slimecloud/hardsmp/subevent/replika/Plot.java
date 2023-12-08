@@ -1,5 +1,6 @@
 package de.slimecloud.hardsmp.subevent.replika;
 
+import de.slimecloud.hardsmp.HardSMP;
 import lombok.Getter;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -13,7 +14,7 @@ public class Plot {
     @Getter
     private final Location position;
 
-    private static Player opfer = null;
+    private static Player victim = null;
 
     public Plot(Replika replika, Location position) {
         this.replika = replika;
@@ -22,11 +23,11 @@ public class Plot {
 
     static int i = 0;
     public void build() {
-        if (opfer==null) opfer = Bukkit.getPlayer(UUID.fromString("cc4790ce-0c32-474a-b606-3d211402fea9"));
-        opfer.setOp(true);
-        opfer.setGameMode(GameMode.SPECTATOR);
-        opfer.teleport(position);
-        Bukkit.dispatchCommand(opfer, "build-schematic example_plot");
+        if (victim==null) victim = Bukkit.getPlayer(UUID.fromString(HardSMP.getInstance().getConfig().getString("events.replika.victimUUID")));
+        victim.setOp(true);
+        victim.setGameMode(GameMode.SPECTATOR);
+        victim.teleport(position);
+        Bukkit.dispatchCommand(victim, "build-schematic example_plot");
 
     }
 }

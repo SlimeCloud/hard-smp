@@ -1,21 +1,18 @@
 package de.slimecloud.hardsmp.subevent.replika.commands;
 
 import de.slimecloud.hardsmp.HardSMP;
-import de.slimecloud.hardsmp.build.Build;
-import de.slimecloud.hardsmp.subevent.SubEvent;
 import de.slimecloud.hardsmp.subevent.replika.Replika;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,12 +37,12 @@ public class ReplikaCommand implements CommandExecutor, TabCompleter {
             case "start" -> {
                 player.sendMessage(
                         HardSMP.getPrefix().append(
-                                Component.text("Starte Replika...", plugin.getGreenColor())));
+                                Component.text("Starte Replika...", HardSMP.getGreenColor())));
 
                 if (event.getPlayers().isEmpty()) {
                     player.sendMessage(
                             HardSMP.getPrefix().append(
-                                    Component.text("FEHLER! Du musst zuerst ein Setup des Events durchführen!", plugin.getGreenColor())));
+                                    Component.text("FEHLER! Du musst zuerst ein Setup des Events durchführen!", HardSMP.getGreenColor())));
                     return true;
                 }
 
@@ -53,18 +50,28 @@ public class ReplikaCommand implements CommandExecutor, TabCompleter {
 
                 player.sendMessage(
                         HardSMP.getPrefix().append(
-                                Component.text("Replika Event gestartet!", plugin.getGreenColor())));
+                                Component.text("Replika Event gestartet!", HardSMP.getGreenColor())));
             }
             case "stop" -> {
                 player.sendMessage(
                         HardSMP.getPrefix().append(
-                                Component.text("Stoppe Replika...", plugin.getGreenColor())));
+                                Component.text("Stoppe Replika...", HardSMP.getGreenColor())));
 
                 event.stop();
 
                 player.sendMessage(
                         HardSMP.getPrefix().append(
-                                Component.text("Replika Event gestoppt!", plugin.getGreenColor())));
+                                Component.text("Replika Event gestoppt!", HardSMP.getGreenColor())));
+            }
+            case "finishLevel" -> {
+                player.sendMessage(HardSMP.getPrefix().append(Component.text("Überprüfe Plot auf Richtigkeit...", HardSMP.getGreenColor())));
+
+                if (event.checkLevel(player)) {
+                    player.sendMessage(HardSMP.getPrefix().append(Component.text("Glückwunsch! Du hast das Nächste Level erreicht!", HardSMP.getGreenColor())));
+                    return true;
+                }
+
+                player.sendMessage(HardSMP.getPrefix().append(Component.text("Fehlgeschlagen! Schau dir dein Bauwerk nochmal genau an!", NamedTextColor.RED)));
             }
 
         }
@@ -76,8 +83,20 @@ public class ReplikaCommand implements CommandExecutor, TabCompleter {
         List<String> list = new ArrayList<>();
         switch (args.length) {
             case 1 -> {
-                list.add("start");
-                list.add("stop");
+                if (sender.hasPermission("hardsmp.command.replika.admin")) {
+                    list.add("start");
+                    list.add("stop");
+                    list.add("join");
+                }
+                list.add("finishLevel");
+            }
+            case 2 -> {
+                if (args[0].equals("join")) {
+                    list = Bukkit.getOnlinePlayers().stream()
+                            .map(Player::getName)
+                            .filter(p -> p.startsWith(args[1]))
+                            .toList();
+                }
             }
         }
         return list;

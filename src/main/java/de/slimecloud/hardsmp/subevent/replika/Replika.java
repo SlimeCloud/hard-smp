@@ -4,6 +4,7 @@ import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.build.Build;
 import de.slimecloud.hardsmp.subevent.SubEvent;
 import lombok.Getter;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -52,7 +53,7 @@ public class Replika implements SubEvent {
     private int plotsInRow = 0;
     private ArrayList<Build> levels;
     private Map<UUID, Integer> playerLevels;
-
+    private Boolean isStarted = false;
     private World world = null;
 
     private static Player victim = null;
@@ -73,6 +74,7 @@ public class Replika implements SubEvent {
         }
         this.schematics = new HashMap<>();
         this.players = new ArrayList<>();
+        this.playerLevels = new HashMap<>();
         this.plots = new HashMap<>();
         directory.mkdirs();
         if (directory.listFiles() != null) {
@@ -104,6 +106,7 @@ public class Replika implements SubEvent {
 
     Set<UUID> uuids = new HashSet<>();
     int i = 0;
+
     private void generatePlot(UUID uuid) {
         uuids.add(uuid);
         i++;
@@ -153,20 +156,46 @@ public class Replika implements SubEvent {
 
     private void placeLevel(int level, UUID uuid) {
         Plot playerPlot = plots.get(uuid);
-        Bukkit.getWorld("replika").setBlockData(playerPlot.getPosition().toLocation(Bukkit.getWorld("replika")).add(0, 3,0), Material.BLUE_WOOL.createBlockData());
-        Bukkit.getWorld("replika").setBlockData(playerPlot.getPosition().toLocation(Bukkit.getWorld("replika")).add(plotSpacing + 1, 3, (double) plotLength / 2 + 1), Material.LIGHT_BLUE_WOOL.createBlockData());
-        wierdBuild(playerPlot.getPosition().add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
+        wierdBuild(playerPlot.getPosition().toLocation(Bukkit.getWorld("replika")).add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
+        //todo give player the items
     }
 
     public Boolean checkLevel(Player player) {
+        int level = playerLevels.get(player.getUniqueId());
+        File template = getFile(String.valueOf(level));
+        File currentBuild = getCurrentBuild(player);
+        try {
+            if (FileUtils.contentEquals(template, currentBuild)) {//remove air, set clear plate with air before placeing next
+                placeLevel(level, player.getUniqueId());
+                playerLevels.put(player.getUniqueId(), level+1);
+                currentBuild.delete();
+                return true;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        currentBuild.delete();
         return false;
+    }
+
+    private File getCurrentBuild(Player player) {
+        Plot playerPlot = plots.get(player.getUniqueId());
+        Location loc1 = playerPlot.getPosition().toLocation(Bukkit.getWorld("replika")).add(plotSpacing + 1, 0, 1);
+        Location loc2 = loc1.toLocation(Bukkit.getWorld("replika")).add(plotWidth - 3, topBorderHeight, plotWidth - 3); //we can use as z the same as in x because our build space is currently always a square
+        File file = getFile("temp_" + player.getUniqueId());
+        try {
+            Build.scan(file, loc1, loc2, false, false);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return file;
     }
 
     private ArrayList<Build> registerLevel() {
         ArrayList<Build> newLevel = new ArrayList<>();
         int maxLevel = HardSMP.getInstance().getConfig().getInt("events.replika.max-levels");
 
-        for (int level = 1; level < maxLevel ; level++) {
+        for (int level = 1; level < maxLevel; level++) {
             try {
                 newLevel.add(Build.load(getFile(String.valueOf(level))));
             } catch (IOException e) {
@@ -177,8 +206,8 @@ public class Replika implements SubEvent {
     }
 
     //just don't ask, it works....
-    public void wierdBuild(Location location, String schematicName){
-        if (victim==null) victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
+    public void wierdBuild(Location location, String schematicName) {
+        if (victim == null) victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
         victim.setOp(true);
         victim.setGameMode(GameMode.SPECTATOR);
         victim.teleport(location);
@@ -187,15 +216,18 @@ public class Replika implements SubEvent {
 
     @Override
     public void setup(Collection<Player> players) {
+        if (isStarted) return;
         getWorld(true);
         registerLevel();
         Bukkit.getScheduler().runTask(HardSMP.getInstance(), scheduledTask -> {
             this.players.addAll(players);
+            this.players.remove(victim);
 
             //todo change back to tp instead of looping and placing blocks
             //this.players.forEach(player ->
             for (int i = 0; i < 12; i++) {
                 UUID uui = UUID.randomUUID();
+                playerLevels.put(uui, 0);
                 Plot plot = getPlot(uui);
                 Location plotLoc = plot.getPosition().toLocation(plot.getPosition().getWorld());
                 Location teleportLoc = plotLoc.add((plotSpacing + (double) plotWidth / 2), 1, (double) (plotLength / 2) / 2);
@@ -207,9 +239,16 @@ public class Replika implements SubEvent {
 
     @Override
     public void join(Player player) {
+        if (player == victim) return;
         this.players.add(player);
+        this.playerLevels.put(player.getUniqueId(), isStarted ? 1 : 0);
         Plot plot = getPlot(player.getUniqueId());
-        player.teleport(plot.getPosition().add(plotWidth, 0, plotLength));
+        Location plotLoc = plot.getPosition().toLocation(plot.getPosition().getWorld());
+        Location teleportLoc = plotLoc.add((plotSpacing + (double) plotWidth / 2), 1, (double) (plotLength / 2) / 2);
+        if (isStarted) {
+            placeLevel(1, player.getUniqueId());
+        }
+        player.teleport(teleportLoc);
     }
 
     @Override
@@ -229,9 +268,11 @@ public class Replika implements SubEvent {
 
     @Override
     public void start() {
-        //Game info for player
+        //todo Game info for player
+        //todo enable movement, set fly
         Bukkit.getScheduler().runTask(HardSMP.getInstance(), scheduledTask -> {
             plots.forEach((uuid, level) -> placeLevel(1, uuid));
         });
+        this.isStarted = true;
     }
 }

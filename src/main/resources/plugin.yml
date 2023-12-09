@@ -59,6 +59,8 @@ permissions:
     default: true
   hardsmp.command.invsee:
     default: false
+  hardsmp.command.arena:
+    default: false
 
 commands:
   formatting:
@@ -132,3 +134,5 @@ commands:
     aliases: ["inv"]
     usage: "§cBenutzung: /invsee <Spieler>"
     permission: hardsmp.command.invsee
+  arena:
+    permission: hardsmp.command.arena

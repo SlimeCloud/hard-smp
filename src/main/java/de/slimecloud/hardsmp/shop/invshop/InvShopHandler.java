@@ -39,6 +39,8 @@ public class InvShopHandler implements Listener {
     private final List<ClaimOffer> claimoffers = new ArrayList<>();
     private final List<ArenaOffer> arenaoffers = new ArrayList<>();
 
+    public static boolean arenaShopActive = false;
+
     public InvShopHandler(){
         claimshopinv = Bukkit.createInventory(null, 9, Component.text("Bauamt"));
         arenashopinv = Bukkit.createInventory(null, 9, Component.text("Arena-Shop"));
@@ -241,8 +243,12 @@ public class InvShopHandler implements Listener {
             refreshClaimShopItems(player);
             player.openInventory(claimshopinv);
         } else if (isArenaShop(shop)) {
-            refreshArenaShopItems(player);
-            player.openInventory(arenashopinv);
+            if (arenaShopActive) {
+                refreshArenaShopItems(player);
+                player.openInventory(arenashopinv);
+            } else {
+                player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu kannst den Shop gerade nicht nutzen!")));
+            }
         }
     }
 

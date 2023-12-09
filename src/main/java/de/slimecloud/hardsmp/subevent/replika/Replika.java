@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 public class Replika implements SubEvent {
@@ -171,9 +172,11 @@ public class Replika implements SubEvent {
 
     private void placeLevel(int level, UUID uuid) {
         Plot playerPlot = plots.get(uuid);
+        Player player = Bukkit.getPlayer(uuid);
         playerPlot.build();
         wierdBuild(playerPlot.getPosition().toLocation(getWorld()).add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
         plugin.getLogger().info("Placed " + level + ". for " + Bukkit.getPlayer(uuid).getName());
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 5000, 1);
     }
 
     public Boolean checkLevel(Player player) {
@@ -312,14 +315,28 @@ public class Replika implements SubEvent {
             player.sendTitlePart(TitlePart.SUBTITLE, Component.text("Chat lesen!", HardSMP.getGreenColor()));
             player.sendMessage(Formatter.parseText(plugin.getConfig().getString("events.replika.info-message").replace("%finishCommand", "/replika finishLevel")));
             player.setGameMode(GameMode.CREATIVE);
+            player.sendMessage(Component.newline().appendNewline().append(HardSMP.getPrefix()
+                            .append(Component.text("Event startet in ", HardSMP.getGreenColor())
+                                    .append(Component.text("60s", HardSMP.getYellowColor())))
+                    ));
         });
-        Bukkit.getScheduler().runTask(HardSMP.getInstance(), scheduledTask -> {
-            plots.forEach((uuid, plot) -> {
-                placeLevel(1, uuid);
-                playerLevels.put(uuid, 1);
-            });
+        //todo wait 60s
+
+        //todo warp this countdown in a task
+        AtomicInteger finalCount = new AtomicInteger(5);
+        players.forEach(player -> {
+            player.sendMessage(HardSMP.getPrefix()
+                    .append(Component.text("Event startet in ", HardSMP.getGreenColor())
+                            .append(Component.text(finalCount + "s", HardSMP.getYellowColor()))
+                    ));
+            if (finalCount.get() <= 5) {
+                player.sendTitlePart(TitlePart.TITLE, Component.text("Event Start"));
+                player.sendTitlePart(TitlePart.SUBTITLE, Component.text(finalCount + "s"));
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 5000, 1);
+            }
+            finalCount.getAndDecrement();
         });
-        //todo count down
+        System.out.println("start");
         isStarted = true;
         setActionbar();
     }

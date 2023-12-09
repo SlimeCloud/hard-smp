@@ -3,6 +3,7 @@ package de.slimecloud.hardsmp.commands;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.shop.invshop.InvShopHandler;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,12 +16,12 @@ public class ArenaCommand implements CommandExecutor, EmptyTabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cDu darfst das nicht!");
+            sender.sendMessage("§cBefehl kann nur als Spieler ausgeführt werden!");
             return true;
         }
 
         if (!player.hasPermission("hardsmp.command.arena")) {
-            sender.sendMessage("§cDu darfst das nicht!");
+            sender.sendMessage(HardSMP.getPrefix().append(Component.text("Du hast keine Rechte diesen Befehl auszuführen!", NamedTextColor.RED)));
             return true;
         }
 

@@ -1,4 +1,4 @@
-package de.slimecloud.hardsmp.shop.claimshop;
+package de.slimecloud.hardsmp.shop.invshop;
 
 import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;

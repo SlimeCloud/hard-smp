@@ -2,7 +2,7 @@ package de.slimecloud.hardsmp.commands;
 
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.shop.SlimeNPC;
-import de.slimecloud.hardsmp.shop.claimshop.ClaimShopNPC;
+import de.slimecloud.hardsmp.shop.invshop.ClaimShopNPC;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

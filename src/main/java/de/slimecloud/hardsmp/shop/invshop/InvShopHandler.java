@@ -1,4 +1,4 @@
-package de.slimecloud.hardsmp.shop.claimshop;
+package de.slimecloud.hardsmp.shop.invshop;
 
 import de.cyklon.spigotutils.item.ItemBuilder;
 import de.slimecloud.hardsmp.HardSMP;
@@ -25,23 +25,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ClaimShopHandler implements Listener {
+public class InvShopHandler implements Listener {
 
-    public record ClaimOffer(ItemBuilder item, int maxAmount, List<ItemStack> prices, double pointsRequired, int index, int blocks) {
-
-    }
+    public record InvOffer(ItemBuilder item, int maxAmount, List<ItemStack> prices, double pointsRequired, int index, int blocks) {}
 
     private final Inventory shopinv;
 
-    private final List<ClaimOffer> offers = new ArrayList<>();
+    private final List<InvOffer> offers = new ArrayList<>();
 
-    public ClaimShopHandler(){
+    public InvShopHandler(){
         shopinv = Bukkit.createInventory(null, 9, Component.text("Bauamt"));
     }
 
     private boolean isClaimShop(Entity entity) {
         String s = entity.getPersistentDataContainer().get(HardSMP.getInstance().CLAIM_SHOP_KEY, PersistentDataType.STRING);
         return s != null && s.equals("claimshop");
+    }
+
+    private boolean isArenaShop(Entity entity) {
+        String s = entity.getPersistentDataContainer().get(HardSMP.getInstance().ARENA_SHOP_KEY, PersistentDataType.STRING);
+        return s != null && s.equals("arenashop");
     }
 
     public void addItemsToShop() {
@@ -88,7 +91,7 @@ public class ClaimShopHandler implements Listener {
                 currentItem.addLore(List.of("", "", ""));
                 List<ItemStack> list = new ArrayList<>();
                 list.add(firstPrice);
-                offers.add(new ClaimOffer(currentItem, quantity, list, requiredPoints, index, blocks));
+                offers.add(new InvOffer(currentItem, quantity, list, requiredPoints, index, blocks));
                 continue;
             }
             Material mat2 = Material.getMaterial(secondPriceItem.toUpperCase());
@@ -96,7 +99,7 @@ public class ClaimShopHandler implements Listener {
                 currentItem.addLore(List.of("", "", ""));
                 List<ItemStack> list = new ArrayList<>();
                 list.add(firstPrice);
-                offers.add(new ClaimOffer(currentItem, quantity, list, requiredPoints, index, blocks));
+                offers.add(new InvOffer(currentItem, quantity, list, requiredPoints, index, blocks));
                 continue;
             }
             ItemStack secondPrice = new ItemStack(mat2, secondPriceAmount);
@@ -106,7 +109,7 @@ public class ClaimShopHandler implements Listener {
             List<ItemStack> list = new ArrayList<>();
             list.add(firstPrice);
             list.add(secondPrice);
-            offers.add(new ClaimOffer(currentItem, quantity, list, requiredPoints, index, blocks));
+            offers.add(new InvOffer(currentItem, quantity, list, requiredPoints, index, blocks));
         }
     }
 
@@ -123,7 +126,7 @@ public class ClaimShopHandler implements Listener {
         shopinv.setItem(1, defaultItem);
         shopinv.setItem(7, defaultItem);
         shopinv.setItem(8, defaultItem);
-        for (ClaimOffer co : offers) {
+        for (InvOffer co : offers) {
             shopinv.addItem(co.item
                     .removeLore(Objects.requireNonNull(co.item.build().lore()).size() - 1)
                     .removeLore(Objects.requireNonNull(co.item.build().lore()).size() - 1)
@@ -152,7 +155,7 @@ public class ClaimShopHandler implements Listener {
             event.setCancelled(true);
         if (!event.getCurrentItem().getType().equals(Material.IRON_HOE)) return;
 
-        for (ClaimOffer offer : offers) {
+        for (InvOffer offer : offers) {
             if (event.getCurrentItem().getItemMeta().hasCustomModelData() && offer.index == event.getCurrentItem().getItemMeta().getCustomModelData()) {
                 event.setCancelled(true);
                 shopBuy(offer, player);
@@ -162,7 +165,7 @@ public class ClaimShopHandler implements Listener {
         }
     }
 
-    public void shopBuy(ClaimOffer offer, Player player) {
+    public void shopBuy(InvOffer offer, Player player) {
         ClaimRights rights = ClaimRights.load(player.getUniqueId());
         if (rights.getBought(offer.blocks) >= offer.maxAmount) {
             player.sendMessage(HardSMP.getPrefix().append(Component.text("§cDu hast schon die maximale Anzahl gekauft!")));

@@ -27,7 +27,7 @@ public class Plot {
         victim.setOp(true);
         victim.setGameMode(GameMode.SPECTATOR);
         victim.teleport(position);
-        Bukkit.dispatchCommand(victim, "build-schematic example_plot");
+        Bukkit.dispatchCommand(victim, "build-schematic " + HardSMP.getInstance().getConfig().getString("events.replika.plotSchematicName").replace(".build", ""));
 
     }
 }

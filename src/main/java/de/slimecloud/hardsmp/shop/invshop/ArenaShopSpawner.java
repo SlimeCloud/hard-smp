@@ -50,13 +50,12 @@ public class ArenaShopSpawner {
         for (int i = 0; i < amount; i++) {
             entity = (LivingEntity) player.getWorld().spawnEntity(spawnLocation, entities.get(mat));
 
-            if (entity.getEquipment() == null)
-                continue;
+            if (entity.getEquipment() == null) continue;
 
 
             entity.getEquipment().setHelmet(helmet);
         }
 
-        player.sendMessage(HardSMP.getPrefix().append(Component.text(entities.get(mat).toString().replace('_', ' ') + " " + amount + "x gespawnt!",  color(0x88D657))));
+        player.sendMessage(HardSMP.getPrefix().append(Component.text(entities.get(mat).toString().replace('_', ' ') + " " + amount + "x gespawnt!", color(0x88D657))));
     }
 }

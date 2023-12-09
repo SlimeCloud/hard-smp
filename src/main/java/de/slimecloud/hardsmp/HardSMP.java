@@ -13,7 +13,6 @@ import de.slimecloud.hardsmp.commands.home.ListHomeCommand;
 import de.slimecloud.hardsmp.commands.home.RemoveHomeCommand;
 import de.slimecloud.hardsmp.commands.home.SetHomeCommand;
 import de.slimecloud.hardsmp.commands.info.MinecraftInfoCommand;
-import de.slimecloud.hardsmp.commands.SpawnCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.*;
 import de.slimecloud.hardsmp.listener.DeathPointHandler;

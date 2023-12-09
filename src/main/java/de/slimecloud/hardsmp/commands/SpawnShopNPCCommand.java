@@ -20,8 +20,7 @@ public class SpawnShopNPCCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (commandSender instanceof Player player) {
-            if (args.length == 0)
-                new SlimeNPC(player.getLocation());
+            if (args.length == 0) new SlimeNPC(player.getLocation());
             else if (args.length == 1) {
                 switch (args[0]) {
                     case "general" -> new SlimeNPC(player.getLocation());
@@ -31,18 +30,14 @@ public class SpawnShopNPCCommand implements CommandExecutor, TabCompleter {
                         return false;
                     }
                 }
-            } else
-                return false;
+            } else return false;
             return true;
-        } else
-            commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDas kannst du nicht tun!")));
+        } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDas kannst du nicht tun!")));
         return true;
     }
 
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return Stream.of("general", "claimshop", "arenashop")
-                .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
-                .toList();
+        return Stream.of("general", "claimshop", "arenashop").filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).toList();
     }
 
 }

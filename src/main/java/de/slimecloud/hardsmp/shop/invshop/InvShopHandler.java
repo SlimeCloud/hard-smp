@@ -29,9 +29,12 @@ import java.util.Objects;
 
 public class InvShopHandler implements Listener {
 
-    public record ArenaOffer(ItemBuilder item, List<ItemStack> prices, double pointsRequired) {}
+    public record ArenaOffer(ItemBuilder item, List<ItemStack> prices, double pointsRequired) {
+    }
 
-    public record ClaimOffer(ItemBuilder item, int maxAmount, List<ItemStack> prices, double pointsRequired, int index, int blocks) {}
+    public record ClaimOffer(ItemBuilder item, int maxAmount, List<ItemStack> prices, double pointsRequired, int index,
+                             int blocks) {
+    }
 
     private final Inventory claimshopinv;
     private final Inventory arenashopinv;
@@ -41,7 +44,7 @@ public class InvShopHandler implements Listener {
 
     public static boolean arenaShopActive = false;
 
-    public InvShopHandler(){
+    public InvShopHandler() {
         claimshopinv = Bukkit.createInventory(null, 9, Component.text("Bauamt"));
         arenashopinv = Bukkit.createInventory(null, 9, Component.text("Arena-Shop"));
     }
@@ -302,7 +305,7 @@ public class InvShopHandler implements Listener {
             }
         } else if (offer.prices.size() == 2) {
             if (player.getInventory().containsAtLeast(offer.prices.get(0), offer.prices.get(0).getAmount()) &&
-                player.getInventory().containsAtLeast(offer.prices.get(1), offer.prices.get(1).getAmount())) {
+                    player.getInventory().containsAtLeast(offer.prices.get(1), offer.prices.get(1).getAmount())) {
                 rights.buy(offer.blocks, player);
                 player.getInventory().removeItem(offer.prices.get(0));
                 player.getInventory().removeItem(offer.prices.get(1));

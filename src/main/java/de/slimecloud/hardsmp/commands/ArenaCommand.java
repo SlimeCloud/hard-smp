@@ -25,13 +25,13 @@ public class ArenaCommand implements CommandExecutor, EmptyTabCompleter {
             return true;
         }
 
-        if(args.length == 0) {
+        if (args.length == 0) {
             if (InvShopHandler.arenaShopActive) {
                 InvShopHandler.arenaShopActive = false;
-                player.sendMessage(HardSMP.getPrefix().append(Component.text("Arena Shop deaktiviert!",  color(0x88D657))));
+                player.sendMessage(HardSMP.getPrefix().append(Component.text("Arena Shop deaktiviert!", color(0x88D657))));
             } else {
                 InvShopHandler.arenaShopActive = true;
-                player.sendMessage(HardSMP.getPrefix().append(Component.text("Arena Shop aktiviert!",  color(0x88D657))));
+                player.sendMessage(HardSMP.getPrefix().append(Component.text("Arena Shop aktiviert!", color(0x88D657))));
             }
         } else player.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /arena")));
         return true;

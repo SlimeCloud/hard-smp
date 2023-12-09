@@ -121,6 +121,7 @@ public class BuildFormat {
 
     static Build load(byte[] data) {
         BuildImpl build = new BuildImpl();
+        build.setBytes(data);
         try (ByteArrayInputStream bis = new ByteArrayInputStream(data); BufferedReader br = new BufferedReader(new InputStreamReader(bis))) {
             for (String line; (line = br.readLine()) != null; ) {
                 String[] astring = line.split(SEPERATOR);

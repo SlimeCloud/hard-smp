@@ -140,6 +140,7 @@ public class Replika implements SubEvent {
 
     //todo: reset old world - manuell?
     private World getWorld(boolean regenerate) {
+        if (!regenerate && this.world!=null) return this.world;
         World world = Bukkit.getWorld("replika");
         if (regenerate && world != null) {
             if (world.getWorldFolder().delete()) plugin.getLogger().info("world was del");
@@ -158,7 +159,7 @@ public class Replika implements SubEvent {
     private void placeLevel(int level, UUID uuid) {
         Plot playerPlot = plots.get(uuid);
         playerPlot.build();
-        wierdBuild(playerPlot.getPosition().toLocation(Bukkit.getWorld("replika")).add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
+        wierdBuild(playerPlot.getPosition().toLocation(getWorld()).add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
         //todo give player the items
     }
 
@@ -183,8 +184,8 @@ public class Replika implements SubEvent {
 
     private Build getCurrentBuild(Player player) {
         Plot playerPlot = plots.get(player.getUniqueId());
-        Location loc1 = playerPlot.getPosition().toLocation(Bukkit.getWorld("replika")).add(plotSpacing + 1, 0, 1);
-        Location loc2 = loc1.toLocation(Bukkit.getWorld("replika")).add(plotWidth - 3, topBorderHeight, plotWidth - 3); //we can use as z the same as in x because our build space is currently always a square
+        Location loc1 = playerPlot.getPosition().toLocation(getWorld()).add(plotSpacing + 1, 0, 1);
+        Location loc2 = loc1.toLocation(getWorld()).add(plotWidth - 3, topBorderHeight, plotWidth - 3); //we can use as z the same as in x because our build space is currently always a square
         return Build.scan(loc1, loc2, false, false);
     }
 
@@ -203,6 +204,7 @@ public class Replika implements SubEvent {
     }
 
     //just don't ask, it works....
+    //(say thanks to spigot, that we have do this)
     public void wierdBuild(Location location, String schematicName) {
         if (victim == null) victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
         victim.setOp(true);
@@ -229,7 +231,7 @@ public class Replika implements SubEvent {
                 Location plotLoc = plot.getPosition().toLocation(plot.getPosition().getWorld());
                 Location teleportLoc = plotLoc.add((plotSpacing + (double) plotWidth / 2), 1, (double) (plotLength / 2) / 2);
                 //player.teleport(teleportLoc);
-                Bukkit.getWorld("replika").setBlockData(teleportLoc, Material.RED_WOOL.createBlockData());
+                getWorld().setBlockData(teleportLoc, Material.RED_WOOL.createBlockData());
             }
         });
     }

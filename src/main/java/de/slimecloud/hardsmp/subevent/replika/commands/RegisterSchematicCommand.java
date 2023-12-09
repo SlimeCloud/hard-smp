@@ -39,7 +39,7 @@ public class RegisterSchematicCommand implements CommandExecutor, TabCompleter {
             Vector cord2 = parseVector(args[4].replace("~", Double.toString(playerVec.getX())), args[5].replace("~", Double.toString(playerVec.getY())), args[6].replace("~", Double.toString(playerVec.getZ())));
 
             try {
-                Build build = Build.scan(cord1.toLocation(player.getWorld()), cord2.toLocation(player.getWorld()), Boolean.parseBoolean(args[8]), Boolean.parseBoolean(args[9]));
+                Build build = Build.scan(cord1.toLocation(player.getWorld()), cord2.toLocation(player.getWorld()), Boolean.parseBoolean(args[7]), Boolean.parseBoolean(args[8]));
 
                 try (FileOutputStream fos = new FileOutputStream(file)) {
                     fos.write(build.getBytes());

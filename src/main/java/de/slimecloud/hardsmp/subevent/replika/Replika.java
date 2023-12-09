@@ -5,14 +5,18 @@ import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.build.Build;
 import de.slimecloud.hardsmp.build.BuildFormat;
 import de.slimecloud.hardsmp.subevent.SubEvent;
+import de.slimecloud.hardsmp.ui.Chat;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.TitlePart;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -63,6 +67,7 @@ public class Replika implements SubEvent {
     private World world = null;
 
     private Player victim = null;
+    private int maxLevel = 10;
 
     public Replika(Plugin plugin) {
         this.plugin = plugin;
@@ -83,6 +88,7 @@ public class Replika implements SubEvent {
         this.playerLevels = new HashMap<>();
         this.plots = new HashMap<>();
         this.victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
+        this.maxLevel = plugin.getConfig().getInt("events.replika.max-levels");
         directory.mkdirs();
         if (directory.listFiles() != null) {
             Arrays.stream(directory.listFiles())
@@ -166,6 +172,7 @@ public class Replika implements SubEvent {
         Plot playerPlot = plots.get(uuid);
         playerPlot.build();
         wierdBuild(playerPlot.getPosition().toLocation(getWorld()).add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
+        //todo admin log/console log
     }
 
     public Boolean checkLevel(Player player) {
@@ -181,6 +188,24 @@ public class Replika implements SubEvent {
 
         if (currentBuild.equals(template)) {
             playerLevels.put(player.getUniqueId(), ++level);
+
+            if (level - 1 == this.maxLevel) {
+                player.sendMessage(HardSMP.getPrefix().append(
+                        Component.text("Glückwunsch! Du hast alle Level geschafft!")
+                ));
+
+                player.setGameMode(GameMode.SPECTATOR);
+                players.remove(player);
+                Firework firework = getWorld().spawn(player.getLocation(), Firework.class);
+                FireworkMeta data = firework.getFireworkMeta();
+                data.addEffects(FireworkEffect.builder().withColor(Color.fromRGB(0xF6ED82)).withColor(Color.fromRGB(0x88d657)).with(FireworkEffect.Type.BALL_LARGE).withFlicker().build());
+                data.setPower(1);
+                firework.setFireworkMeta(data);
+                //todo placement, fist 3 add title
+                Bukkit.broadcast(HardSMP.getPrefix().append(Chat.getName(player).append(Component.text(" hat alle Level als PLACEMENT geschafft!"))));
+                return true;
+            }
+
             placeLevel(level, player.getUniqueId());
             return true;
         }
@@ -196,9 +221,9 @@ public class Replika implements SubEvent {
 
     private ArrayList<Build> registerLevel() {
         ArrayList<Build> newLevel = new ArrayList<>();
-        int maxLevel = HardSMP.getInstance().getConfig().getInt("events.replika.max-levels");
 
-        for (int level = 1; level < maxLevel; level++) {
+
+        for (int level = 1; level < this.maxLevel; level++) {
             try {
                 newLevel.add(Build.load(getFile(String.valueOf(level))));
             } catch (IOException e) {

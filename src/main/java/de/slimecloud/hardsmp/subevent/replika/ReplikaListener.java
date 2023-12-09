@@ -1,11 +1,13 @@
 package de.slimecloud.hardsmp.subevent.replika;
 
+import de.slimecloud.hardsmp.HardSMP;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
 public class ReplikaListener implements Listener {
@@ -34,6 +36,12 @@ public class ReplikaListener implements Listener {
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (!canEdit(event.getPlayer(), event.getBlock().getLocation())) event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void onMove(PlayerMoveEvent event) {
+		Replika replika = HardSMP.getInstance().getSubEvents().getReplika();
+		if (!replika.getIsStarted() && event.getPlayer().getWorld().equals(replika.getWorld())) event.setCancelled(true);
 	}
 
 }

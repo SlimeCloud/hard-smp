@@ -233,6 +233,7 @@ public final class HardSMP extends JavaPlugin {
         ClaimCommand.claimingPlayers.values().forEach(ClaimInfo::stopTasks);
         ClaimCommand.claimingPlayers.clear();
 
+        this.getSubEvents().getReplika().stop();
         this.discordBot.shutdown();
     }
 

@@ -3,22 +3,19 @@ package de.slimecloud.hardsmp.subevent.replika;
 import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.build.Build;
-import de.slimecloud.hardsmp.build.BuildFormat;
 import de.slimecloud.hardsmp.subevent.SubEvent;
 import de.slimecloud.hardsmp.ui.Chat;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.TitlePart;
-import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +46,7 @@ public class Replika implements SubEvent {
     private final Map<String, Build> schematics;
 
     private final List<Player> players;
+    private ArrayList<Player> finishedPlayer;
 
     private final Map<UUID, Plot> plots;
 
@@ -68,6 +66,8 @@ public class Replika implements SubEvent {
 
     private Player victim = null;
     private int maxLevel = 10;
+
+    private ScheduledTask actionbarTask;
 
     public Replika(Plugin plugin) {
         this.plugin = plugin;
@@ -89,6 +89,7 @@ public class Replika implements SubEvent {
         this.plots = new HashMap<>();
         this.victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
         this.maxLevel = plugin.getConfig().getInt("events.replika.max-levels");
+        this.finishedPlayer = new ArrayList<>();
         directory.mkdirs();
         if (directory.listFiles() != null) {
             Arrays.stream(directory.listFiles())
@@ -201,8 +202,15 @@ public class Replika implements SubEvent {
                 data.addEffects(FireworkEffect.builder().withColor(Color.fromRGB(0xF6ED82)).withColor(Color.fromRGB(0x88d657)).with(FireworkEffect.Type.BALL_LARGE).withFlicker().build());
                 data.setPower(1);
                 firework.setFireworkMeta(data);
-                //todo placement, fist 3 add title
-                Bukkit.broadcast(HardSMP.getPrefix().append(Chat.getName(player).append(Component.text(" hat alle Level als PLACEMENT geschafft!"))));
+                finishedPlayer.add(player);
+                player.sendTitlePart(TitlePart.TITLE, Component.text(finishedPlayer.size(), HardSMP.yellowColor).append(Component.text(". Platz", HardSMP.getGreenColor())));
+                Bukkit.broadcast(
+                        HardSMP.getPrefix()
+                                .append(Chat.getName(player)
+                                .append(Component.text(" hat alle Level als ", HardSMP.greenColor)
+                                .append(Component.text(finishedPlayer.size(), HardSMP.getYellowColor())
+                                .append(Component.text(". geschafft!", HardSMP.getGreenColor())))))
+                );
                 return true;
             }
 
@@ -293,7 +301,8 @@ public class Replika implements SubEvent {
 
     @Override
     public void stop() {
-
+        players.removeAll(Bukkit.getOnlinePlayers());
+        actionbarTask.cancel();
     }
 
     @Override
@@ -310,13 +319,14 @@ public class Replika implements SubEvent {
                 playerLevels.put(uuid, 1);
             });
         });
+        //todo count down
         isStarted = true;
         setActionbar();
     }
 
     private void setActionbar() {
-        Bukkit.getAsyncScheduler().runAtFixedRate(getPlugin(), scheduledTask -> {
-            players.forEach(player -> player.sendActionBar(Component.text("Nutze ", HardSMP.getGreenColor()).append(
+         actionbarTask = Bukkit.getAsyncScheduler().runAtFixedRate(getPlugin(), scheduledTask -> {
+            this.players.forEach(player -> player.sendActionBar(Component.text("Nutze ", HardSMP.getGreenColor()).append(
                     Component.text("/replika finishLevel", HardSMP.getYellowColor())
                     .append(Component.text( " um das Level zu beenden!", HardSMP.getGreenColor()))
             )));

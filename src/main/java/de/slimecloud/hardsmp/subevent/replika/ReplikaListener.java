@@ -41,7 +41,7 @@ public class ReplikaListener implements Listener {
 	@EventHandler
 	public void onMove(PlayerMoveEvent event) {
 		Replika replika = HardSMP.getInstance().getSubEvents().getReplika();
-		if (!replika.getIsStarted() && event.getPlayer().getWorld().equals(replika.getWorld())) event.setCancelled(true);
+		if (!replika.getIsStarted() && event.getPlayer().getWorld().equals(replika.getWorld()) && replika.getPlayers().contains(event.getPlayer())) event.setCancelled(true);
 	}
 
 }

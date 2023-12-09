@@ -14,10 +14,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 public class Replika implements SubEvent {
@@ -275,9 +277,8 @@ public class Replika implements SubEvent {
             player.sendTitlePart(TitlePart.TITLE, Component.text("ERKLÄRUNG", HardSMP.getYellowColor()));
             player.sendTitlePart(TitlePart.SUBTITLE, Component.text("Chat lesen!", HardSMP.getGreenColor()));
             player.sendMessage(Formatter.parseText(plugin.getConfig().getString("events.replika.info-message").replace("%finishCommand", "/replika finishLevel")));
+            player.setGameMode(GameMode.CREATIVE);
         });
-        //todo enable movement, set fly, set gamemode
-        //todo actionbar display  command /finsishlevel
         Bukkit.getScheduler().runTask(HardSMP.getInstance(), scheduledTask -> {
             plots.forEach((uuid, plot) -> {
                 placeLevel(1, uuid);
@@ -285,5 +286,15 @@ public class Replika implements SubEvent {
             });
         });
         isStarted = true;
+        setActionbar();
+    }
+
+    private void setActionbar() {
+        Bukkit.getAsyncScheduler().runAtFixedRate(getPlugin(), scheduledTask -> {
+            players.forEach(player -> player.sendActionBar(Component.text("Nutze ", HardSMP.getGreenColor()).append(
+                    Component.text("/replika finishLevel", HardSMP.getYellowColor())
+                    .append(Component.text( " um das Level zu beenden!", HardSMP.getGreenColor()))
+            )));
+        }, 0, 500, TimeUnit.MILLISECONDS);
     }
 }

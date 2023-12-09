@@ -3,6 +3,14 @@ database:
   user: postgres
   password: pwd
 
+discord:
+  token: xxx
+  console-channel: 123
+  netrunner-role: 123
+  guild: 123
+  mod-log-channel: 123
+  verify-role: 123
+
 shop:
   offers:
     lock-pick:
@@ -207,13 +215,6 @@ verify:
   code-length: 5
   pre-verify: false
 
-discord:
-  token: xxx
-  console-channel: 123
-  netrunner-role: 123
-  guild: 123
-  mod-log-channel: 123
-
 teamchat:
   messageFormat: "§8[§äTeam§öChat§8] §c%player§7:"
   messageColor: "§6"
@@ -229,6 +230,19 @@ leaderboard:
 
 claim:
   maxblocks: 15000
+  claim-free:
+    - x1: -89
+      z1: 190
+      x2: 25
+      z2: 50
+    - x1: 113
+      z1: 94
+      x2: 26
+      z2: 135
+    - x1: 114
+      z1: 81
+      x2: 242
+      z2: 20
 
 events:
   replika:

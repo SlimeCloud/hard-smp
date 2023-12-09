@@ -39,7 +39,7 @@ public class Placeholders extends PlaceholderExpansion {
     @Override
     public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
         if(params.equalsIgnoreCase("points")) return "" + (int) PlayerController.getPlayer(player).getActualPoints();
-        else if(params.equalsIgnoreCase("name")) return LegacyComponentSerializer.legacySection().serialize(HardSMP.getInstance().getChat().formatName(player));
+        else if(params.equalsIgnoreCase("name")) return LegacyComponentSerializer.legacySection().serialize(Chat.getName(player));
 
         return null;
     }

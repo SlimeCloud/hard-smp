@@ -133,13 +133,13 @@ public class Replika implements SubEvent {
         return plot;
     }
 
-    private World getWorld() {
+    World getWorld() {
         return getWorld(false);
     }
 
 
     //todo: reset old world - manuell?
-    private World getWorld(boolean regenerate) {
+    World getWorld(boolean regenerate) {
         if (!regenerate && this.world!=null) return this.world;
         World world = Bukkit.getWorld("replika");
         if (regenerate && world != null) {

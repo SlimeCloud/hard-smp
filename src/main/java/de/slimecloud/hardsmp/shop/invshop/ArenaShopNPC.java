@@ -19,6 +19,7 @@ public class ArenaShopNPC {
         shop.setPersistent(true);
         shop.setInvulnerable(true);
         shop.setAI(false);
+        shop.setHealth(10.0);
         shop.setBodyYaw(location.getYaw());
     }
 }

@@ -68,7 +68,7 @@ public final class HardSMP extends JavaPlugin {
     private DiscordBot discordBot;
 
     @Getter
-    private InvShopHandler claimShopHandler;
+    private InvShopHandler invShopHandler;
 
     @Getter
     private ChestKey chestKey;
@@ -118,7 +118,7 @@ public final class HardSMP extends JavaPlugin {
         }
 
         ClaimCommand claim = new ClaimCommand();
-        claimShopHandler = new InvShopHandler();
+        invShopHandler = new InvShopHandler();
         RulesCommand rules = new RulesCommand();
         KeyChainCommand keyChain;
 
@@ -151,7 +151,7 @@ public final class HardSMP extends JavaPlugin {
         //Events
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
-        registerEvent(claimShopHandler);
+        registerEvent(invShopHandler);
         registerEvent(new PointsListener());
         registerEvent(rules);
         registerEvent(keyChain);
@@ -185,7 +185,7 @@ public final class HardSMP extends JavaPlugin {
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
 
         SlimeHandler.setupOffers(getConfig());
-        claimShopHandler.addItemsToShop();
+        invShopHandler.addItemsToShop();
 
         AdvancementHandler.register(this, this::registerEvent);
 

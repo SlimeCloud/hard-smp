@@ -2,11 +2,15 @@ package de.slimecloud.hardsmp.shop.invshop;
 
 import de.slimecloud.hardsmp.HardSMP;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.Map;
 
@@ -36,9 +40,22 @@ public class ArenaShopSpawner {
             return;
         }
 
-        Location spawnLocation = new Location(player.getWorld(), section.getInt("x"), section.getInt("y"), section.getInt("z"));
+        Location spawnLocation = new Location(player.getWorld(), section.getDouble("x"), section.getDouble("y"), section.getDouble("z"));
+        LivingEntity entity;
+        ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
+        LeatherArmorMeta lmeta = ((LeatherArmorMeta) helmet.getItemMeta());
+        lmeta.setColor(Color.RED);
+        helmet.setItemMeta(lmeta);
 
-        for (int i = 0; i < amount; i++) player.getWorld().spawnEntity(spawnLocation, entities.get(mat));
+        for (int i = 0; i < amount; i++) {
+            entity = (LivingEntity) player.getWorld().spawnEntity(spawnLocation, entities.get(mat));
+
+            if (entity.getEquipment() == null)
+                continue;
+
+
+            entity.getEquipment().setHelmet(helmet);
+        }
 
         player.sendMessage(HardSMP.getPrefix().append(Component.text(entities.get(mat).toString().replace('_', ' ') + " " + amount + "x gespawnt!",  color(0x88D657))));
     }

@@ -96,6 +96,55 @@ claimshop:
         second-item: "diamond"
         second-amount: 32
 
+arenashop:
+  offers:
+    zombie:
+      item: "zombie-spawn-egg"
+      amount: 1
+      price:
+        required-points: 300
+        item: "diamond"
+        amount: 1
+    spider:
+      item: "cave-spider-spawn-egg"
+      amount: 1
+      price:
+        required-points: 500
+        item: "diamond"
+        amount: 2
+    skeleton:
+      item: "skeleton-spawn-egg"
+      amount: 1
+      price:
+        required-points: 1000
+        item: "diamond"
+        amount: 3
+    wither-skeleton:
+      item: "wither-skeleton-spawn-egg"
+      amount: 1
+      price:
+        required-points: 3000
+        item: "diamond"
+        amount: 7
+    creeper:
+      item: "creeper-spawn-egg"
+      amount: 1
+      price:
+        required-points: 800
+        item: "diamond"
+        amount: 4
+    witch:
+      item: "witch-spawn-egg"
+      amount: 1
+      price:
+        required-points: 1500
+        item: "diamond"
+        amount: 12
+  location:
+    x: 175.5
+    y: 115.5
+    z: 139.5
+
 chest-key:
   lockable: ["CHEST", "TRAPPED_CHEST", "BARREL", "SHULKER_BOX"]
   no-key: "§cVerschlossen"

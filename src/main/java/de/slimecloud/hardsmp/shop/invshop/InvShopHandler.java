@@ -69,7 +69,7 @@ public class InvShopHandler implements Listener {
             HardSMP.getInstance().getLogger().warning("skipped registration of offers for arenashop because they are not defined");
         } else {
             for (String key : section.getKeys(false)) {
-                registerInvItem(section, key);
+                registerArenaItem(section, key);
             }
         }
     }
@@ -133,7 +133,7 @@ public class InvShopHandler implements Listener {
     }
 
     @SneakyThrows
-    private void registerInvItem(ConfigurationSection section, String key) {
+    private void registerArenaItem(ConfigurationSection section, String key) {
         String item = section.getString("%s.item".formatted(key));
         if (item == null) {
             HardSMP.getInstance().getLogger().warning("cannot register offer '%s' because the item is not defined".formatted(key));
@@ -152,19 +152,19 @@ public class InvShopHandler implements Listener {
         String secondPriceItem = section.getString("%s.price.second-item".formatted(key));
         int secondPriceAmount = section.getInt("%s.price.second-amount".formatted(key), 1);
 
-        ItemBuilder currentItem = HardSMP.getInstance().getItemManager().getBuilder(item);
+        ItemBuilder currentItem = HardSMP.getInstance().getItemManager().getBuilder(Material.getMaterial(item.toUpperCase().replace('-', '_')));
         Material mat = Material.getMaterial(firstPriceItem.toUpperCase());
         if (mat == null) {
             HardSMP.getInstance().getLogger().warning("skipped offer '" + item + "' cause item '" + firstPriceItem.toUpperCase() + "' not found");
             return;
         }
         ItemStack firstPrice = new ItemStack(mat, firstPriceAmount);
-
+        currentItem.setDisplayName("§r§6Spawn " + section.getInt("%s.amount".formatted(key)) + "x " + key.substring(0, 1).toUpperCase() + key.substring(1));
         currentItem.addLore(List.of("", "§6Preis: ", "§b" + mat.toString().replace('_', ' ') + " " + firstPriceAmount + "x"));
 
 
         if (secondPriceItem == null) {
-            currentItem.addLore(List.of("", "", ""));
+            currentItem.addLore(List.of("", ""));
             List<ItemStack> list = new ArrayList<>();
             list.add(firstPrice);
             arenaoffers.add(new ArenaOffer(currentItem, list, requiredPoints));
@@ -172,7 +172,7 @@ public class InvShopHandler implements Listener {
         }
         Material mat2 = Material.getMaterial(secondPriceItem.toUpperCase());
         if (mat2 == null) {
-            currentItem.addLore(List.of("", "", ""));
+            currentItem.addLore(List.of("", ""));
             List<ItemStack> list = new ArrayList<>();
             list.add(firstPrice);
             arenaoffers.add(new ArenaOffer(currentItem, list, requiredPoints));
@@ -223,7 +223,7 @@ public class InvShopHandler implements Listener {
         arenashopinv.setItem(4, defaultItem);
         arenashopinv.setItem(8, defaultItem);
         for (ArenaOffer io : arenaoffers) {
-            claimshopinv.addItem(io.item
+            arenashopinv.addItem(io.item
                     .removeLore(Objects.requireNonNull(io.item.build().lore()).size() - 1)
                     .addLore(List.of((PlayerController.getPlayer((OfflinePlayer) player).getActualPoints() >= io.pointsRequired ? "§a" : "§c") + "Benötige Punkte: " + Math.round(io.pointsRequired)))
                     .build());

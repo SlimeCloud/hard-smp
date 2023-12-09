@@ -2,6 +2,7 @@ package de.slimecloud.hardsmp.subevent.replika;
 
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.build.Build;
+import de.slimecloud.hardsmp.build.BuildFormat;
 import de.slimecloud.hardsmp.subevent.SubEvent;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
@@ -160,7 +161,6 @@ public class Replika implements SubEvent {
         Plot playerPlot = plots.get(uuid);
         playerPlot.build();
         wierdBuild(playerPlot.getPosition().toLocation(getWorld()).add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
-        //todo give player the items
     }
 
     public Boolean checkLevel(Player player) {
@@ -175,8 +175,8 @@ public class Replika implements SubEvent {
         Build currentBuild = getCurrentBuild(player);
 
         if (currentBuild.equals(template)) {
+            playerLevels.put(player.getUniqueId(), ++level);
             placeLevel(level, player.getUniqueId());
-            playerLevels.put(player.getUniqueId(), level+1);
             return true;
         }
         return false;
@@ -186,7 +186,12 @@ public class Replika implements SubEvent {
         Plot playerPlot = plots.get(player.getUniqueId());
         Location loc1 = playerPlot.getPosition().toLocation(getWorld()).add(plotSpacing + 1, 0, 1);
         Location loc2 = loc1.toLocation(getWorld()).add(plotWidth - 3, topBorderHeight, plotWidth - 3); //we can use as z the same as in x because our build space is currently always a square
-        return Build.scan(loc1, loc2, false, false);
+        File file = getFile("temp_"+player.getUniqueId());
+        try {
+            return Build.scan(file, loc1, loc2, false, false);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private ArrayList<Build> registerLevel() {
@@ -269,9 +274,12 @@ public class Replika implements SubEvent {
     @Override
     public void start() {
         //todo Game info for player boden immer ausgefüllt,
-        //todo enable movement, set fly
+        //todo enable movement, set fly, set gamemode
         Bukkit.getScheduler().runTask(HardSMP.getInstance(), scheduledTask -> {
-            plots.forEach((uuid, level) -> placeLevel(1, uuid));
+            plots.forEach((uuid, plot) -> {
+                placeLevel(1, uuid);
+                playerLevels.put(uuid, 1);
+            });
         });
         this.isStarted = true;
     }

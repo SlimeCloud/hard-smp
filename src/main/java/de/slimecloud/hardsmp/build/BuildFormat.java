@@ -17,6 +17,7 @@ import org.bukkit.util.Vector;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -215,16 +216,8 @@ public class BuildFormat {
         public boolean equals(Object o) {
             if (this == o) return true;
 
-            if (o == null || getClass() != o.getClass()) return false;
-
-            BuildImpl build = (BuildImpl) o;
-
-            return new EqualsBuilder().append(bytes, build.bytes).isEquals();
-        }
-
-        @Override
-        public int hashCode() {
-            return new HashCodeBuilder(17, 37).append(bytes).toHashCode();
+            if (o instanceof Build build) return Arrays.equals(build.getBytes(), bytes);
+            return false;
         }
     }
 

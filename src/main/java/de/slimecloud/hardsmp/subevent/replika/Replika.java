@@ -186,12 +186,7 @@ public class Replika implements SubEvent {
         Plot playerPlot = plots.get(player.getUniqueId());
         Location loc1 = playerPlot.getPosition().toLocation(getWorld()).add(plotSpacing + 1, 0, 1);
         Location loc2 = loc1.toLocation(getWorld()).add(plotWidth - 3, topBorderHeight, plotWidth - 3); //we can use as z the same as in x because our build space is currently always a square
-        File file = getFile("temp_"+player.getUniqueId());
-        try {
-            return Build.scan(file, loc1, loc2, false, false);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return Build.scan(loc1, loc2, false, false);
     }
 
     private ArrayList<Build> registerLevel() {
@@ -273,8 +268,11 @@ public class Replika implements SubEvent {
 
     @Override
     public void start() {
-        //todo Game info for player boden immer ausgefüllt,
+        //todo Game info for player
+        //  boden immer ausgefüllt,
+        //  kdshf
         //todo enable movement, set fly, set gamemode
+        //todo actionbar display  command /finsishlevel
         Bukkit.getScheduler().runTask(HardSMP.getInstance(), scheduledTask -> {
             plots.forEach((uuid, plot) -> {
                 placeLevel(1, uuid);

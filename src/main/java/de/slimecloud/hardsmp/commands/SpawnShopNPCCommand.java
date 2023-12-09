@@ -27,11 +27,12 @@ public class SpawnShopNPCCommand implements CommandExecutor, TabCompleter {
                     case "general" -> new SlimeNPC(player.getLocation());
                     case "claimshop" -> new ClaimShopNPC(player.getLocation());
                     case "arenashop" -> new ArenaShopNPC(player.getLocation());
-                    default ->
-                            player.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /spawn-shop-npc [general/claimshop/arenashop]")));
+                    default -> {
+                        return false;
+                    }
                 }
             } else
-                player.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /spawn-shop-npc [general/claimshop/arenashop]")));
+                return false;
             return true;
         } else
             commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDas kannst du nicht tun!")));

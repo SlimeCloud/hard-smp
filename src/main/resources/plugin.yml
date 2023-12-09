@@ -136,3 +136,4 @@ commands:
     permission: hardsmp.command.invsee
   arena:
     permission: hardsmp.command.arena
+    usage: "§cBenutzung: /spawn-shop-npc [general/claimshop/arenashop]"

@@ -23,6 +23,7 @@ import de.slimecloud.hardsmp.shop.claimshop.ClaimShopHandler;
 import de.slimecloud.hardsmp.subevent.SubEvent;
 import de.slimecloud.hardsmp.subevent.commands.EventCommand;
 import de.slimecloud.hardsmp.subevent.replika.Replika;
+import de.slimecloud.hardsmp.subevent.replika.ReplikaListener;
 import de.slimecloud.hardsmp.subevent.replika.commands.BuildSchematicCommand;
 import de.slimecloud.hardsmp.subevent.replika.commands.RegisterSchematicCommand;
 import de.slimecloud.hardsmp.subevent.replika.commands.ReplikaCommand;
@@ -270,6 +271,8 @@ public final class HardSMP extends JavaPlugin {
             registerCommand("register-schematic", new RegisterSchematicCommand());
             registerCommand("build-schematic", new BuildSchematicCommand());
             registerCommand("replika", new ReplikaCommand(getInstance()));
+
+            registerEvent(new ReplikaListener(replika));
         }
 
         public Map<String, SubEvent> getEvents() {

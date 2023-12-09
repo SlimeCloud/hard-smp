@@ -1,10 +1,13 @@
 package de.slimecloud.hardsmp.subevent.replika;
 
+import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.build.Build;
 import de.slimecloud.hardsmp.build.BuildFormat;
 import de.slimecloud.hardsmp.subevent.SubEvent;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.TitlePart;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -268,9 +271,11 @@ public class Replika implements SubEvent {
 
     @Override
     public void start() {
-        //todo Game info for player
-        //  boden immer ausgefüllt,
-        //  kdshf
+        this.players.forEach(player -> {
+            player.sendTitlePart(TitlePart.TITLE, Component.text("ERKLÄRUNG", HardSMP.getYellowColor()));
+            player.sendTitlePart(TitlePart.SUBTITLE, Component.text("Chat lesen!", HardSMP.getGreenColor()));
+            player.sendMessage(Formatter.parseText(plugin.getConfig().getString("events.replika.info-message").replace("%finishCommand", "/replika finishLevel")));
+        });
         //todo enable movement, set fly, set gamemode
         //todo actionbar display  command /finsishlevel
         Bukkit.getScheduler().runTask(HardSMP.getInstance(), scheduledTask -> {
@@ -279,6 +284,6 @@ public class Replika implements SubEvent {
                 playerLevels.put(uuid, 1);
             });
         });
-        this.isStarted = true;
+        isStarted = true;
     }
 }

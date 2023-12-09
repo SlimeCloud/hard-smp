@@ -173,7 +173,7 @@ public class Replika implements SubEvent {
         Plot playerPlot = plots.get(uuid);
         playerPlot.build();
         wierdBuild(playerPlot.getPosition().toLocation(getWorld()).add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
-        //todo admin log/console log
+        plugin.getLogger().info("Placed " + level + ". for " + Bukkit.getPlayer(uuid).getName());
     }
 
     public Boolean checkLevel(Player player) {
@@ -278,7 +278,7 @@ public class Replika implements SubEvent {
     public void join(Player player) {
         if (victim == null) victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
         if (player.getUniqueId().equals(victim.getUniqueId())) return;
-        this.players.add(player); //todo check if player is already in this map
+        if (!this.players.contains(player)) this.players.add(player);
         this.playerLevels.put(player.getUniqueId(), isStarted ? 1 : 0);
         Plot plot = getPlot(player.getUniqueId());
         Location plotLoc = plot.getPosition().toLocation(plot.getPosition().getWorld());

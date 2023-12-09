@@ -6,6 +6,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.util.Vector;
 
 import java.util.Map;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class ImmutableBuild implements Build {
@@ -13,9 +14,10 @@ public class ImmutableBuild implements Build {
     private final Map<Vector, BlockData> blocks;
     private final Map<Vector, EntityData> entities;
     private final byte[] bytes;
+    private final Function<Object, Boolean> equalFunc;
 
     public ImmutableBuild(Build build) {
-        this(build.getBlocks(), build.getEntities(), build.getBytes());
+        this(build.getBlocks(), build.getEntities(), build.getBytes(), build::equals);
     }
 
     @Override
@@ -36,5 +38,10 @@ public class ImmutableBuild implements Build {
     @Override
     public byte[] getBytes() {
         return bytes;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return equalFunc.apply(obj);
     }
 }

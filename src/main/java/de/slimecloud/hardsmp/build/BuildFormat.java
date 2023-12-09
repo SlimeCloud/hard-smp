@@ -2,6 +2,8 @@ package de.slimecloud.hardsmp.build;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -207,6 +209,22 @@ public class BuildFormat {
         @Override
         public byte[] getBytes() {
             return bytes;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+
+            if (o == null || getClass() != o.getClass()) return false;
+
+            BuildImpl build = (BuildImpl) o;
+
+            return new EqualsBuilder().append(bytes, build.bytes).isEquals();
+        }
+
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder(17, 37).append(bytes).toHashCode();
         }
     }
 

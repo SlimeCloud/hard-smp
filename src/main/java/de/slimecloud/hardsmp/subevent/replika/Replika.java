@@ -56,7 +56,7 @@ public class Replika implements SubEvent {
     private Boolean isStarted = false;
     private World world = null;
 
-    private static Player victim = null;
+    private Player victim = null;
 
     public Replika(Plugin plugin) {
         this.plugin = plugin;
@@ -76,6 +76,7 @@ public class Replika implements SubEvent {
         this.players = new ArrayList<>();
         this.playerLevels = new HashMap<>();
         this.plots = new HashMap<>();
+        this.victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
         directory.mkdirs();
         if (directory.listFiles() != null) {
             Arrays.stream(directory.listFiles())
@@ -156,39 +157,35 @@ public class Replika implements SubEvent {
 
     private void placeLevel(int level, UUID uuid) {
         Plot playerPlot = plots.get(uuid);
+        playerPlot.build();
         wierdBuild(playerPlot.getPosition().toLocation(Bukkit.getWorld("replika")).add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
         //todo give player the items
     }
 
     public Boolean checkLevel(Player player) {
         int level = playerLevels.get(player.getUniqueId());
-        File template = getFile(String.valueOf(level));
-        File currentBuild = getCurrentBuild(player);
+
+        Build template;
         try {
-            if (FileUtils.contentEquals(template, currentBuild)) {//remove air, set clear plate with air before placeing next
-                placeLevel(level, player.getUniqueId());
-                playerLevels.put(player.getUniqueId(), level+1);
-                currentBuild.delete();
-                return true;
-            }
+            template = Build.load(getFile(String.valueOf(level)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        currentBuild.delete();
+        Build currentBuild = getCurrentBuild(player);
+
+        if (currentBuild.equals(template)) {
+            placeLevel(level, player.getUniqueId());
+            playerLevels.put(player.getUniqueId(), level+1);
+            return true;
+        }
         return false;
     }
 
-    private File getCurrentBuild(Player player) {
+    private Build getCurrentBuild(Player player) {
         Plot playerPlot = plots.get(player.getUniqueId());
         Location loc1 = playerPlot.getPosition().toLocation(Bukkit.getWorld("replika")).add(plotSpacing + 1, 0, 1);
         Location loc2 = loc1.toLocation(Bukkit.getWorld("replika")).add(plotWidth - 3, topBorderHeight, plotWidth - 3); //we can use as z the same as in x because our build space is currently always a square
-        File file = getFile("temp_" + player.getUniqueId());
-        try {
-            Build.scan(file, loc1, loc2, false, false);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return file;
+        return Build.scan(loc1, loc2, false, false);
     }
 
     private ArrayList<Build> registerLevel() {
@@ -239,8 +236,9 @@ public class Replika implements SubEvent {
 
     @Override
     public void join(Player player) {
-        if (player == victim) return;
-        this.players.add(player);
+        if (victim == null) victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
+        if (player.getUniqueId().equals(victim.getUniqueId())) return;
+        this.players.add(player); //todo check if player is already in this map
         this.playerLevels.put(player.getUniqueId(), isStarted ? 1 : 0);
         Plot plot = getPlot(player.getUniqueId());
         Location plotLoc = plot.getPosition().toLocation(plot.getPosition().getWorld());
@@ -268,7 +266,7 @@ public class Replika implements SubEvent {
 
     @Override
     public void start() {
-        //todo Game info for player
+        //todo Game info for player boden immer ausgefüllt,
         //todo enable movement, set fly
         Bukkit.getScheduler().runTask(HardSMP.getInstance(), scheduledTask -> {
             plots.forEach((uuid, level) -> placeLevel(1, uuid));

@@ -275,6 +275,7 @@ public class Replika implements SubEvent {
                 getWorld().setBlockData(teleportLoc, Material.RED_WOOL.createBlockData());
             }
         });
+        //todo set Scoreboard?
     }
 
     @Override

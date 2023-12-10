@@ -3,6 +3,7 @@ package de.slimecloud.hardsmp.subevent.replika;
 import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.build.Build;
+import de.slimecloud.hardsmp.player.PlayerController;
 import de.slimecloud.hardsmp.subevent.SubEvent;
 import de.slimecloud.hardsmp.util.InventoryStorage;
 import de.slimecloud.hardsmp.ui.Chat;
@@ -154,7 +155,6 @@ public class Replika implements SubEvent {
     }
 
 
-    //todo: reset old world - manuell?
     World getWorld(boolean regenerate) {
         if (!regenerate && this.world!=null) return this.world;
         World world = Bukkit.getWorld("replika");
@@ -179,7 +179,7 @@ public class Replika implements SubEvent {
         wierdBuild(playerPlot.getPosition().toLocation(getWorld()).add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
         plugin.getLogger().info("Placed " + level + ". for " + Bukkit.getPlayer(uuid).getName());
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 5000, 1);
-        //todo add points for complete: 100
+        PlayerController.getPlayer(Bukkit.getOfflinePlayer(player.getUniqueId())).addPoints(100);
     }
 
     public Boolean checkLevel(Player player) {

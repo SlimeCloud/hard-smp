@@ -2,6 +2,8 @@ package de.slimecloud.hardsmp.build;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,6 +17,7 @@ import org.bukkit.util.Vector;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -118,6 +121,7 @@ public class BuildFormat {
 
     static Build load(byte[] data) {
         BuildImpl build = new BuildImpl();
+        build.setBytes(data);
         try (ByteArrayInputStream bis = new ByteArrayInputStream(data); BufferedReader br = new BufferedReader(new InputStreamReader(bis))) {
             for (String line; (line = br.readLine()) != null; ) {
                 String[] astring = line.split(SEPERATOR);
@@ -207,6 +211,14 @@ public class BuildFormat {
         @Override
         public byte[] getBytes() {
             return bytes;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+
+            if (o instanceof Build build) return Arrays.equals(build.getBytes(), bytes);
+            return false;
         }
     }
 

@@ -4,6 +4,7 @@ import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.ui.Chat;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -46,12 +47,16 @@ public class ListHomeCommand implements CommandExecutor, TabCompleter {
                 .append(Component.text(":", TextColor.color(0x88d657)))
                 .appendNewline();
 
+        boolean found = false;
+
         for (HomeData home : HomeData.load(target.getUniqueId())) {
             homes = homes.append(Component.text("   - " + home.getHomeName()).clickEvent(ClickEvent.suggestCommand("/home " + home.getHomeName())))
                     .appendNewline();
+
+            found = true;
         }
 
-        sender.sendMessage(homes);
+        sender.sendMessage(found ? homes : Component.text("Spieler hat keine Homes", NamedTextColor.RED));
         return true;
     }
 

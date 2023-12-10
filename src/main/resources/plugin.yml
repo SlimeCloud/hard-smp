@@ -63,6 +63,8 @@ permissions:
     default: false
   hardsmp.command.inventory:
     default: false
+  hardsmp.command.replika:
+    default: false
 
 commands:
   formatting:
@@ -88,12 +90,6 @@ commands:
     aliases: ["tc"]
     usage: "§cBenutzung: /teamchat <Nachricht>"
     permission: hardsmp.teamchat.send
-  register-schematic:
-    usage: "§cUsage: /register-schematic <name> <pos1> <pos2>"
-    permission: hardsmp.schematic.register
-  build-schematic:
-    usage: "§cUsage: /build-schematic <name>"
-    permission: hardsmp.schematic.build
   unverify:
     usage: "§cBenutzung: /unverify <Spieler>"
     permission: hardsmp.command.unverify
@@ -142,9 +138,18 @@ commands:
     aliases: ["inv"]
     usage: "§cBenutzung: /invsee <Spieler>"
     permission: hardsmp.command.invsee
+  register-schematic:
+    usage: "§cUsage: /register-schematic <name> <pos1> <pos2> <copyAir> <copyEntities>"
+    permission: hardsmp.schematic.register
+  build-schematic:
+    usage: "§cUsage: /build-schematic <name>"
+    permission: hardsmp.schematic.build
   event:
-    usage: "§cBenutzung: /event [setup/start/stop] <Event>"
+    usage: "§cUsage: /event <setup/start/stop> <event-name>"
     permission: hardsmp.command.event
   inventory:
     usage: "§cBenutzung: /inventory [save/restore] <Spieler>"
     permission: hardsmp.command.inventory
+  replika:
+    usage: "§cBenutzung: /replika <start/stop>"
+    permission: hardsmp.command.replika

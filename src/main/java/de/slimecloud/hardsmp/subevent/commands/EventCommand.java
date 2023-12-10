@@ -20,18 +20,16 @@ public class EventCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        System.out.println(args.length);
         if (args.length < 2) return false;
-
+        SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);
         switch (args[0]) {
             case "start" -> {
                 sender.sendMessage(HardSMP.getPrefix().append(Component.text("Starte Event!", HardSMP.getInstance().getGreenColor())));
-                SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);
+                event.start();
 
             }
             case "setup" -> {
                 sender.sendMessage(HardSMP.getPrefix().append(Component.text("Lade Event!", HardSMP.getInstance().getGreenColor())));
-                SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);
                 if (event == null) {
                     sender.sendMessage(HardSMP.getPrefix().append(Component.text("SubEvent '" + args[1] + "' wurde nicht gefunden!", NamedTextColor.RED)));
                     return true;
@@ -41,7 +39,6 @@ public class EventCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
             case "stop" -> {
-                SubEvent event = HardSMP.getInstance().getSubEvents().getEvents().get(args[1]);
                 if (event == null) {
                     sender.sendMessage(HardSMP.getPrefix().append(Component.text("SubEvent '" + args[1] + "' wurde nicht gefunden!", NamedTextColor.RED)));
                     return true;
@@ -50,8 +47,11 @@ public class EventCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(HardSMP.getPrefix().append(Component.text("SubEvent '" + args[1] + "' erfolgreich beendet!", HardSMP.getInstance().getGreenColor())));
                 return true;
             }
+            case "join" -> {
+                event.join(Bukkit.getPlayer(args[2]));
+                return true;
+            }
         }
-        System.out.println("retun end");
         return false;
     }
 
@@ -63,8 +63,15 @@ public class EventCommand implements CommandExecutor, TabCompleter {
                 list.add("start");
                 list.add("setup");
                 list.add("stop");
+                list.add("join");
             }
             case 2 -> list.addAll(HardSMP.getInstance().getSubEvents().getEvents().keySet());
+            case 3 -> {
+                if (args[1].equals("join")) list = Bukkit.getOnlinePlayers().stream()
+                            .map(Player::getName)
+                            .filter(p -> p.startsWith(args[0]))
+                            .toList();
+            }
         }
         list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()));
         return list;

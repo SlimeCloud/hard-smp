@@ -10,6 +10,8 @@ public interface SubEvent {
 
     void stop();
 
+    void start();
+
     void join(Player player);
 
     void leave(Player player);

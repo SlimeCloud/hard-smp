@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
+import de.slimecloud.hardsmp.ui.Chat;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -44,17 +45,17 @@ public class ReplyCommand implements CommandExecutor, EmptyTabCompleter {
             return true;
         }
 
-        Component message = Formatter.parseText("&", "&r&7&o " + String.join(" ", args))
+        Component message = Formatter.parseText("&", "&r&7&o" + String.join(" ", args))
                 .clickEvent(ClickEvent.suggestCommand("/r "))
                 .hoverEvent(HoverEvent.showText(Component.text("Antworten", TextColor.color(0xF6ED82))));;
 
         tPlayer.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.receive"))
-                .append(HardSMP.getInstance().getChat().formatName(player))
+                .append(Chat.getName(player))
                 .append(Component.text(": "))
                 .append(message)
         );
         sender.sendMessage(Formatter.parseText(HardSMP.getInstance().getConfig().getString("ui.chat.replyPrefix.outgoing"))
-                .append(HardSMP.getInstance().getChat().formatName(tPlayer))
+                .append(Chat.getName(tPlayer))
                 .append(Component.text(": "))
                 .append(message)
         );

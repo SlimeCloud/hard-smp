@@ -1,9 +1,7 @@
 package de.slimecloud.hardsmp.claim;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,7 +11,10 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerTakeLecternBookEvent;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +22,8 @@ import java.util.List;
 public class ClaimProtectionHandler implements Listener {
 
     private boolean isClaimed(Location loc, Player player) {
-        return Claim.allClaims.values().stream().anyMatch(claim -> claim.getUuid().contains("-") && claim.contains(loc) && !claim.getUuid().equals(player.getUniqueId().toString()));
+        if(player.hasPermission("hardsmp.claim.bypass")) return false;
+        return Claim.allClaims.values().stream().anyMatch(claim -> claim.contains(loc) && !claim.getUuid().equals(player.getUniqueId().toString()));
     }
 
     @EventHandler
@@ -103,16 +105,6 @@ public class ClaimProtectionHandler implements Listener {
     @EventHandler
     private void onBucketFill(PlayerBucketFillEvent event) {
         if (isClaimed(event.getBlock().getLocation(), event.getPlayer())) {
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));
-        }
-    }
-
-    @EventHandler
-    private void onInteract(PlayerInteractEvent event) {
-        if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock() != null && event.getClickedBlock().getType().equals(Material.FARMLAND))
-            event.setCancelled(true);
-        if (event.getAction().isRightClick() && event.getClickedBlock() != null && isClaimed(event.getClickedBlock().getLocation(), event.getPlayer())) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));
         }

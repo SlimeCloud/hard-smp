@@ -39,7 +39,7 @@ public class RegisterSchematicCommand implements CommandExecutor, TabCompleter {
             Vector cord2 = parseVector(args[4].replace("~", Double.toString(playerVec.getX())), args[5].replace("~", Double.toString(playerVec.getY())), args[6].replace("~", Double.toString(playerVec.getZ())));
 
             try {
-                Build build = Build.scan(cord1.toLocation(player.getWorld()), cord2.toLocation(player.getWorld()), true, false);
+                Build build = Build.scan(cord1.toLocation(player.getWorld()), cord2.toLocation(player.getWorld()), Boolean.parseBoolean(args[7]), Boolean.parseBoolean(args[8]));
 
                 try (FileOutputStream fos = new FileOutputStream(file)) {
                     fos.write(build.getBytes());
@@ -65,6 +65,10 @@ public class RegisterSchematicCommand implements CommandExecutor, TabCompleter {
                 case 2, 5 -> ListLookingCords.listAutomaticLoockingCoords(list, player, "x", true);
                 case 3, 6 -> ListLookingCords.listAutomaticLoockingCoords(list, player, "y", true);
                 case 4, 7 -> ListLookingCords.listAutomaticLoockingCoords(list, player, "z", true);
+                case 8, 9 -> {
+                    list.add("true");
+                    list.add("false");
+                }
             }
         }
         list.removeIf(s -> !s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()));

@@ -10,10 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.Warden;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -239,7 +236,7 @@ public class InvShopHandler implements Listener {
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         if (!((event.getRightClicked() instanceof Villager) || (event.getRightClicked() instanceof Warden))) return;
         Entity shop = event.getRightClicked();
-        event.setCancelled(true);
+        if (isClaimShop(shop) || isArenaShop(shop)) event.setCancelled(true);
         Player player = event.getPlayer();
 
         if (isClaimShop(shop)) {

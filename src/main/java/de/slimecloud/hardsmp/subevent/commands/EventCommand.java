@@ -67,9 +67,9 @@ public class EventCommand implements CommandExecutor, TabCompleter {
             }
             case 2 -> list.addAll(HardSMP.getInstance().getSubEvents().getEvents().keySet());
             case 3 -> {
-                if (args[1].equals("join")) list = Bukkit.getOnlinePlayers().stream()
+                if (args[0].equals("join")) list = Bukkit.getOnlinePlayers().stream()
                             .map(Player::getName)
-                            .filter(p -> p.startsWith(args[0]))
+                            .filter(p -> p.startsWith(args[1]))
                             .toList();
             }
         }

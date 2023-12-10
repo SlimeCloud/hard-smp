@@ -4,6 +4,7 @@ import de.cyklon.spigotutils.adventure.Formatter;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.build.Build;
 import de.slimecloud.hardsmp.subevent.SubEvent;
+import de.slimecloud.hardsmp.util.InventoryStorage;
 import de.slimecloud.hardsmp.ui.Chat;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lombok.Getter;
@@ -274,8 +275,9 @@ public class Replika implements SubEvent {
                 //player.teleport(teleportLoc);
                 getWorld().setBlockData(teleportLoc, Material.RED_WOOL.createBlockData());
             }
+
+            //TODO InventoryStorage.saveInventory(player)
         });
-        //todo set Scoreboard?
     }
 
     @Override
@@ -291,11 +293,13 @@ public class Replika implements SubEvent {
             placeLevel(1, player.getUniqueId());
         }
         player.teleport(teleportLoc);
+        InventoryStorage.saveInventory(player);
     }
 
     @Override
     public void leave(Player player) {
         this.players.remove(player);
+        InventoryStorage.restoreInventory(player);
     }
 
     @Override

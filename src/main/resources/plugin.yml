@@ -59,6 +59,10 @@ permissions:
     default: true
   hardsmp.command.invsee:
     default: false
+  hardsmp.command.event:
+    default: false
+  hardsmp.command.inventory:
+    default: false
 
 commands:
   formatting:
@@ -139,5 +143,8 @@ commands:
     usage: "§cBenutzung: /invsee <Spieler>"
     permission: hardsmp.command.invsee
   event:
-    usage: "§cUsage: /event <setup/start/stop> <event-name>"
+    usage: "§cBenutzung: /event [setup/start/stop] <Event>"
     permission: hardsmp.command.event
+  inventory:
+    usage: "§cBenutzung: /inventory [save/restore] <Spieler>"
+    permission: hardsmp.command.inventory

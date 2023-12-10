@@ -156,6 +156,7 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("listhome", new ListHomeCommand());
         registerCommand("invsee", new InvseeCommand());
         registerCommand("info", new MinecraftInfoCommand());
+        registerCommand("inventory", new InventoryCommand());
 
         getLogger().info("initialize Custom Items");
         itemManager.registerItem("chest-key", () -> new ItemBuilder(Material.IRON_HOE).addItemFlags(ItemFlag.HIDE_ATTRIBUTES).setDisplayName(ChatColor.RESET + "Chest Key").build());

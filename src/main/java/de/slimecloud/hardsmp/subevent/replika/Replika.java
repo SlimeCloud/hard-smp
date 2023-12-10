@@ -2,6 +2,7 @@ package de.slimecloud.hardsmp.subevent.replika;
 
 import de.slimecloud.hardsmp.build.Build;
 import de.slimecloud.hardsmp.subevent.SubEvent;
+import de.slimecloud.hardsmp.util.InventoryStorage;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -149,19 +150,20 @@ public class Replika implements SubEvent {
     @Override
     public void setup(Collection<Player> players) {
         getWorld(true);
-        this.players.addAll(players);
-        this.players.forEach(p -> p.teleport(getPlot(p.getUniqueId()).getPosition().add(plotWidth, 0, plotLength)));
+        players.forEach(this::join);
     }
 
     @Override
     public void join(Player player) {
         this.players.add(player);
         player.teleport(getPlot(player.getUniqueId()).getPosition().add(plotWidth, 0, plotLength));
+        InventoryStorage.saveInventory(player);
     }
 
     @Override
     public void leave(Player player) {
         this.players.remove(player);
+        InventoryStorage.restoreInventory(player);
     }
 
     @Override

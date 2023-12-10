@@ -274,19 +274,17 @@ public class Replika implements SubEvent {
             if (victim == null) victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
             this.players.remove(victim);
 
-            //todo change back to tp instead of looping and placing blocks
-            //this.players.forEach(player ->
-            for (int i = 0; i < 12; i++) {
+            this.players.forEach(player -> {
                 UUID uui = UUID.randomUUID();
                 playerLevels.put(uui, 0);
                 Plot plot = getPlot(uui);
                 Location plotLoc = plot.getPosition().toLocation(plot.getPosition().getWorld());
                 Location teleportLoc = plotLoc.add((plotSpacing + (double) plotWidth / 2), 1, (double) (plotLength / 2) / 2);
-                //player.teleport(teleportLoc);
-                getWorld().setBlockData(teleportLoc, Material.RED_WOOL.createBlockData());
-            }
+                player.teleport(teleportLoc);
+                InventoryStorage.saveInventory(player);
+            });
 
-            //TODO InventoryStorage.saveInventory(player)
+
         });
     }
 
@@ -326,13 +324,14 @@ public class Replika implements SubEvent {
 
     @Override
     public void stop() {
-        players.forEach(InventoryStorage::restoreInventory);
+        players.forEach(player -> {
+            player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+            InventoryStorage.restoreInventory(player);
+        });
         players.removeAll(Bukkit.getOnlinePlayers());
         actionbarTask.cancel();
         isSetuped = false;
         isStarted = false;
-        //todo teleport back to spawn
-        //todo message restart is a better way to stop the event
     }
 
     @Override

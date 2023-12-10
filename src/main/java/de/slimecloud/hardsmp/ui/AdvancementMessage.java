@@ -1,5 +1,6 @@
 package de.slimecloud.hardsmp.ui;
 
+import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent;
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.player.PlayerController;
 import de.slimecloud.hardsmp.player.data.PointCategory;
@@ -9,10 +10,17 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 public class AdvancementMessage implements Listener {
+    @EventHandler(priority = EventPriority.HIGH)
+    public void eventAdvancement(PlayerAdvancementCriterionGrantEvent event) {
+        if(!HardSMP.getInstance().getSubEvents().getReplika().getIsSetuped()) return;
+        event.setCancelled(true);
+    }
+
     @EventHandler
     private void onAdvancement(PlayerAdvancementDoneEvent event) {
         if(event.getAdvancement().getDisplay() == null) return;

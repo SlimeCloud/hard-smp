@@ -61,18 +61,16 @@ public class InvShopHandler implements Listener {
 
     public void addItemsToShop() {
         ConfigurationSection section = HardSMP.getInstance().getConfig().getConfigurationSection("claimshop.offers");
-        if (section == null) {
-            HardSMP.getInstance().getLogger().warning("skipped registration of offers for claimshop because they are not defined");
-        } else {
+        if (section == null) HardSMP.getInstance().getLogger().warning("skipped registration of offers for claimshop because they are not defined");
+        else {
             for (String key : section.getKeys(false)) {
                 registerClaimItem(section, key);
             }
         }
 
         section = HardSMP.getInstance().getConfig().getConfigurationSection("arenashop.offers");
-        if (section == null) {
-            HardSMP.getInstance().getLogger().warning("skipped registration of offers for arenashop because they are not defined");
-        } else {
+        if (section == null) HardSMP.getInstance().getLogger().warning("skipped registration of offers for arenashop because they are not defined");
+        else {
             for (String key : section.getKeys(false)) {
                 registerArenaItem(section, key);
             }

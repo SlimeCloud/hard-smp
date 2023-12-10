@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.Map;
+import java.util.Random;
 
 import static net.kyori.adventure.text.format.TextColor.color;
 
@@ -40,7 +41,21 @@ public class ArenaShopSpawner {
             return;
         }
 
-        Location spawnLocation = new Location(player.getWorld(), section.getDouble("x"), section.getDouble("y"), section.getDouble("z"));
+        Location spawnLocation = new Location(
+                player.getWorld(),
+                new Random().nextInt(section.getInt("x1"), section.getInt("x2")) + 0.5,
+                section.getInt("y") + 0.5,
+                new Random().nextInt(section.getInt("z1"), section.getInt("z2")) + 0.5
+        );
+
+        while (spawnLocation.getBlock().getType() != Material.AIR)
+            spawnLocation = new Location(
+                    player.getWorld(),
+                    new Random().nextInt(section.getInt("x1"), section.getInt("x2")) + 0.5,
+                    section.getInt("y") + 0.5,
+                    new Random().nextInt(section.getInt("z1"), section.getInt("z2")) + 0.5
+            );
+
         LivingEntity entity;
         ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
         LeatherArmorMeta lmeta = ((LeatherArmorMeta) helmet.getItemMeta());

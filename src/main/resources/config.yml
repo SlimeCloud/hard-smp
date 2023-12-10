@@ -141,9 +141,11 @@ arenashop:
         item: "diamond"
         amount: 12
   location:
-    x: 175.5
-    y: 115.5
-    z: 139.5
+    x1: 165
+    x2: 185
+    y: 115
+    z1: 129
+    z2: 149
 
 chest-key:
   lockable: ["CHEST", "TRAPPED_CHEST", "BARREL", "SHULKER_BOX"]

@@ -37,7 +37,9 @@ public class SpawnShopNPCCommand implements CommandExecutor, TabCompleter {
     }
 
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return Stream.of("general", "claimshop", "arenashop").filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).toList();
+        return Stream.of("general", "claimshop", "arenashop")
+                .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                .toList();
     }
 
 }

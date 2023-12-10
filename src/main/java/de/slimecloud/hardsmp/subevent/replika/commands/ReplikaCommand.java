@@ -34,35 +34,6 @@ public class ReplikaCommand implements CommandExecutor, TabCompleter {
 
         Replika event = plugin.getSubEvents().getReplika();
         switch (args[0]) {
-            case "start" -> {
-                player.sendMessage(
-                        HardSMP.getPrefix().append(
-                                Component.text("Starte Replika...", HardSMP.getGreenColor())));
-
-                if (event.getPlayers().isEmpty()) {
-                    player.sendMessage(
-                            HardSMP.getPrefix().append(
-                                    Component.text("FEHLER! Du musst zuerst ein Setup des Events durchführen!", HardSMP.getGreenColor())));
-                    return true;
-                }
-
-                event.start();
-
-                player.sendMessage(
-                        HardSMP.getPrefix().append(
-                                Component.text("Replika Event gestartet!", HardSMP.getGreenColor())));
-            }
-            case "stop" -> {
-                player.sendMessage(
-                        HardSMP.getPrefix().append(
-                                Component.text("Stoppe Replika...", HardSMP.getGreenColor())));
-
-                event.stop();
-
-                player.sendMessage(
-                        HardSMP.getPrefix().append(
-                                Component.text("Replika Event gestoppt!", HardSMP.getGreenColor())));
-            }
             case "finishLevel" -> {
                 player.sendMessage(HardSMP.getPrefix().append(Component.text("Überprüfe Plot auf Richtigkeit...", HardSMP.getGreenColor())));
 
@@ -83,11 +54,6 @@ public class ReplikaCommand implements CommandExecutor, TabCompleter {
         List<String> list = new ArrayList<>();
         switch (args.length) {
             case 1 -> {
-                if (sender.hasPermission("hardsmp.command.replika.admin")) {
-                    list.add("start");
-                    list.add("stop");
-                    list.add("join");
-                }
                 list.add("finishLevel");
             }
             case 2 -> {

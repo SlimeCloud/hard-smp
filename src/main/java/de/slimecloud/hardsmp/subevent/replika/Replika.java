@@ -64,6 +64,7 @@ public class Replika implements SubEvent {
     private ArrayList<Build> levels;
     private Map<UUID, Integer> playerLevels;
     private Boolean isStarted = false;
+    private Boolean isSetuped = false;
     private World world = null;
 
     private Player victim = null;
@@ -178,6 +179,7 @@ public class Replika implements SubEvent {
         wierdBuild(playerPlot.getPosition().toLocation(getWorld()).add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
         plugin.getLogger().info("Placed " + level + ". for " + Bukkit.getPlayer(uuid).getName());
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 5000, 1);
+        //todo add points for complete: 100
     }
 
     public Boolean checkLevel(Player player) {
@@ -215,6 +217,11 @@ public class Replika implements SubEvent {
                                 .append(Component.text(finishedPlayer.size(), HardSMP.getYellowColor())
                                 .append(Component.text(". geschafft!", HardSMP.getGreenColor())))))
                 );
+                //todo add top 3 points
+                //  1. 20k
+                //  2. 15k
+                //  3. 10k
+                //  default 1k wenn geschafft
                 return true;
             }
 
@@ -258,10 +265,13 @@ public class Replika implements SubEvent {
     @Override
     public void setup(Collection<Player> players) {
         if (isStarted) return;
+        isSetuped = true;
         getWorld(true);
         registerLevel();
         Bukkit.getScheduler().runTask(HardSMP.getInstance(), scheduledTask -> {
             this.players.addAll(players);
+
+            if (victim == null) victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
             this.players.remove(victim);
 
             //todo change back to tp instead of looping and placing blocks
@@ -283,23 +293,30 @@ public class Replika implements SubEvent {
     @Override
     public void join(Player player) {
         if (victim == null) victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
-        if (player.getUniqueId().equals(victim.getUniqueId())) return;
+        if (player.getUniqueId().toString().contains(victim.getUniqueId().toString())) return;
+
         if (!this.players.contains(player)) this.players.add(player);
-        this.playerLevels.put(player.getUniqueId(), isStarted ? 1 : 0);
+        if (!this.playerLevels.containsKey(player.getUniqueId())) this.playerLevels.put(player.getUniqueId(), isStarted ? 1 : 0);
+
+        System.out.println(plots.get(player.getUniqueId()));
         Plot plot = getPlot(player.getUniqueId());
         Location plotLoc = plot.getPosition().toLocation(plot.getPosition().getWorld());
         Location teleportLoc = plotLoc.add((plotSpacing + (double) plotWidth / 2), 1, (double) (plotLength / 2) / 2);
-        if (isStarted) {
-            placeLevel(1, player.getUniqueId());
-        }
+
         player.teleport(teleportLoc);
+        player.setGameMode(GameMode.CREATIVE);
         InventoryStorage.saveInventory(player);
+
+
+        if (isStarted) {
+            System.out.println("player lvl: " + this.playerLevels.get(player.getUniqueId()));
+            placeLevel(this.playerLevels.get(player.getUniqueId()), player.getUniqueId());
+        }
     }
 
     @Override
     public void leave(Player player) {
         this.players.remove(player);
-        InventoryStorage.restoreInventory(player);
     }
 
     @Override
@@ -309,21 +326,33 @@ public class Replika implements SubEvent {
 
     @Override
     public void stop() {
+        players.forEach(InventoryStorage::restoreInventory);
         players.removeAll(Bukkit.getOnlinePlayers());
         actionbarTask.cancel();
+        isSetuped = false;
+        isStarted = false;
+        //todo teleport back to spawn
+        //todo message restart is a better way to stop the event
     }
 
     @Override
     public void start() {
         this.players.forEach(player -> {
+
             player.sendTitlePart(TitlePart.TITLE, Component.text("ERKLÄRUNG", HardSMP.getYellowColor()));
             player.sendTitlePart(TitlePart.SUBTITLE, Component.text("Chat lesen!", HardSMP.getGreenColor()));
+
             player.sendMessage(Formatter.parseText(plugin.getConfig().getString("events.replika.info-message").replace("%finishCommand", "/replika finishLevel")));
+
             player.setGameMode(GameMode.CREATIVE);
+
             player.sendMessage(Component.newline().appendNewline().append(HardSMP.getPrefix()
                             .append(Component.text("Event startet in ", HardSMP.getGreenColor())
                                     .append(Component.text("60s", HardSMP.getYellowColor())))
                     ));
+
+            placeLevel(1, player.getUniqueId());
+            playerLevels.put(player.getUniqueId(), 1);
         });
         //todo wait 60s
 
@@ -342,13 +371,14 @@ public class Replika implements SubEvent {
             finalCount.getAndDecrement();
         });
         System.out.println("start");
+
         isStarted = true;
         setActionbar();
     }
 
     private void setActionbar() {
          actionbarTask = Bukkit.getAsyncScheduler().runAtFixedRate(getPlugin(), scheduledTask -> {
-            this.players.forEach(player -> player.sendActionBar(Component.text("Nutze ", HardSMP.getGreenColor()).append(
+            players.forEach(player -> player.sendActionBar(Component.text("Nutze ", HardSMP.getGreenColor()).append(
                     Component.text("/replika finishLevel", HardSMP.getYellowColor())
                     .append(Component.text( " um das Level zu beenden!", HardSMP.getGreenColor()))
             )));

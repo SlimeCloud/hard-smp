@@ -61,6 +61,8 @@ permissions:
     default: false
   hardsmp.command.replika:
     default: false
+  hardsmp.events.replika.bypass:
+    default: false
 
 commands:
   formatting:

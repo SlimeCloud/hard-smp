@@ -2,6 +2,7 @@ package de.slimecloud.hardsmp.subevent.replika;
 
 import de.slimecloud.hardsmp.HardSMP;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,6 +32,7 @@ public class ReplikaListener implements Listener {
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
+		if (event.getPlayer().getWorld().equals(replika.getWorld()) && event.getBlockPlaced().getType().equals(Material.ENDER_CHEST)) event.setCancelled(true);
 		if (!canEdit(event.getPlayer(), event.getBlockPlaced().getLocation()) && !event.getPlayer().hasPermission("hardsmp.events.replika.bypass")) event.setCancelled(true);
 	}
 

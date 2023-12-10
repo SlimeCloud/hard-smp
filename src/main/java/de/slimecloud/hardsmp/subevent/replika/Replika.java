@@ -283,6 +283,7 @@ public class Replika implements SubEvent {
                 Location teleportLoc = plotLoc.add((plotSpacing + (double) plotWidth / 2), 1, (double) (plotLength / 2) / 2);
                 player.teleport(teleportLoc);
                 InventoryStorage.saveInventory(player);
+                player.getInventory().clear();
             });
 
 
@@ -305,6 +306,7 @@ public class Replika implements SubEvent {
         player.teleport(teleportLoc);
         player.setGameMode(GameMode.CREATIVE);
         InventoryStorage.saveInventory(player);
+        player.getInventory().clear();
 
 
         if (isStarted) {

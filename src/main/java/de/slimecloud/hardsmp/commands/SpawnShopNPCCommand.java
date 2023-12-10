@@ -2,7 +2,8 @@ package de.slimecloud.hardsmp.commands;
 
 import de.slimecloud.hardsmp.HardSMP;
 import de.slimecloud.hardsmp.shop.SlimeNPC;
-import de.slimecloud.hardsmp.shop.claimshop.ClaimShopNPC;
+import de.slimecloud.hardsmp.shop.invshop.ArenaShopNPC;
+import de.slimecloud.hardsmp.shop.invshop.ClaimShopNPC;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,25 +20,24 @@ public class SpawnShopNPCCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (commandSender instanceof Player player) {
-            if (args.length == 0)
-                new SlimeNPC(player.getLocation());
+            if (args.length == 0) new SlimeNPC(player.getLocation());
             else if (args.length == 1) {
-                if (args[0].equals("general"))
-                    new SlimeNPC(player.getLocation());
-                else if (args[0].equals("claimshop"))
-                    new ClaimShopNPC(player.getLocation());
-                else
-                    player.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /spawn-shop-npc [general/claimshop]")));
-            } else
-                player.sendMessage(HardSMP.getPrefix().append(Component.text("§cBenutzung: /spawn-shop-npc [general/claimshop]")));
+                switch (args[0]) {
+                    case "general" -> new SlimeNPC(player.getLocation());
+                    case "claimshop" -> new ClaimShopNPC(player.getLocation());
+                    case "arenashop" -> new ArenaShopNPC(player.getLocation());
+                    default -> {
+                        return false;
+                    }
+                }
+            } else return false;
             return true;
-        } else
-            commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDas kannst du nicht tun!")));
+        } else commandSender.sendMessage(HardSMP.getPrefix().append(Component.text("§cDas kannst du nicht tun!")));
         return true;
     }
 
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return Stream.of("general", "claimshop")
+        return Stream.of("general", "claimshop", "arenashop")
                 .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
                 .toList();
     }

@@ -13,14 +13,13 @@ import de.slimecloud.hardsmp.commands.home.ListHomeCommand;
 import de.slimecloud.hardsmp.commands.home.RemoveHomeCommand;
 import de.slimecloud.hardsmp.commands.home.SetHomeCommand;
 import de.slimecloud.hardsmp.commands.info.MinecraftInfoCommand;
-import de.slimecloud.hardsmp.commands.SpawnCommand;
 import de.slimecloud.hardsmp.database.Database;
 import de.slimecloud.hardsmp.item.*;
 import de.slimecloud.hardsmp.listener.DeathPointHandler;
 import de.slimecloud.hardsmp.listener.PunishmentListener;
 import de.slimecloud.hardsmp.player.data.PointsListener;
 import de.slimecloud.hardsmp.shop.SlimeHandler;
-import de.slimecloud.hardsmp.shop.claimshop.ClaimShopHandler;
+import de.slimecloud.hardsmp.shop.invshop.InvShopHandler;
 import de.slimecloud.hardsmp.ui.*;
 import de.slimecloud.hardsmp.ui.scoreboard.ScoreboardManager;
 import de.slimecloud.hardsmp.verify.MinecraftVerificationListener;
@@ -47,6 +46,7 @@ public final class HardSMP extends JavaPlugin {
 
     public final NamespacedKey SHOP_KEY = new NamespacedKey(this, "shop");
     public final NamespacedKey CLAIM_SHOP_KEY = new NamespacedKey(this, "claimshop");
+    public final NamespacedKey ARENA_SHOP_KEY = new NamespacedKey(this, "arenashop");
 
     @Getter
     private static HardSMP instance;
@@ -67,7 +67,7 @@ public final class HardSMP extends JavaPlugin {
     private DiscordBot discordBot;
 
     @Getter
-    private ClaimShopHandler claimShopHandler;
+    private InvShopHandler invShopHandler;
 
     @Getter
     private ChestKey chestKey;
@@ -117,7 +117,7 @@ public final class HardSMP extends JavaPlugin {
         }
 
         ClaimCommand claim = new ClaimCommand();
-        claimShopHandler = new ClaimShopHandler();
+        invShopHandler = new InvShopHandler();
         RulesCommand rules = new RulesCommand();
         KeyChainCommand keyChain;
 
@@ -145,12 +145,13 @@ public final class HardSMP extends JavaPlugin {
         registerCommand("removehome", new RemoveHomeCommand());
         registerCommand("listhome", new ListHomeCommand());
         registerCommand("invsee", new InvseeCommand());
+        registerCommand("arena", new ArenaCommand());
 
         registerCommand("info", new MinecraftInfoCommand());
         //Events
         registerEvent(new MinecraftVerificationListener());
         registerEvent(new SlimeHandler());
-        registerEvent(claimShopHandler);
+        registerEvent(invShopHandler);
         registerEvent(new PointsListener());
         registerEvent(rules);
         registerEvent(keyChain);
@@ -184,7 +185,7 @@ public final class HardSMP extends JavaPlugin {
         itemManager.registerItem("mending-Infinity-bow", () -> new ItemBuilder(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).addEnchantment(Enchantment.MENDING, 1).build());
 
         SlimeHandler.setupOffers(getConfig());
-        claimShopHandler.addItemsToShop();
+        invShopHandler.addItemsToShop();
 
         AdvancementHandler.register(this, this::registerEvent);
 

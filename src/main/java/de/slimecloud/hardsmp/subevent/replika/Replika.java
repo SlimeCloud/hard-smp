@@ -10,6 +10,7 @@ import de.slimecloud.hardsmp.ui.Chat;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.TitlePart;
 import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -275,7 +276,7 @@ public class Replika implements SubEvent {
             this.players.remove(victim);
 
             this.players.forEach(player -> {
-                UUID uui = UUID.randomUUID();
+                UUID uui = player.getUniqueId();
                 playerLevels.put(uui, 0);
                 Plot plot = getPlot(uui);
                 Location plotLoc = plot.getPosition().toLocation(plot.getPosition().getWorld());
@@ -353,26 +354,16 @@ public class Replika implements SubEvent {
             placeLevel(1, player.getUniqueId());
             playerLevels.put(player.getUniqueId(), 1);
         });
-        //todo wait 60s
 
-        //todo warp this countdown in a task
-        AtomicInteger finalCount = new AtomicInteger(5);
-        players.forEach(player -> {
-            player.sendMessage(HardSMP.getPrefix()
-                    .append(Component.text("Event startet in ", HardSMP.getGreenColor())
-                            .append(Component.text(finalCount + "s", HardSMP.getYellowColor()))
-                    ));
-            if (finalCount.get() <= 5) {
-                player.sendTitlePart(TitlePart.TITLE, Component.text("Event Start"));
-                player.sendTitlePart(TitlePart.SUBTITLE, Component.text(finalCount + "s"));
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 5000, 1);
-            }
-            finalCount.getAndDecrement();
-        });
-        System.out.println("start");
 
-        isStarted = true;
-        setActionbar();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            isStarted = true;
+            setActionbar();
+            Bukkit.broadcast(HardSMP.getPrefix().append(Component.text("LETS GOO!", HardSMP.getGreenColor(), TextDecoration.BOLD)));
+            Bukkit.broadcast(HardSMP.getPrefix().append(Component.text("LETS GOO!", HardSMP.getGreenColor(), TextDecoration.BOLD)));
+            Bukkit.broadcast(HardSMP.getPrefix().append(Component.text("LETS GOO!", HardSMP.getGreenColor(), TextDecoration.BOLD)));
+        }, 20*60);
+
     }
 
     private void setActionbar() {

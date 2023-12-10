@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
@@ -30,18 +31,23 @@ public class ReplikaListener implements Listener {
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (!canEdit(event.getPlayer(), event.getBlockPlaced().getLocation())) event.setCancelled(true);
+		if (!canEdit(event.getPlayer(), event.getBlockPlaced().getLocation()) && !event.getPlayer().hasPermission("hardsmp.events.replika.bypass")) event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (!canEdit(event.getPlayer(), event.getBlock().getLocation())) event.setCancelled(true);
+		if (!canEdit(event.getPlayer(), event.getBlock().getLocation()) && !event.getPlayer().hasPermission("hardsmp.events.replika.bypass")) event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void onMove(PlayerMoveEvent event) {
 		Replika replika = HardSMP.getInstance().getSubEvents().getReplika();
-		if (!replika.getIsStarted() && event.getPlayer().getWorld().equals(replika.getWorld()) && replika.getPlayers().contains(event.getPlayer())) event.setCancelled(true);
+		if (!replika.getIsStarted() && event.getPlayer().getWorld().equals(replika.getWorld()) && replika.getPlayers().contains(event.getPlayer()) && !event.getPlayer().hasPermission("hardsmp.events.replika.bypass")) event.setCancelled(true);
 	}
 
+	@EventHandler
+	public void onJoin(PlayerJoinEvent event) {
+		Replika replika = HardSMP.getInstance().getSubEvents().getReplika();
+		if (replika.getIsSetuped() || replika.getIsStarted()) replika.join(event.getPlayer());
+	}
 }

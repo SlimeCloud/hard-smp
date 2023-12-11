@@ -29,6 +29,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
@@ -42,6 +43,7 @@ import java.util.stream.Stream;
 import static net.kyori.adventure.text.format.TextColor.color;
 
 public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
+    public final static NamespacedKey claimOutline = new NamespacedKey("hard-smp", "claim-outline");
 
     public static final Map<UUID, ClaimInfo> claimingPlayers = new HashMap<>();
     private final List<UUID> deletingPlayers = new ArrayList<>();
@@ -65,6 +67,11 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
+
+        Bukkit.getAsyncScheduler().runAtFixedRate(HardSMP.getInstance(), x -> Bukkit.getOnlinePlayers().forEach(p -> {
+            if(!p.getPersistentDataContainer().getOrDefault(claimOutline, PersistentDataType.BOOLEAN, false)) return;
+            showOutline(p);
+        }), 0, 300, TimeUnit.MILLISECONDS);
     }
 
 
@@ -271,6 +278,13 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
                     player.sendMessage(found ? claims : Component.text("Spieler hat keine Claims!", NamedTextColor.RED));
                 }
+                case "outline" -> {
+                    boolean value = !player.getPersistentDataContainer().getOrDefault(claimOutline, PersistentDataType.BOOLEAN, false);
+                    player.getPersistentDataContainer().set(claimOutline, PersistentDataType.BOOLEAN, value);
+
+                    if(value) player.sendMessage(HardSMP.getPrefix().append(Component.text("Claim-Outlines aktiviert!")));
+                    else player.sendMessage(HardSMP.getPrefix().append(Component.text("Claim-Outlines deaktiviert!")));
+                }
                 default -> { return false; }
             }
         } else return false;
@@ -372,35 +386,6 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
 
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event) {
-        int px = event.getTo().getBlockX();
-        int pz = event.getTo().getBlockZ();
-
-        Claim.allClaims.values().forEach(claim -> {
-            int x1 = claim.getX1();
-            int x2 = claim.getX2();
-            int z1 = claim.getZ1();
-            int z2 = claim.getZ2();
-
-            int dx = Math.min(Math.abs(x1 - px), Math.abs(x2 - px));
-            int dy = Math.min(Math.abs(z1 - pz), Math.abs(z2 - pz));
-
-            if(Math.sqrt(dx * dx + dy * dy) > 10) return;
-
-            Player player = event.getPlayer();
-            Particle.DustOptions extraCorner = new Particle.DustOptions(Color.fromRGB(0x88D657), 1.0F);
-
-            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-
-            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
-
-            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (claim.getX1() + claim.getX2()) / 2.0, player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getX1() - claim.getX2()) * 5, Math.abs(claim.getX1() - claim.getX2()) / 4.0, 0.0, 0.0, extraCorner);
-            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (claim.getX1() + claim.getX2()) / 2.0, player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getX1() - claim.getX2()) * 5, Math.abs(claim.getX1() - claim.getX2()) / 4.0, 0.0, 0.0, extraCorner);
-            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), (claim.getZ1() + claim.getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getZ1() - claim.getZ2()) * 5, 0.0, 0.0, Math.abs(claim.getZ1() - claim.getZ2()) / 4.0, extraCorner);
-            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), (claim.getZ1() + claim.getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getZ1() - claim.getZ2()) * 5, 0.0, 0.0, Math.abs(claim.getZ1() - claim.getZ2()) / 4.0, extraCorner);
-        });
-
         if (!claimingPlayers.containsKey(event.getPlayer().getUniqueId())) {
             var from = Claim.allClaims.values().stream()
                     .filter(c -> c.containsPlayer(event.getFrom()))
@@ -515,9 +500,39 @@ public class ClaimCommand implements CommandExecutor, TabCompleter, Listener {
         event.getPlayer().sendMessage(HardSMP.getPrefix().append(Component.text("§cDurch den Dimensionswechsel wurde der Claim-Modus beendet!")));
     }
 
+    private void showOutline(Player player) {
+        int px = player.getLocation().getBlockX();
+        int pz = player.getLocation().getBlockZ();
+
+        Claim.allClaims.values().forEach(claim -> {
+            int x1 = claim.getX1();
+            int x2 = claim.getX2();
+            int z1 = claim.getZ1();
+            int z2 = claim.getZ2();
+
+            int dx = Math.min(Math.abs(x1 - px), Math.abs(x2 - px));
+            int dy = Math.min(Math.abs(z1 - pz), Math.abs(z2 - pz));
+
+            if(Math.sqrt(dx * dx + dy * dy) > 20) return;
+
+            Particle.DustOptions extraCorner = new Particle.DustOptions(Color.fromRGB(0x88D657), 1.0F);
+
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), 100, 0.0, 10.0, 0.0, 1.0, extraCorner);
+
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (claim.getX1() + claim.getX2()) / 2.0, player.getLocation().getY(), claim.getZ1()).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getX1() - claim.getX2()) * 5, Math.abs(claim.getX1() - claim.getX2()) / 4.0, 0.0, 0.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), (claim.getX1() + claim.getX2()) / 2.0, player.getLocation().getY(), claim.getZ2()).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getX1() - claim.getX2()) * 5, Math.abs(claim.getX1() - claim.getX2()) / 4.0, 0.0, 0.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX1(), player.getLocation().getY(), (claim.getZ1() + claim.getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getZ1() - claim.getZ2()) * 5, 0.0, 0.0, Math.abs(claim.getZ1() - claim.getZ2()) / 4.0, extraCorner);
+            player.spawnParticle(Particle.REDSTONE, new Location(player.getWorld(), claim.getX2(), player.getLocation().getY(), (claim.getZ1() + claim.getZ2()) / 2.0).add(new Vector(0.5, 0.5, 0.5)), Math.abs(claim.getZ1() - claim.getZ2()) * 5, 0.0, 0.0, Math.abs(claim.getZ1() - claim.getZ2()) / 4.0, extraCorner);
+        });
+    }
+
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length == 1) return Stream.of("start", "cancel", "finish", "remove", "info", "list")
+        if (args.length == 1) return Stream.of("start", "cancel", "finish", "remove", "info", "list", "outline")
                 .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
                 .toList();
         if (

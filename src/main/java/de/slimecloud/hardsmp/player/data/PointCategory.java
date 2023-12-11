@@ -29,8 +29,8 @@ public enum PointCategory {
     PIG_ONE_CM(0.05d / (2.42 * 100), (points, cm) -> points * cm),
     STRIDER_ONE_CM(0.05d / (4.14 * 100), (points, cm) -> points * cm),
 
-    FISH_CAUGHT(5),
-    ENCHANT_ITEM(10, (points, weight) -> points / weight), // points / enchant weight  (lower weight is better enchantment)
+    FISH_CAUGHT(0.5),
+    ENCHANT_ITEM(5, (points, weight) -> points / weight), // points / enchant weight  (lower weight is better enchantment)
     JUMP(0.1),
     //MOB_KILL(0.1, (points, mob_hp) -> points * mob_hp), //  points*mob-hp
     DEATH(1),

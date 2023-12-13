@@ -175,7 +175,7 @@ public class Replika implements SubEvent {
 
     private void placeLevel(int level, UUID uuid) {
         Plot playerPlot = plots.get(uuid);
-        Player player = Bukkit.getPlayer(uuid);
+        Player player = Bukkit.getPlayer(uuid); //todo throw error when player is not online at event start but were online on event setup
         playerPlot.build();
         wierdBuild(playerPlot.getPosition().toLocation(getWorld()).add(plotSpacing + 1, 0, (double) plotLength / 2 + 1), String.valueOf(level));
         plugin.getLogger().info("Placed " + level + ". for " + Bukkit.getPlayer(uuid).getName());
@@ -255,16 +255,21 @@ public class Replika implements SubEvent {
 
     //just don't ask, it works....
     //(say thanks to spigot, that we have do this)
+    //todo do it in a other way thats shit, maybe using Minecraft Schematics https://minecraft.fandom.com/wiki/Schematic_file_format
+    // or Worldedit api https://worldedit.enginehub.org/en/latest/api/
+    // or try to  use Bukkit.getWorld("s").setBlockData() instead of world.getBlockAt(data.getKey().add(pos).toLocation(world)).setBlockData(data);
     public void wierdBuild(Location location, String schematicName) {
         if (victim == null) victim = Bukkit.getPlayer(UUID.fromString(plugin.getConfig().getString("events.replika.victimUUID")));
         victim.setOp(true);
         victim.setGameMode(GameMode.SPECTATOR);
         victim.teleport(location);
+
         Bukkit.dispatchCommand(victim, "build-schematic " + schematicName.replace(".build", ""));
     }
 
     @Override
     public void setup(Collection<Player> players) {
+        //todo do something against GrimAC, maybe give temporally bypass permission?
         if (isStarted) return;
         isSetuped = true;
         getWorld(true);
@@ -303,11 +308,11 @@ public class Replika implements SubEvent {
         Location plotLoc = plot.getPosition().toLocation(plot.getPosition().getWorld());
         Location teleportLoc = plotLoc.add((plotSpacing + (double) plotWidth / 2), 1, (double) (plotLength / 2) / 2);
 
-        player.teleport(teleportLoc);
+        player.teleport(teleportLoc); //todo only teleport and add when build was successful
         player.setGameMode(GameMode.CREATIVE);
         InventoryStorage.saveInventory(player);
         player.getInventory().clear();
-
+        //Todo do a methode to add player also for setup
 
         if (isStarted) {
             System.out.println("player lvl: " + this.playerLevels.get(player.getUniqueId()));

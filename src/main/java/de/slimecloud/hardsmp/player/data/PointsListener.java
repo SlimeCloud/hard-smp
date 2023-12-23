@@ -199,7 +199,7 @@ public class PointsListener implements Listener {
 
     @EventHandler
     public void onFishCaught(PlayerFishEvent event) {
-        addPoints(event.getPlayer(), PointCategory.FISH_CAUGHT);
+        if(event.getCaught() != null) addPoints(event.getPlayer(), PointCategory.FISH_CAUGHT);
     }
 
     @EventHandler

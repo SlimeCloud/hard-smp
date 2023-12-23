@@ -36,7 +36,7 @@ public enum PointCategory {
     DEATH(1),
     PLAYER_KILL(5, (points, hp) -> points * hp), // points * hp after kill
     RAID_WIN(20),
-    VILLAGER_TRADED(2),
+    VILLAGER_TRADED(1),
 
     ADVANCEMENT(1, (points, lvl) -> List.of(50, 100, 200, 400, 800, 1000).get((int) (lvl - 1)) * points);
     //50, 100, 200, 400 und 800

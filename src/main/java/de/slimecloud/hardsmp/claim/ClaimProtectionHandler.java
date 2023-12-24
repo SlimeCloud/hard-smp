@@ -9,6 +9,8 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -77,6 +79,23 @@ public class ClaimProtectionHandler implements Listener {
         }
     }
 
+    @EventHandler
+    private void onHangingPlace(HangingPlaceEvent event) {
+        if (event.getPlayer() != null && isClaimed(event.getEntity().getLocation(), event.getPlayer())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));
+        }
+    }
+
+    @EventHandler
+    private void onHangingBreak(HangingBreakByEntityEvent event) {
+        if(!(event.getRemover() instanceof Player player)) return;
+
+        if (isClaimed(event.getEntity().getLocation(), player)) {
+            event.setCancelled(true);
+            player.sendMessage(Component.text("§cDu kannst das hier nicht benutzen!"));
+        }
+    }
 
     @EventHandler
     private void onSignEdit(SignChangeEvent event) {

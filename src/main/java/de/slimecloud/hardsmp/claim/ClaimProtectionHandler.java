@@ -125,7 +125,11 @@ public class ClaimProtectionHandler implements Listener {
     @EventHandler
     private void onFlow(BlockFromToEvent event) {
         Collection<Claim> claims = Claim.allClaims.values();
-        if (claims.stream().anyMatch(claim -> claim.contains(event.getToBlock().getLocation()))) {
+        List<Claim> first = claims.stream().filter(claim -> claim.contains(event.getBlock().getLocation())).toList();
+
+        if (!first.isEmpty() && !first.get(0).contains(event.getToBlock().getLocation())) {
+            event.setCancelled(true);
+        } else if (first.isEmpty() && claims.stream().anyMatch(claim -> claim.contains(event.getToBlock().getLocation()))) {
             event.setCancelled(true);
         }
     }

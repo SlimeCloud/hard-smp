@@ -144,9 +144,12 @@ public class ClaimProtectionHandler implements Listener {
     @EventHandler
     private void onFlow(BlockFromToEvent event) {
         Collection<Claim> claims = Claim.allClaims.values();
-        if (claims.stream().anyMatch(claim -> claim.contains(event.getToBlock().getLocation()))) {
+        List<Claim> first = claims.stream().filter(claim -> claim.contains(event.getBlock().getLocation())).toList();
+
+        if (!first.isEmpty() && !first.get(0).contains(event.getToBlock().getLocation()))
             event.setCancelled(true);
-        }
+        else if (first.isEmpty() && claims.stream().anyMatch(claim -> claim.contains(event.getToBlock().getLocation())))
+            event.setCancelled(true);
     }
 
     @EventHandler
@@ -154,11 +157,10 @@ public class ClaimProtectionHandler implements Listener {
         Collection<Claim> claims = Claim.allClaims.values();
         List<Claim> first = claims.stream().filter(claim -> claim.contains(event.getBlock().getLocation().add(event.getDirection().getDirection().multiply(-1)))).toList();
 
-        if (!first.isEmpty() && !event.getBlocks().stream().allMatch(block -> first.get(0).contains(block.getLocation().add(event.getDirection().getDirection())))) {
+        if (!first.isEmpty() && !event.getBlocks().stream().allMatch(block -> first.get(0).contains(block.getLocation().add(event.getDirection().getDirection()))))
             event.setCancelled(true);
-        } else if (first.isEmpty() && event.getBlocks().stream().anyMatch(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation().add(event.getDirection().getDirection()))))) {
+        else if (first.isEmpty() && event.getBlocks().stream().anyMatch(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation().add(event.getDirection().getDirection())))))
             event.setCancelled(true);
-        }
     }
 
     @EventHandler
@@ -166,18 +168,15 @@ public class ClaimProtectionHandler implements Listener {
         Collection<Claim> claims = Claim.allClaims.values();
         List<Claim> first = claims.stream().filter(claim -> claim.contains(event.getBlock().getLocation().add(event.getDirection().getDirection()))).toList();
 
-        if (!first.isEmpty() && !event.getBlocks().stream().allMatch(block -> first.get(0).contains(block.getLocation()))) {
+        if (!first.isEmpty() && !event.getBlocks().stream().allMatch(block -> first.get(0).contains(block.getLocation())))
             event.setCancelled(true);
-        } else if (first.isEmpty() && event.getBlocks().stream().anyMatch(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation())))) {
+        else if (first.isEmpty() && event.getBlocks().stream().anyMatch(block -> claims.stream().anyMatch(claim -> claim.contains(block.getLocation()))))
             event.setCancelled(true);
-        }
     }
 
     //ToDo: Find a workaround for fireballs being thrown into a claim
     @EventHandler
     private void onRide(PlayerInteractEntityEvent event) {
-        if (isClaimed(event.getPlayer().getLocation(), event.getPlayer())) {
-            event.setCancelled(true);
-        }
+        if (isClaimed(event.getPlayer().getLocation(), event.getPlayer())) event.setCancelled(true);
     }
 }
